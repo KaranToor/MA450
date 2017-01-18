@@ -57,7 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String CLOUD_VISION_API_KEY = "YOUR_API_KEY";
+    private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
     public static final String FILE_NAME = "temp.jpg";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
@@ -239,10 +239,10 @@ public class MainActivity extends AppCompatActivity {
 
                         // add the features we want
                         annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
-                            Feature labelDetection = new Feature();
-                            labelDetection.setType("LABEL_DETECTION");
-                            labelDetection.setMaxResults(10);
-                            add(labelDetection);
+                            Feature textDetection = new Feature();
+                            textDetection.setType("TEXT_DETECTION");
+                            textDetection.setMaxResults(10);
+                            add(textDetection);
                         }});
 
                         // Add the list of one thing to the request
@@ -296,9 +296,9 @@ public class MainActivity extends AppCompatActivity {
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
         String message = "I found these things:\n\n";
 
-        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
-        if (labels != null) {
-            for (EntityAnnotation label : labels) {
+        List<EntityAnnotation> words = response.getResponses().get(0).getTextAnnotations();
+        if (words != null) {
+            for (EntityAnnotation label : words) {
                 message += String.format("%.3f: %s", label.getScore(), label.getDescription());
                 message += "\n";
             }
