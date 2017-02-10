@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:text="Receipt Suite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp"
+        android:layout_marginBottom="69dp"
+        android:id="@+id/textView"
+        tools:text=" "
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:fontFamily="serif"
+        android:textSize="45sp"
+        android:textColor="@color/colorIcons" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:layout_above="@+id/button2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:id="@+id/editText2"
+        android:hint="@string/email"
+        android:background="@drawable/roundedtextbox" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editText3"
+        android:layout_marginTop="5dp"
+        android:layout_alignTop="@+id/editText2"
+        android:layout_alignLeft="@+id/editText2"
+        android:layout_alignStart="@+id/editText2"
+        android:hint="@string/password"
+        android:background="@drawable/roundedtextbox"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/log_in"
+        android:id="@+id/button2"
+        android:onClick="logInUser"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/colorTextPrimary"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/layout2"
+        android:layout_below="@+id/button2"
+        android:background="@color/colorIcons">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register"
+            android:onClick="registerUser"
+            android:id="@+id/button"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorTextPrimary"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

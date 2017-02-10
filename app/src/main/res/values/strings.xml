@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Receipt Suite</string>
+    <string name="log_in">Log In</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="nameHint">Name</string>
+    <string name="image_picker_error">Error picking image</string>
+    <string name="dialog_select_prompt">Please choose gallery to upload a photo</string>
+    <string name="dialog_select_camera">Camera</string>
+    <string name="dialog_select_gallery">Gallery</string>
+</resources>
