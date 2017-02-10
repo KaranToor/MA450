@@ -29,7 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
     public void createUser(View view) {
         u = (EditText) findViewById(R.id.editText4);
         p = (EditText) findViewById(R.id.editText6);
-        if(u.getText().toString().length() >= 1  && p.getText().toString().length() >= 1 ) {
+        if (u.getText().toString().length() >= 1 && p.getText().toString().length() >= 1) {
             AsyncTask<String, Void, String> task = null;
             String message = ((EditText) findViewById(R.id.editText)).getText().toString();
             String message2 = ((EditText) findViewById(R.id.editText4)).getText().toString();
@@ -38,18 +38,19 @@ public class SignUpActivity extends AppCompatActivity {
             task.execute(PARTIAL_URL, message2, message3, message);
 
         } else {
-            Toast.makeText(this, "All fields must be filled" ,Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
         }
     }
 
     private class CreatingUserWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "register.php";
+
         @Override
         protected String doInBackground(String... strings) {
             String response = "";
             HttpURLConnection urlConnection = null;
             String url = strings[0];
-            String args = "?username=" + strings[1] + "&password=" + strings[2] + "&name=" +strings[3];
+            String args = "?username=" + strings[1] + "&password=" + strings[2] + "&name=" + strings[3];
             try {
                 URL urlObject = new URL(url + SERVICE + args);
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
@@ -68,6 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
             return response;
         }
+
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
