@@ -91,11 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
-<<<<<<< HEAD
-            } else if (result.startsWith("{\"Error")) {
-=======
             }else if (result.contains("Error")){
->>>>>>> ea36a153f46b06de736ddb3dc1160360a8ccd00a
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
