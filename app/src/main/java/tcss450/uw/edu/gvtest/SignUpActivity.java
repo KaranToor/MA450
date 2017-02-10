@@ -77,7 +77,11 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
-            } else {
+            } else if (result.contains("Error")){
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }  else {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
             }
 
