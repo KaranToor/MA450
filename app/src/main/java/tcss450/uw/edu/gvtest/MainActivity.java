@@ -174,12 +174,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
-            }else if (result.startsWith("{\"Error")){
+            }else if (result.contains("Error")){
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
             } else {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
+                startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
             }
 
         }
