@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * This Activity allows the user to view their receipts and add a new receipt via the camera button.
  *
- * @author MA450 Team 11
+ * @author Google Cloud Vision sample modified by MA450 Team 11
  * @version Winter 2017
  */
 public class OverviewActivity extends AppCompatActivity implements View.OnLongClickListener {
@@ -58,11 +58,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
-    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private TextView mImageDetails;
-    private ImageView mMainImage;
 
     /**
      * Called at the creation of the Activity.
@@ -83,6 +81,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         table.addView(t);
     }
 
+    /**
+     * Launches the dialog for the user to choose a picture from their gallery.
+     *
+     * @param view The view used for event handling.
+     */
     public void cameraButtonClicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(OverviewActivity.this);
         builder
@@ -93,15 +96,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                         startGalleryChooser();
                     }
                 });
-//                .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        startCamera();
-//                    }
-//                });
         builder.create().show();
     }
 
+    /**
+     * Starts the gallery image chooser Activity.
+     */
     public void startGalleryChooser() {
         if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Intent intent = new Intent();
@@ -112,23 +112,23 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
-//    public void startCamera() {
-//        if (PermissionUtils.requestPermission(
-//                this,
-//                CAMERA_PERMISSIONS_REQUEST,
-//                Manifest.permission.READ_EXTERNAL_STORAGE,
-//                Manifest.permission.CAMERA)) {
-//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
-//            startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
-//        }
-//    }
-
+    /**
+     * Gets the file from external storage.
+     *
+     * @return The image file.
+     */
     public File getCameraFile() {
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         return new File(dir, FILE_NAME);
     }
 
+    /**
+     * Checks if the permissions were authorized.
+     *
+     * @param requestCode The camera or gallery permission code.
+     * @param resultCode  The result of the attempt.
+     * @param data        which item was selected.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -140,19 +140,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(
-//            int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode) {
-////            case CAMERA_PERMISSIONS_REQUEST:
-////                if (PermissionUtils.permissionGranted(requestCode, CAMERA_PERMISSIONS_REQUEST, grantResults)) {
-////                    startCamera();
-////                }
-////                break;
-//        }
-//    }
-
+    /**
+     * Uploads the bitmap version of the image to Google Cloud Vision API.
+     *
+     * @param uri the image.
+     */
     public void uploadImage(Uri uri) {
         if (uri != null) {
             try {
@@ -175,9 +167,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
+    /**
+     * Makes the call to Google Cloud Vision and gets the result.
+     *
+     * @param bitmap The image to send to Google Cloud Vision.
+     * @throws IOException Throw exception when file is invalid.
+     */
     private void callCloudVision(final Bitmap bitmap) throws IOException {
-        // Switch text to loading
-//        mImageDetails.setText(R.string.loading_message);
 
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String>() {
@@ -232,6 +228,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                         // add the features we want
                         annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
                             Feature textDetection = new Feature();
+                            // We're interested in text detection so we use this type flag. @toork
                             textDetection.setType("TEXT_DETECTION");
                             textDetection.setMaxResults(10);
                             add(textDetection);
@@ -259,14 +256,24 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 return "Cloud Vision API request failed. Check logs for details.";
             }
 
+            /**
+             * After retrieving the data, post it to the specified TextView.
+             * @param result the String result of text found in the image.
+             */
             protected void onPostExecute(String result) {
                 mImageDetails.setText(result);
             }
         }.execute();
     }
 
+    /**
+     * Scales the image to a specified dimension.
+     *
+     * @param bitmap       The bitmap to scale.
+     * @param maxDimension The maximum dimension of width or height.
+     * @return The scaled bitmap.
+     */
     public Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
-
         int originalWidth = bitmap.getWidth();
         int originalHeight = bitmap.getHeight();
         int resizedWidth = maxDimension;
@@ -285,6 +292,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
 
+    /**
+     * Prints out the text Google Cloud Vision has found.
+     *
+     * @param response the response from Google Cloud Vision.
+     * @return The String of text found.
+     */
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
         String message = "I found these things:\n\n";
 
@@ -301,7 +314,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         return message;
     }
 
-
+    /**
+     * Initializes the rows of temporary receipts in the overview screen.
+     */
     private void init() {
         TableLayout table = (TableLayout) findViewById(R.id.table);
         for (int i = 1; i < 5; i++) {
@@ -320,17 +335,32 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
+    /**
+     * Sets the progress bar.
+     */
     private void setProgressLabel() {
+        //This *should* make the TextView over the progress bar be "current progress/maximum value"
         ProgressBar p = (ProgressBar) this.findViewById(R.id.progressBar3);
         TextView t = (TextView) this.findViewById(R.id.progressLabel);
         t.setText(p.getProgress() + "\\" + p.getMax());
-    } //This *should* make the TextView over the progress bar be "current progress/maximum value"
+    }
 
+    /**
+     * Cancel on long click.
+     *
+     * @param v The view used for event handling.
+     * @return The boolean representing a long click.
+     */
     @Override
     public boolean onLongClick(View v) { //This is the start of trying to make a fragment show up when an item in the overview is tapped and held
         return false;
     }
 
+    /**
+     * Log a click.
+     *
+     * @param view The view used for event handling.
+     */
     public void viewEntry(View view) {
         Log.d("print", "clicked");
     }

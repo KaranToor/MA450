@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Provides utility logic for getting the app's SHA1 signature. Used with restricted API keys.
  *
- * @author MA450 Team 11
+ * @author Google Cloud Vision Android sample
  * @version Winter 2017
  */
 public class PackageManagerUtils {

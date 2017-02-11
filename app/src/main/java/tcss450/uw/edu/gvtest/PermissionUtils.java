@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * A class which allows for checking and/or requesting the apps' required permissions.
  *
- * @author MA450 Team 11
+ * @author Google Cloud Vision Android sample
  * @version Winter 2017
  */
 public class PermissionUtils {
