@@ -6,6 +6,7 @@ import android.os.Bundle;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -15,18 +16,33 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+/**
+ * Initial screen upon app startup. Provides user capability to login
+ * or navigate to another screen to register.
+ */
 public class MainActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
 
     EditText email;
     EditText password;
 
+    /**
+     * Initializes activity
+     *
+     * @param savedInstanceState the instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
+    /**
+     * Navigates to the "sign up" activity
+     *
+     * @param view The View passed in when this method is called.
+     */
     public void registerUser(View view) {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
@@ -56,9 +72,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Asynchronously verifies login credentials
+     */
     private class GetWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "login.php";
 
+        /**
+         * Executes async tasks on a separate thread.
+         *
+         * @param strings The parameters to be passed in.
+         * @return The result.
+         */
         @Override
         protected String doInBackground(String... strings) {
             String response = "";
@@ -84,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
             return response;
         }
 
+        /**
+         * Begins the "overview" activity
+         *
+         * @param result the result.
+         */
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
@@ -91,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
-            }else if (result.contains("Error")){
+            } else if (result.contains("Error")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;

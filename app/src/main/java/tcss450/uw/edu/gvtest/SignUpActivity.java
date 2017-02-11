@@ -14,18 +14,30 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
+/**
+ * Adds a new user to the app's database and allows for future logins from this new user.
+ */
 public class SignUpActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
     EditText u;
     EditText p;
 
+    /**
+     * Initializes activity.
+     *
+     * @param savedInstanceState the instance that is saved.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
     }
 
+    /**
+     * Creates a new user.
+     *
+     * @param view The view passed in when this method is called
+     */
     public void createUser(View view) {
         u = (EditText) findViewById(R.id.editText4);
         p = (EditText) findViewById(R.id.editText6);
@@ -42,6 +54,9 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Asynchronously reaches out to the app's database and adds the credentials of the new user
+     */
     private class CreatingUserWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "register.php";
 
@@ -77,11 +92,11 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
-            } else if (result.contains("Error")){
+            } else if (result.contains("Error")) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
-            }  else {
+            } else {
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
             }
 
