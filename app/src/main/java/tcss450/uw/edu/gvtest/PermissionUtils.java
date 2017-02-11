@@ -18,18 +18,18 @@ public class PermissionUtils {
     /**
      * Checks for the apps' required permissions, and requests any that are missing.
      *
-     * @param activity    the current activity
-     * @param requestCode an integer constant indicating the requested permission
-     * @param permissions a list of permissions given to the app
+     * @param theActivity    the current activity
+     * @param theRequestCode an integer constant indicating the requested permission
+     * @param thePermissions a list of permissions given to the app
      * @return a boolean indicating the status of the requested permission
      */
     public static boolean requestPermission(
-            Activity activity, int requestCode, String... permissions) {
+            Activity theActivity, int theRequestCode, String... thePermissions) {
         boolean granted = true;
         ArrayList<String> permissionsNeeded = new ArrayList<>();
 
-        for (String s : permissions) {
-            int permissionCheck = ContextCompat.checkSelfPermission(activity, s);
+        for (String s : thePermissions) {
+            int permissionCheck = ContextCompat.checkSelfPermission(theActivity, s);
             boolean hasPermission = (permissionCheck == PackageManager.PERMISSION_GRANTED);
             granted &= hasPermission;
             if (!hasPermission) {
@@ -40,9 +40,9 @@ public class PermissionUtils {
         if (granted) {
             return true;
         } else {
-            ActivityCompat.requestPermissions(activity,
+            ActivityCompat.requestPermissions(theActivity,
                     permissionsNeeded.toArray(new String[permissionsNeeded.size()]),
-                    requestCode);
+                    theRequestCode);
             return false;
         }
     }
@@ -50,15 +50,15 @@ public class PermissionUtils {
     /**
      * Checks for a specific permissions' status.
      *
-     * @param requestCode    an integer constant indicating the requested permission
-     * @param permissionCode an integer constant indicating a specific permission
-     * @param grantResults   an integer array containing the permission's status
+     * @param theRequestCode    an integer constant indicating the requested permission
+     * @param thePermissionCode an integer constant indicating a specific permission
+     * @param theGrantResults   an integer array containing the permission's status
      * @return a boolean indicating the status of the requested permission
      */
     public static boolean permissionGranted(
-            int requestCode, int permissionCode, int[] grantResults) {
-        if (requestCode == permissionCode) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            int theRequestCode, int thePermissionCode, int[] theGrantResults) {
+        if (theRequestCode == thePermissionCode) {
+            if (theGrantResults.length > 0 && theGrantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 return true;
             } else {
                 return false;

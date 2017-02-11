@@ -19,29 +19,29 @@ import java.net.URL;
  */
 public class SignUpActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
-    EditText u;
-    EditText p;
+    EditText myUser;
+    EditText myPassword;
 
     /**
      * Initializes activity.
      *
-     * @param savedInstanceState the instance that is saved.
+     * @param theSavedInstanceState the instance that is saved.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle theSavedInstanceState) {
+        super.onCreate(theSavedInstanceState);
         setContentView(R.layout.activity_sign_up);
     }
 
     /**
      * Creates a new user.
      *
-     * @param view The view passed in when this method is called
+     * @param theView The view passed in when this method is called
      */
-    public void createUser(View view) {
-        u = (EditText) findViewById(R.id.editText4);
-        p = (EditText) findViewById(R.id.editText6);
-        if (u.getText().toString().length() >= 1 && p.getText().toString().length() >= 1) {
+    public void createUser(View theView) {
+        myUser = (EditText) findViewById(R.id.editText4);
+        myPassword = (EditText) findViewById(R.id.editText6);
+        if (myUser.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
             AsyncTask<String, Void, String> task = null;
             String message = ((EditText) findViewById(R.id.editText)).getText().toString();
             String message2 = ((EditText) findViewById(R.id.editText4)).getText().toString();
@@ -63,15 +63,15 @@ public class SignUpActivity extends AppCompatActivity {
         /**
          * Performs operations in separate thread.
          *
-         * @param strings The string parameters.
+         * @param theStrings The string parameters.
          * @return the result.
          */
         @Override
-        protected String doInBackground(String... strings) {
+        protected String doInBackground(String... theStrings) {
             String response = "";
             HttpURLConnection urlConnection = null;
-            String url = strings[0];
-            String args = "?username=" + strings[1] + "&password=" + strings[2] + "&name=" + strings[3];
+            String url = theStrings[0];
+            String args = "?username=" + theStrings[1] + "&password=" + theStrings[2] + "&name=" + theStrings[3];
             try {
                 URL urlObject = new URL(url + SERVICE + args);
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
@@ -94,21 +94,23 @@ public class SignUpActivity extends AppCompatActivity {
         /**
          * After async task is complete, show result.
          *
-         * @param result The completed result.
+         * @param theResult The completed result.
          */
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
-            if (result.startsWith("Unable to")) {
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+            if (theResult.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
                 return;
-            } else if (result.contains("Error")) {
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+            } else if (theResult.contains("Error")) {
+                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
                 return;
             } else {
-                getApplicationContext().startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
+                Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
             }
 
         }

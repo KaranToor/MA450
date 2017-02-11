@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -60,33 +59,33 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
-    private TextView mImageDetails;
+    private TextView myImageDetails;
 
     /**
      * Called at the creation of the Activity.
      *
-     * @param savedInstanceState The instance state.
+     * @param theSavedInstanceState The instance state.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle theSavedInstanceState) {
+        super.onCreate(theSavedInstanceState);
         setContentView(R.layout.activity_overview);
         setProgressLabel();
         init();
 
         TableLayout table = (TableLayout) findViewById(R.id.table);
         TableRow t = new TableRow(this);
-        mImageDetails = new TextView(this);
-        t.addView(mImageDetails);
+        myImageDetails = new TextView(this);
+        t.addView(myImageDetails);
         table.addView(t);
     }
 
     /**
      * Launches the dialog for the user to choose a picture from their gallery.
      *
-     * @param view The view used for event handling.
+     * @param theView The view used for event handling.
      */
-    public void cameraButtonClicked(View view) {
+    public void cameraButtonClicked(View theView) {
         AlertDialog.Builder builder = new AlertDialog.Builder(OverviewActivity.this);
         builder
                 .setMessage(R.string.dialog_select_prompt)
@@ -125,17 +124,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     /**
      * Checks if the permissions were authorized.
      *
-     * @param requestCode The camera or gallery permission code.
-     * @param resultCode  The result of the attempt.
-     * @param data        which item was selected.
+     * @param theRequestCode The camera or gallery permission code.
+     * @param theResultCode  The result of the attempt.
+     * @param theData        which item was selected.
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(int theRequestCode, int theResultCode, Intent theData) {
+        super.onActivityResult(theRequestCode, theResultCode, theData);
 
-        if (requestCode == GALLERY_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            uploadImage(data.getData());
-        } else if (requestCode == CAMERA_IMAGE_REQUEST && resultCode == RESULT_OK) {
+        if (theRequestCode == GALLERY_IMAGE_REQUEST && theResultCode == RESULT_OK && theData != null) {
+            uploadImage(theData.getData());
+        } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             uploadImage(Uri.fromFile(getCameraFile()));
         }
     }
@@ -143,15 +142,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     /**
      * Uploads the bitmap version of the image to Google Cloud Vision API.
      *
-     * @param uri the image.
+     * @param theUri the image.
      */
-    public void uploadImage(Uri uri) {
-        if (uri != null) {
+    public void uploadImage(Uri theUri) {
+        if (theUri != null) {
             try {
                 // scale the image to save on bandwidth
                 Bitmap bitmap =
                         scaleBitmapDown(
-                                MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
+                                MediaStore.Images.Media.getBitmap(getContentResolver(), theUri),
                                 1200);
 
                 callCloudVision(bitmap);
@@ -170,15 +169,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     /**
      * Makes the call to Google Cloud Vision and gets the result.
      *
-     * @param bitmap The image to send to Google Cloud Vision.
+     * @param theBitmap The image to send to Google Cloud Vision.
      * @throws IOException Throw exception when file is invalid.
      */
-    private void callCloudVision(final Bitmap bitmap) throws IOException {
+    private void callCloudVision(final Bitmap theBitmap) throws IOException {
 
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String>() {
             @Override
-            protected String doInBackground(Object... params) {
+            protected String doInBackground(Object... theParams) {
                 try {
                     HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
                     JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -218,7 +217,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                         // Convert the bitmap to a JPEG
                         // Just in case it's a format that Android understands but Cloud Vision
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
+                        theBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
                         byte[] imageBytes = byteArrayOutputStream.toByteArray();
 
                         // Base64 encode the JPEG
@@ -258,10 +257,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
             /**
              * After retrieving the data, post it to the specified TextView.
-             * @param result the String result of text found in the image.
+             * @param theResult the String result of text found in the image.
              */
-            protected void onPostExecute(String result) {
-                mImageDetails.setText(result);
+            protected void onPostExecute(String theResult) {
+                myImageDetails.setText(theResult);
             }
         }.execute();
     }
@@ -269,39 +268,39 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     /**
      * Scales the image to a specified dimension.
      *
-     * @param bitmap       The bitmap to scale.
-     * @param maxDimension The maximum dimension of width or height.
+     * @param theBitmap       The bitmap to scale.
+     * @param theMaxDimension The maximum dimension of width or height.
      * @return The scaled bitmap.
      */
-    public Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
-        int originalWidth = bitmap.getWidth();
-        int originalHeight = bitmap.getHeight();
-        int resizedWidth = maxDimension;
-        int resizedHeight = maxDimension;
+    public Bitmap scaleBitmapDown(Bitmap theBitmap, int theMaxDimension) {
+        int originalWidth = theBitmap.getWidth();
+        int originalHeight = theBitmap.getHeight();
+        int resizedWidth = theMaxDimension;
+        int resizedHeight = theMaxDimension;
 
         if (originalHeight > originalWidth) {
-            resizedHeight = maxDimension;
+            resizedHeight = theMaxDimension;
             resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
         } else if (originalWidth > originalHeight) {
-            resizedWidth = maxDimension;
+            resizedWidth = theMaxDimension;
             resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
         } else if (originalHeight == originalWidth) {
-            resizedHeight = maxDimension;
-            resizedWidth = maxDimension;
+            resizedHeight = theMaxDimension;
+            resizedWidth = theMaxDimension;
         }
-        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+        return Bitmap.createScaledBitmap(theBitmap, resizedWidth, resizedHeight, false);
     }
 
     /**
      * Prints out the text Google Cloud Vision has found.
      *
-     * @param response the response from Google Cloud Vision.
+     * @param theResponse the response from Google Cloud Vision.
      * @return The String of text found.
      */
-    private String convertResponseToString(BatchAnnotateImagesResponse response) {
+    private String convertResponseToString(BatchAnnotateImagesResponse theResponse) {
         String message = "I found these things:\n\n";
 
-        List<EntityAnnotation> words = response.getResponses().get(0).getTextAnnotations();
+        List<EntityAnnotation> words = theResponse.getResponses().get(0).getTextAnnotations();
         if (words != null) {
             for (EntityAnnotation label : words) {
                 message += String.format("%.3f: %s", label.getScore(), label.getDescription());
@@ -348,20 +347,20 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     /**
      * Cancel on long click.
      *
-     * @param v The view used for event handling.
+     * @param theView The view used for event handling.
      * @return The boolean representing a long click.
      */
     @Override
-    public boolean onLongClick(View v) { //This is the start of trying to make a fragment show up when an item in the overview is tapped and held
+    public boolean onLongClick(View theView) { //This is the start of trying to make a fragment show up when an item in the overview is tapped and held
         return false;
     }
 
     /**
      * Log a click.
      *
-     * @param view The view used for event handling.
+     * @param theView The view used for event handling.
      */
-    public void viewEntry(View view) {
+    public void viewEntry(View theView) {
         Log.d("print", "clicked");
     }
 

@@ -27,40 +27,40 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
 
-    EditText email;
-    EditText password;
+    EditText myEmail;
+    EditText myPassword;
 
     /**
      * Initializes activity
      *
-     * @param savedInstanceState the instance state.
+     * @param theSavedInstanceState the instance state.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle theSavedInstanceState) {
+        super.onCreate(theSavedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
     /**
      * Navigates to the "sign up" activity
      *
-     * @param view The View passed in when this method is called.
+     * @param theView The View passed in when this method is called.
      */
-    public void registerUser(View view) {
+    public void registerUser(View theView) {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 
     /**
-     * Directs the email to the overview activity after logging in.
+     * Directs the myEmail to the overview activity after logging in.
      *
-     * @param view The View passed in when this method is called.
+     * @param theView The View passed in when this method is called.
      */
-    public void logInUser(View view) {
-        email = (EditText) findViewById(R.id.editText2);
-        password = (EditText) findViewById(R.id.editText3);
+    public void logInUser(View theView) {
+        myEmail = (EditText) findViewById(R.id.editText2);
+        myPassword = (EditText) findViewById(R.id.editText3);
 
-        if (email.getText().toString().length() >= 1 && password.getText().toString().length() >= 1) {
+        if (myEmail.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
             AsyncTask<String, Void, String> task = null;
             String message = ((EditText) findViewById(R.id.editText2)).getText().toString();
             String message2 = ((EditText) findViewById(R.id.editText3)).getText().toString();
@@ -84,15 +84,15 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Executes async tasks on a separate thread.
          *
-         * @param strings The parameters to be passed in.
+         * @param theStrings The parameters to be passed in.
          * @return The result.
          */
         @Override
-        protected String doInBackground(String... strings) {
+        protected String doInBackground(String... theStrings) {
             String response = "";
             HttpURLConnection urlConnection = null;
-            String url = strings[0];
-            String args = "?username=" + strings[1] + "&password=" + strings[2];
+            String url = theStrings[0];
+            String args = "?username=" + theStrings[1] + "&password=" + theStrings[2];
             try {
                 URL urlObject = new URL(url + SERVICE + args);
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
@@ -115,17 +115,17 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Begins the "overview" activity
          *
-         * @param result the result.
+         * @param theResult the result.
          */
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
-            if (result.startsWith("Unable to")) {
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+            if (theResult.startsWith("Unable to")) {
+                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
                 return;
-            } else if (result.contains("Error")) {
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
+            } else if (theResult.contains("Error")) {
+                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
                 return;
             } else {

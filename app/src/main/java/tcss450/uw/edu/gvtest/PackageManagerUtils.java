@@ -21,12 +21,12 @@ public class PackageManagerUtils {
     /**
      * Gets the SHA1 signature, hex encoded for inclusion with Google Cloud Platform API requests
      *
-     * @param packageName Identifies the APK whose signature should be extracted.
+     * @param thePackageName Identifies the APK whose signature should be extracted.
      * @return a lowercase, hex-encoded
      */
-    public static String getSignature(@NonNull PackageManager pm, @NonNull String packageName) {
+    public static String getSignature(@NonNull PackageManager thePM, @NonNull String thePackageName) {
         try {
-            PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
+            PackageInfo packageInfo = thePM.getPackageInfo(thePackageName, PackageManager.GET_SIGNATURES);
             if (packageInfo == null
                     || packageInfo.signatures == null
                     || packageInfo.signatures.length == 0
@@ -42,11 +42,11 @@ public class PackageManagerUtils {
     /**
      * Returns the signature as a string.
      *
-     * @param sig The signature to process.
+     * @param theSig The signature to process.
      * @return The String of a signature.
      */
-    private static String signatureDigest(Signature sig) {
-        byte[] signature = sig.toByteArray();
+    private static String signatureDigest(Signature theSig) {
+        byte[] signature = theSig.toByteArray();
         try {
             MessageDigest md = MessageDigest.getInstance("SHA1");
             byte[] digest = md.digest(signature);
