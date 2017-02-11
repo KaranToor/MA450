@@ -20,6 +20,9 @@ import android.widget.Toast;
 /**
  * Initial screen upon app startup. Provides user capability to login
  * or navigate to another screen to register.
+ *
+ * @author MA450 Team 11
+ * @version Winter 2017
  */
 public class MainActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";

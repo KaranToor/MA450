@@ -60,6 +60,12 @@ public class SignUpActivity extends AppCompatActivity {
     private class CreatingUserWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "register.php";
 
+        /**
+         * Performs operations in separate thread.
+         *
+         * @param strings The string parameters.
+         * @return the result.
+         */
         @Override
         protected String doInBackground(String... strings) {
             String response = "";
@@ -85,6 +91,11 @@ public class SignUpActivity extends AppCompatActivity {
             return response;
         }
 
+        /**
+         * After async task is complete, show result.
+         *
+         * @param result The completed result.
+         */
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.

@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Provides utility logic for getting the app's SHA1 signature. Used with restricted API keys.
+ *
  * @author MA450 Team 11
  * @version Winter 2017
  */
@@ -38,6 +39,12 @@ public class PackageManagerUtils {
         }
     }
 
+    /**
+     * Returns the signature as a string.
+     *
+     * @param sig The signature to process.
+     * @return The String of a signature.
+     */
     private static String signatureDigest(Signature sig) {
         byte[] signature = sig.toByteArray();
         try {

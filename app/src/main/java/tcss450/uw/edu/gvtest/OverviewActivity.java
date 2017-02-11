@@ -44,6 +44,9 @@ import java.util.List;
 
 /**
  * This Activity allows the user to view their receipts and add a new receipt via the camera button.
+ *
+ * @author MA450 Team 11
+ * @version Winter 2017
  */
 public class OverviewActivity extends AppCompatActivity implements View.OnLongClickListener {
 
