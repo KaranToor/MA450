@@ -13,6 +13,7 @@ import java.net.URL;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -80,6 +81,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private class GetWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "login.php";
+        Button submit = (Button) findViewById(R.id.button2);
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            submit.setClickable(false);
+        }
 
         /**
          * Executes async tasks on a separate thread.
@@ -120,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
+            submit.setClickable(true);
             if (theResult.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
