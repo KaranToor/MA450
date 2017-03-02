@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -40,18 +41,40 @@ public class SignUpActivity extends AppCompatActivity {
      */
     public void createUser(View theView) {
         myUser = (EditText) findViewById(R.id.editText4);
-        myPassword = (EditText) findViewById(R.id.editText6);
-        if (myUser.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
-            AsyncTask<String, Void, String> task = null;
-            String message = ((EditText) findViewById(R.id.editText)).getText().toString();
-            String message2 = ((EditText) findViewById(R.id.editText4)).getText().toString();
-            String message3 = ((EditText) findViewById(R.id.editText6)).getText().toString();
-            task = new CreatingUserWebServiceTask();
-            task.execute(PARTIAL_URL, message2, message3, message);
+        if (isValidEmail(myUser.getText())) {
+            myPassword = (EditText) findViewById(R.id.editText6);
+            EditText myPass2 = (EditText) findViewById(R.id.editText7);
+            if (myPass2.getText() == myPassword.getText()) {
 
+                if (myUser.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
+                    AsyncTask<String, Void, String> task = null;
+                    String message = ((EditText) findViewById(R.id.editText)).getText().toString();
+                    String message2 = ((EditText) findViewById(R.id.editText4)).getText().toString();
+                    String message3 = ((EditText) findViewById(R.id.editText6)).getText().toString();
+                    task = new CreatingUserWebServiceTask();
+                    task.execute(PARTIAL_URL, message2, message3, message);
+
+                } else {
+                    Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                myPass2.requestFocus();
+                myPass2.setError("Error passwords do not match!");
+            }
         } else {
-            Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
+            myUser.requestFocus();
+            myUser.setError("Email format not valid. Ex. John@Doe.com");
         }
+    }
+
+    /**
+     * From http://stackoverflow.com/questions/24969894/android-email-validation-on-edittext
+     * to validate email imput.
+     * @param target the user input.
+     * @return The result of the validation.
+     */
+    public final static boolean isValidEmail(CharSequence target) {
+        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
     /**
