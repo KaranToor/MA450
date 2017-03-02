@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (isValidEmail(myUser.getText())) {
             myPassword = (EditText) findViewById(R.id.editText6);
             EditText myPass2 = (EditText) findViewById(R.id.editText7);
-            if (myPass2.getText() == myPassword.getText()) {
+            if (myPass2.getText().toString().equals(myPassword.getText().toString())) {
 
                 if (myUser.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
                     AsyncTask<String, Void, String> task = null;
@@ -82,6 +83,13 @@ public class SignUpActivity extends AppCompatActivity {
      */
     private class CreatingUserWebServiceTask extends AsyncTask<String, Void, String> {
         private final String SERVICE = "register.php";
+        Button submit = (Button) findViewById(R.id.button3);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            submit.setClickable(false);
+        }
 
         /**
          * Performs operations in separate thread.
@@ -122,6 +130,7 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
+            submit.setClickable(true);
             if (theResult.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();

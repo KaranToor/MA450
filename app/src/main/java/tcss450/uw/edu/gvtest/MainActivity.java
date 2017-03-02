@@ -60,18 +60,23 @@ public class MainActivity extends AppCompatActivity {
     public void logInUser(View theView) {
         myEmail = (EditText) findViewById(R.id.editText2);
         myPassword = (EditText) findViewById(R.id.editText3);
+        if (SignUpActivity.isValidEmail(myEmail.getText())) {
 
-        if (myEmail.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
-            AsyncTask<String, Void, String> task = null;
-            String message = ((EditText) findViewById(R.id.editText2)).getText().toString();
-            String message2 = ((EditText) findViewById(R.id.editText3)).getText().toString();
+            if (myPassword.getText().toString().length() >= 1) {
+                AsyncTask<String, Void, String> task = null;
+                String message = ((EditText) findViewById(R.id.editText2)).getText().toString();
+                String message2 = ((EditText) findViewById(R.id.editText3)).getText().toString();
 
-            task = new GetWebServiceTask();
-            task.execute(PARTIAL_URL, message, message2);
+                task = new GetWebServiceTask();
+                task.execute(PARTIAL_URL, message, message2);
 
+            } else {
+                Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
+
+            }
         } else {
-            Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
-
+            myEmail.requestFocus();
+            myEmail.setError("Email format not valid. Ex. John@Doe.com");
         }
 
     }
