@@ -58,18 +58,18 @@ public class SignUpActivity extends AppCompatActivity {
                     task = new CreatingUserWebServiceTask();
                     task.execute(PARTIAL_URL, message2, message3, message);
                 } else {
-                    Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.incompleteFormMsg, Toast.LENGTH_LONG).show();
                 }
             } else {
                 myPass2.requestFocus();
-                myPass2.setError("Error passwords do not match!");
+                myPass2.setError(getString(R.string.confirmPasswordErr));
             }
         } else if (myPassword.getText().length() < 8){
             myPassword.requestFocus();
-            myPassword.setError("Password must be at least 8 characters long");
+            myPassword.setError(getString(R.string.passwordErrorMessage));
         } else if (myPass2.getText().length() < 8) {
             myPass2.requestFocus();
-            myPass2.setError("Password must be at least 8 characters long");
+            myPass2.setError(getString(R.string.passwordErrorMessage));
         }
     }
 
@@ -137,10 +137,10 @@ public class SignUpActivity extends AppCompatActivity {
         protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
             submit.setClickable(true);
-            if (theResult.startsWith("Unable to")) {
+            if (theResult.startsWith(getString(R.string.unable))) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
-            } else if (theResult.contains("Error")) {
+            } else if (theResult.contains(getString(R.string.err))) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
             } else {

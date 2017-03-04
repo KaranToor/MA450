@@ -72,15 +72,15 @@ public class MainActivity extends AppCompatActivity {
                 task.execute(PARTIAL_URL, message, message2);
 
             } else {
-                Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.incompleteFormMsg), Toast.LENGTH_LONG).show();
 
             }
         } else if (!SignUpActivity.isValidEmail(myEmail.getText())){
             myEmail.requestFocus();
-            myEmail.setError("Email format not valid. Ex. John@Doe.com");
+            myEmail.setError(getString(R.string.invalidEmailMsg));
         } else {
             myPassword.requestFocus();
-            myPassword.setError("Password must be at least 8 characters long");
+            myPassword.setError(getString(R.string.passwordErrorMessage));
         }
 
     }
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
      * Asynchronously verifies login credentials
      */
     private class GetWebServiceTask extends AsyncTask<String, Void, String> {
-        private final String SERVICE = "login.php";
+        private final String SERVICE = getString(R.string.loginExtension);
         Button submit = (Button) findViewById(R.id.button2);
 
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             String response = "";
             HttpURLConnection urlConnection = null;
             String url = theStrings[0];
-            String args = "?username=" + theStrings[1] + "&password=" + theStrings[2];
+            String args = getString(R.string.queryUN) + theStrings[1] + getString(R.string.queryPass) + theStrings[2];
             try {
                 URL urlObject = new URL(url + SERVICE + args);
                 urlConnection = (HttpURLConnection) urlObject.openConnection();
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     response += s;
                 }
             } catch (Exception e) {
-                response = "Unable to connect, Reason: "
+                response = getString(R.string.unableToConnect)
                         + e.getMessage();
             } finally {
                 if (urlConnection != null)
@@ -139,11 +139,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
             submit.setClickable(true);
-            if (theResult.startsWith("Unable to")) {
+            if (theResult.startsWith(getString(R.string.unable))) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
                 return;
-            } else if (theResult.contains("Error")) {
+            } else if (theResult.contains(getString(R.string.err))) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
                 return;

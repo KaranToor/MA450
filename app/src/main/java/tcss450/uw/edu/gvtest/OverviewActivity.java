@@ -110,9 +110,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST,
                 Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Intent intent = new Intent();
-            intent.setType("image/*");
+            intent.setType(getString(R.string.intenttype));
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select a photo"),
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePhotoPrompt)),
                     GALLERY_IMAGE_REQUEST);
         }
     }
@@ -163,11 +163,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 //                mMainImage.setImageBitmap(bitmap);
 
             } catch (IOException e) {
-                Log.d(TAG, "Image picking failed because " + e.getMessage());
+                Log.d(TAG, getString(R.string.imagePickFail) + e.getMessage());
                 Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
             }
         } else {
-            Log.d(TAG, "Image picker gave us a null image.");
+            Log.d(TAG, getString(R.string.nullImage));
             Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
         }
     }
@@ -236,7 +236,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                         annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
                             Feature textDetection = new Feature();
                             // We're interested in text detection so we use this type flag. @toork
-                            textDetection.setType("TEXT_DETECTION");
+                            textDetection.setType(getString(R.string.detectionType));
                             textDetection.setMaxResults(10);
                             add(textDetection);
                         }});
@@ -249,18 +249,18 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                             vision.images().annotate(batchAnnotateImagesRequest);
                     // Due to a bug: requests to Vision API containing large images fail when GZipped.
                     annotateRequest.setDisableGZipContent(true);
-                    Log.d(TAG, "created Cloud Vision request object, sending request");
+                    Log.d(TAG, getString(R.string.sendingRequest));
 
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
                     return convertResponseToString(response);
 
                 } catch (GoogleJsonResponseException e) {
-                    Log.d(TAG, "failed to make API request because " + e.getContent());
+                    Log.d(TAG, getString(R.string.JSONRespExceptionFail) + e.getContent());
                 } catch (IOException e) {
-                    Log.d(TAG, "failed to make API request because of other IOException " +
+                    Log.d(TAG, getString(R.string.IOERequestFail) +
                             e.getMessage());
                 }
-                return "Cloud Vision API request failed. Check logs for details.";
+                return getString(R.string.visionRequestFailed);
             }
 
             /**
@@ -271,8 +271,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 Pattern pattern = Pattern.compile("(\\d{1,10}\\.\\d{2})");
                 Matcher matcher = pattern.matcher(theResult);
                 myImageDetails.setText(theResult);
-                Log.d("TEST", theResult);
-                myImageDetails.append("STARTING PARSE\n");
+                Log.d(getString(R.string.testCaps), theResult);
+                myImageDetails.append(getString(R.string.startParse));
                 while (matcher.find()) {
                     myImageDetails.append(" " + matcher.group() + "\n");
                 }
@@ -313,7 +313,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      * @return The String of text found.
      */
     private String convertResponseToString(BatchAnnotateImagesResponse theResponse) {
-        String message = "I found these things:\n\n";
+        String message = getString(R.string.found);
 
         List<EntityAnnotation> words = theResponse.getResponses().get(0).getTextAnnotations();
         if (words != null) {
@@ -322,7 +322,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 message += "\n";
             }
         } else {
-            message += "nothing";
+            message += getString(R.string.nothing);
         }
 
         return message;
@@ -336,7 +336,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         for (int i = 1; i < 5; i++) {
             TableRow t = new TableRow(this);
             TextView text = new TextView(this);
-            text.setText("test");
+            text.setText(R.string.testString);
             t.addView(text);
             t.setClickable(true);
             t.setOnClickListener(new View.OnClickListener() {
@@ -376,7 +376,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      * @param theView The view used for event handling.
      */
     public void viewEntry(View theView) {
-        Log.d("print", "clicked");
+        Log.d(getString(R.string.print), getString(R.string.clicked));
     }
 
 
