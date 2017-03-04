@@ -42,9 +42,12 @@ public class SignUpActivity extends AppCompatActivity {
      */
     public void createUser(View theView) {
         myUser = (EditText) findViewById(R.id.editText4);
-        if (isValidEmail(myUser.getText())) {
-            myPassword = (EditText) findViewById(R.id.editText6);
-            EditText myPass2 = (EditText) findViewById(R.id.editText7);
+        myPassword = (EditText) findViewById(R.id.editText6);
+        EditText myPass2 = (EditText) findViewById(R.id.editText7);
+
+        if (isValidEmail(myUser.getText()) && myPassword.getText().length() >= 8
+                && myPass2.getText().length() >= 8) {
+
             if (myPass2.getText().toString().equals(myPassword.getText().toString())) {
 
                 if (myUser.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
@@ -54,7 +57,6 @@ public class SignUpActivity extends AppCompatActivity {
                     String message3 = ((EditText) findViewById(R.id.editText6)).getText().toString();
                     task = new CreatingUserWebServiceTask();
                     task.execute(PARTIAL_URL, message2, message3, message);
-
                 } else {
                     Toast.makeText(this, R.string.incompleteFormMsg, Toast.LENGTH_LONG).show();
                 }
@@ -62,15 +64,19 @@ public class SignUpActivity extends AppCompatActivity {
                 myPass2.requestFocus();
                 myPass2.setError(getString(R.string.confirmPasswordErr));
             }
-        } else {
-            myUser.requestFocus();
-            myUser.setError(getString(R.string.invalidEmailMsg));
+        } else if (myPassword.getText().length() < 8){
+            myPassword.requestFocus();
+            myPassword.setError(getString(R.string.passwordErrorMessage));
+        } else if (myPass2.getText().length() < 8) {
+            myPass2.requestFocus();
+            myPass2.setError(getString(R.string.passwordErrorMessage));
         }
     }
 
     /**
      * From http://stackoverflow.com/questions/24969894/android-email-validation-on-edittext
      * to validate email imput.
+     *
      * @param target the user input.
      * @return The result of the validation.
      */
@@ -134,18 +140,14 @@ public class SignUpActivity extends AppCompatActivity {
             if (theResult.startsWith(getString(R.string.unable))) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
-                return;
             } else if (theResult.contains(getString(R.string.err))) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
-                return;
             } else {
                 Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(intent);
             }
-
         }
     }
-
 }

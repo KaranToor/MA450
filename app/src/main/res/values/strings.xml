@@ -56,4 +56,6 @@
     <string name="placeholder_date">mm/dd/yyyy</string>
     <string name="placeholder_extra">extra data</string>
     <string name="placeholder_extra2">more data</string>
+    <string name="passwordError">Password must be at least 8 characters long</string>
+    <string name="passwordErrorMessage">Password must be at least 8 characters long</string>
 </resources>

@@ -108,7 +108,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      * Starts the gallery image chooser Activity.
      */
     public void startGalleryChooser() {
-        if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST,
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Intent intent = new Intent();
             intent.setType(getString(R.string.intenttype));
             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -208,9 +209,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                                     super.initializeVisionRequest(visionRequest);
 
                                     String packageName = getPackageName();
-                                    visionRequest.getRequestHeaders().set(ANDROID_PACKAGE_HEADER, packageName);
+                                    visionRequest.getRequestHeaders().set(ANDROID_PACKAGE_HEADER,
+                                            packageName);
 
-                                    String sig = PackageManagerUtils.getSignature(getPackageManager(), packageName);
+                                    String sig = PackageManagerUtils.getSignature(getPackageManager(),
+                                            packageName);
 
                                     visionRequest.getRequestHeaders().set(ANDROID_CERT_HEADER, sig);
                                 }

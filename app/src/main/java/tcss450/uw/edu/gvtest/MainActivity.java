@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
     public void logInUser(View theView) {
         myEmail = (EditText) findViewById(R.id.editText2);
         myPassword = (EditText) findViewById(R.id.editText3);
-        if (SignUpActivity.isValidEmail(myEmail.getText())) {
+
+        if (SignUpActivity.isValidEmail(myEmail.getText()) && myPassword.getText().length() > 7) {
 
             if (myPassword.getText().toString().length() >= 1) {
                 AsyncTask<String, Void, String> task = null;
@@ -74,9 +75,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.incompleteFormMsg), Toast.LENGTH_LONG).show();
 
             }
-        } else {
+        } else if (!SignUpActivity.isValidEmail(myEmail.getText())){
             myEmail.requestFocus();
             myEmail.setError(getString(R.string.invalidEmailMsg));
+        } else {
+            myPassword.requestFocus();
+            myPassword.setError(getString(R.string.passwordErrorMessage));
         }
 
     }
