@@ -1,5 +1,6 @@
 package tcss450.uw.edu.gvtest;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -178,9 +179,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      * @throws IOException Throw exception when file is invalid.
      */
     private void callCloudVision(final Bitmap theBitmap) throws IOException {
-
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String>() {
+            ProgressDialog progressDialog;
+            @Override
+            protected void onPreExecute(){
+                progressDialog = new ProgressDialog(OverviewActivity.this);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage("Processing image...");
+                progressDialog.show();
+            }
             @Override
             protected String doInBackground(Object... theParams) {
                 try {
@@ -265,6 +274,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
              * @param theResult the String result of text found in the image.
              */
             protected void onPostExecute(String theResult) {
+                progressDialog.dismiss();
                 Pattern pattern = Pattern.compile("(\\d{1,10}\\.\\d{2})");
                 Matcher matcher = pattern.matcher(theResult);
                 myImageDetails.setText(theResult);
