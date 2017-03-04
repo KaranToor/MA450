@@ -42,9 +42,12 @@ public class SignUpActivity extends AppCompatActivity {
      */
     public void createUser(View theView) {
         myUser = (EditText) findViewById(R.id.editText4);
-        if (isValidEmail(myUser.getText())) {
-            myPassword = (EditText) findViewById(R.id.editText6);
-            EditText myPass2 = (EditText) findViewById(R.id.editText7);
+        myPassword = (EditText) findViewById(R.id.editText6);
+        EditText myPass2 = (EditText) findViewById(R.id.editText7);
+
+        if (isValidEmail(myUser.getText()) && myPassword.getText().length() >= 8
+                && myPass2.getText().length() >= 8) {
+
             if (myPass2.getText().toString().equals(myPassword.getText().toString())) {
 
                 if (myUser.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
@@ -54,7 +57,6 @@ public class SignUpActivity extends AppCompatActivity {
                     String message3 = ((EditText) findViewById(R.id.editText6)).getText().toString();
                     task = new CreatingUserWebServiceTask();
                     task.execute(PARTIAL_URL, message2, message3, message);
-
                 } else {
                     Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
                 }
@@ -62,9 +64,12 @@ public class SignUpActivity extends AppCompatActivity {
                 myPass2.requestFocus();
                 myPass2.setError("Error passwords do not match!");
             }
-        } else {
-            myUser.requestFocus();
-            myUser.setError("Email format not valid. Ex. John@Doe.com");
+        } else if (myPassword.getText().length() < 8){
+            myPassword.requestFocus();
+            myPassword.setError("Password must be at least 8 characters long");
+        } else if (myPass2.getText().length() < 8) {
+            myPass2.requestFocus();
+            myPass2.setError("Password must be at least 8 characters long");
         }
     }
 
@@ -135,11 +140,9 @@ public class SignUpActivity extends AppCompatActivity {
             if (theResult.startsWith("Unable to")) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
-                return;
             } else if (theResult.contains("Error")) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
-                return;
             } else {
                 Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
