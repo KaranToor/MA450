@@ -71,6 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
     /**
      * From http://stackoverflow.com/questions/24969894/android-email-validation-on-edittext
      * to validate email imput.
+     *
      * @param target the user input.
      * @return The result of the validation.
      */
@@ -144,8 +145,6 @@ public class SignUpActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getApplicationContext().startActivity(intent);
             }
-
         }
     }
-
 }
