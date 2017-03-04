@@ -38,8 +38,13 @@ import com.google.api.services.vision.v1.model.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This Activity allows the user to view their receipts and add a new receipt via the camera button.
@@ -260,7 +265,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
              * @param theResult the String result of text found in the image.
              */
             protected void onPostExecute(String theResult) {
+                Pattern pattern = Pattern.compile("(\\d{1,10}\\.\\d{2})");
+                Matcher matcher = pattern.matcher(theResult);
                 myImageDetails.setText(theResult);
+                Log.d("TEST", theResult);
+                myImageDetails.append("STARTING PARSE\n");
+                while (matcher.find()) {
+                    myImageDetails.append(" " + matcher.group() + "\n");
+                }
             }
         }.execute();
     }
