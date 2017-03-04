@@ -56,15 +56,15 @@ public class SignUpActivity extends AppCompatActivity {
                     task.execute(PARTIAL_URL, message2, message3, message);
 
                 } else {
-                    Toast.makeText(this, "All fields must be filled", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.incompleteFormMsg, Toast.LENGTH_LONG).show();
                 }
             } else {
                 myPass2.requestFocus();
-                myPass2.setError("Error passwords do not match!");
+                myPass2.setError(getString(R.string.confirmPasswordErr));
             }
         } else {
             myUser.requestFocus();
-            myUser.setError("Email format not valid. Ex. John@Doe.com");
+            myUser.setError(getString(R.string.invalidEmailMsg));
         }
     }
 
@@ -131,11 +131,11 @@ public class SignUpActivity extends AppCompatActivity {
         protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
             submit.setClickable(true);
-            if (theResult.startsWith("Unable to")) {
+            if (theResult.startsWith(getString(R.string.unable))) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
                 return;
-            } else if (theResult.contains("Error")) {
+            } else if (theResult.contains(getString(R.string.err))) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
                 return;

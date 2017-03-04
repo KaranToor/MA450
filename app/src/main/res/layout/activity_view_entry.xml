@@ -13,12 +13,9 @@
     tools:context="tcss450.uw.edu.gvtest.viewEntryActivity">
 
     <Button
-        android:text="Edit"
+        android:text="@string/edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:id="@+id/button4" />
 
     <RelativeLayout
@@ -34,8 +31,8 @@
             android:id="@+id/imageView2"
             android:scaleType="fitStart"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/contentdesc" />
 
     </RelativeLayout>
 
@@ -46,31 +43,31 @@
         android:gravity="center">
 
         <TextView
-            android:text="$xx.xx"
+            android:text="@string/placeholder_cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cost"
             android:layout_marginTop="15dp" />
         <TextView
-            android:text="example location"
+            android:text="@string/example_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/location"
             android:layout_marginTop="15dp" />
         <TextView
-            android:text="mm/dd/yyyy"
+            android:text="@string/placeholder_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/date"
             android:layout_marginTop="15dp" />
         <TextView
-            android:text="extra data"
+            android:text="@string/placeholder_extra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/extraData1"
             android:layout_marginTop="15dp" />
         <TextView
-            android:text="more data"
+            android:text="@string/placeholder_extra2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/extraData2"

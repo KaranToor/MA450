@@ -13,7 +13,7 @@
     tools:context="tcss450.uw.edu.gvtest.PINEntry">
 
     <TextView
-        android:text="Enter PIN"
+        android:text="@string/PIN_prompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
@@ -36,7 +36,7 @@
         android:id="@+id/editText8" />
 
     <Button
-        android:text="submit"
+        android:text="@string/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

@@ -26,12 +26,11 @@
             android:scaleY="5"
             android:layout_marginBottom="20dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="13dp" />
 
         <TextView
-            android:text="300/500"
+            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/progressBar3"
@@ -40,7 +39,7 @@
             android:id="@+id/progressLabel" />
 
         <Button
-            android:text="Camera"
+            android:text="@string/camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -54,8 +53,6 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/progressLabel"
-            android:layout_centerHorizontal="true"
             android:focusable="true"
             android:clickable="true"
             android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -78,39 +75,27 @@
                     >
 
                     <TextView
-                        android:text="Date"
+                        android:text="@string/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/Date"
                         android:layout_weight="1" />
 
                     <TextView
-                        android:text="Location"
+                        android:text="@string/location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/Location"
                         android:layout_weight="1" />
 
                     <TextView
-                        android:text="Cost"
+                        android:text="@string/cost"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/Cost"
                         android:layout_weight="1" />
                 </LinearLayout>
             </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
         </TableLayout>
     </ScrollView>
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_sign_up"
     android:layout_width="match_parent"
@@ -15,7 +14,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="Sign Up"
+        android:text="@string/sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
@@ -29,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF"
-        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
         android:layout_gravity="top"
         android:orientation="vertical">
 
@@ -52,12 +51,9 @@
             android:ems="10"
 
             android:id="@+id/editText4"
-            android:layout_below="@+id/editText"
-            android:layout_alignLeft="@+id/editText"
-            android:layout_alignStart="@+id/editText"
             android:background="@drawable/underlinededittext"
             android:layout_marginTop="20dp"
-            android:hint="address@example.com" />
+            android:hint="@string/address_example_com" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -66,10 +62,7 @@
             android:ems="10"
             android:layout_marginTop="20dp"
             android:id="@+id/editText6"
-            android:layout_below="@+id/editText4"
-            android:layout_alignLeft="@+id/editText4"
-            android:layout_alignStart="@+id/editText4"
-            android:hint="Enter Password"
+            android:hint="@string/enter_password"
             android:background="@drawable/underlinededittext"/>
 
         <EditText
@@ -79,31 +72,26 @@
             android:ems="10"
             android:layout_marginTop="20dp"
             android:id="@+id/editText7"
-            android:layout_below="@+id/editText6"
-            android:layout_alignLeft="@+id/editText6"
-            android:layout_alignStart="@+id/editText6"
-            android:hint="Confirm Password"
+            android:hint="@string/confirm_password"
             android:background="@drawable/underlinededittext"/>
 
         <CheckBox
-            android:text="I would like to create a PIN for added security"
+            android:text="@string/pin_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/checkBox"
             android:layout_marginTop="20dp"
             android:buttonTint="@color/colorPrimary"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/outlinedroundtextbox"
             android:checked="true"
             />
 
         <Button
-            android:text="Submit"
+            android:text="@string/submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="121dp"
             android:onClick="createUser"
             android:id="@+id/button3" />
