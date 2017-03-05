@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -34,37 +35,44 @@ public class newEntryActivity extends AppCompatActivity {
         EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
         paymentEdit.setText(payment);
 
-        String cameraOrGallery = intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY);
-        if (cameraOrGallery.equals(OverviewActivity.GALLERY_IMAGE_REQUEST)) {
-//            Bitmap bitmap = (Bitmap) intent.getStringExtra(OverviewActivity.BITMAP_IMG);
-        } else if (cameraOrGallery.equals(OverviewActivity.CAMERA_IMAGE_REQUEST)) {
-            findLastPicture();
-        }
+        Uri image = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
+        setImage(image);
 
+//        if (cameraOrGallery.equals(OverviewActivity.GALLERY_IMAGE_REQUEST)) {
+////            Bitmap bitmap = (Bitmap) intent.getStringExtra(OverviewActivity.BITMAP_IMG);
+//        } else if (cameraOrGallery.equals(OverviewActivity.CAMERA_IMAGE_REQUEST)) {
+//            findLastPicture();
+//        }
     }
 
-    private void findLastPicture() {
-        // Find the last picture
-        String[] projection = new String[]{
-                MediaStore.Images.ImageColumns._ID,
-                MediaStore.Images.ImageColumns.DATA,
-                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-                MediaStore.Images.ImageColumns.DATE_TAKEN,
-                MediaStore.Images.ImageColumns.MIME_TYPE
-        };
-        final Cursor cursor = getApplicationContext().getContentResolver()
-                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
-                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
-
-// Put it in the image view
-        if (cursor.moveToFirst()) {
-            final ImageView imageView = (ImageView) findViewById(R.id.imageView);
-            String imageLocation = cursor.getString(1);
-            File imageFile = new File(imageLocation);
-            if (imageFile.exists()) {   // TODO: is there a better way to do this?
-                Bitmap bm = BitmapFactory.decodeFile(imageLocation);
-                imageView.setImageBitmap(bm);
-            }
-        }
+    private void setImage(Uri theUri) {
+        final ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setImageURI(theUri);
     }
+
+
+//    private void findLastPicture() {
+//        // Find the last picture
+//        String[] projection = new String[]{
+//                MediaStore.Images.ImageColumns._ID,
+//                MediaStore.Images.ImageColumns.DATA,
+//                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+//                MediaStore.Images.ImageColumns.DATE_TAKEN,
+//                MediaStore.Images.ImageColumns.MIME_TYPE
+//        };
+//        final Cursor cursor = getApplicationContext().getContentResolver()
+//                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
+//                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+//
+//// Put it in the image view
+//        if (cursor.moveToFirst()) {
+//            final ImageView imageView = (ImageView) findViewById(R.id.imageView);
+//            String imageLocation = cursor.getString(1);
+//            File imageFile = new File(imageLocation);
+//            if (imageFile.exists()) {   // TODO: is there a better way to do this?
+//                Bitmap bm = BitmapFactory.decodeFile(imageLocation);
+//                imageView.setImageBitmap(bm);
+//            }
+//        }
+//    }
 }
