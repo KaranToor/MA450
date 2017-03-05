@@ -15,6 +15,7 @@ import java.net.URL;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                         .show();
                 return;
             } else {
+                Log.d("AFTER LOGIN :", "onPostExecute: result " + theResult);
                 startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
             }
 

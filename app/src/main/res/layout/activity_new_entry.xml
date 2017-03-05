@@ -25,7 +25,7 @@
                 android:text="@string/location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView5"
+                android:id="@+id/locationId"
                 android:inputType="text"
                 android:background="@drawable/underlinededittext"
                 android:textSize="24sp"
@@ -40,7 +40,7 @@
                 android:text="@string/amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView6"
+                android:id="@+id/amountId"
                 android:inputType="text"
                 android:textSize="24sp"
                 android:layout_marginBottom="5dp"
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:background="@drawable/underlinededittext"
-                android:id="@+id/textView7"
+                android:id="@+id/paymentId"
                 android:layout_marginBottom="5dp"
                 android:textSize="24sp" />
         </TableRow>
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="date"
-                android:id="@+id/textView8"
+                android:id="@+id/dateId"
                 android:layout_marginBottom="5dp"
                 android:textSize="24sp"
                 android:background="@drawable/underlinededittext" />
