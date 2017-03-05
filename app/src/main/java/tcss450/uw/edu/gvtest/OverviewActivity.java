@@ -446,7 +446,16 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         String[] tempArray = temp.split(" ");
         for (int i = 0; i < tempArray.length; i++) {
             if (!tempArray[i].isEmpty()) {
-                toReturn = tempArray[i];
+                String state = tempArray[i];
+                int count = 0;
+                for (int j = 0; j < state.length(); j++) {
+                    if (Character.isLetterOrDigit(state.charAt(j))) {
+                        count++;
+                    }
+                }
+                if (count == 2) {
+                    toReturn = tempArray[i];
+                }
             }
         }
         return toReturn.trim();
