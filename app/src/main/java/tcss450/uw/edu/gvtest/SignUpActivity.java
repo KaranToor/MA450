@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -149,5 +151,18 @@ public class SignUpActivity extends AppCompatActivity {
                 getApplicationContext().startActivity(intent);
             }
         }
+    }
+
+    public void setPINFieldVisibility(View view) {
+                CheckBox checkBox = (CheckBox) view;
+                EditText pinBox = (EditText) findViewById(R.id.newPIN);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_sign_up);
+                if (checkBox.isChecked()){
+                        pinBox.setVisibility(View.VISIBLE);
+                    } else {
+                        pinBox.setVisibility(View.GONE);
+                   }
+                pinBox.invalidate();
+               linearLayout.requestLayout();
     }
 }
