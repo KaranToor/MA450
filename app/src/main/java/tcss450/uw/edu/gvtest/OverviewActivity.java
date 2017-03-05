@@ -222,6 +222,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             try {
                 // scale the image to save on bandwidth
                 myImageUri = theUri;
+
+                // Needed for some reason even though it is not used.
+                Bitmap galleryBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), theUri);
                 myAccessedGallery = true;
                 Bitmap bitmap =
                         scaleBitmapDown(
@@ -477,7 +480,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         toReturn += highest;
 
         if (highest == -1) {
-            toReturn = "Price not found. Please enter.";
+            toReturn = "Not Found";
         } else {
             toReturn = formatDecimal(highest);
             toReturn = toReturn.trim();
