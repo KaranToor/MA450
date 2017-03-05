@@ -9,7 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -58,7 +61,7 @@ import java.util.regex.Pattern;
  * @author Google Cloud Vision sample modified by MA450 Team 11
  * @version Winter 2017
  */
-public class OverviewActivity extends AppCompatActivity implements View.OnLongClickListener {
+public class OverviewActivity extends AppCompatActivity implements View.OnLongClickListener, AdapterView.OnItemSelectedListener{
 
     public static final String TOTAL_AMOUNT = "picture-total-text";
     public static final String LOCATION = "location-from-pic";
@@ -94,6 +97,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         setContentView(R.layout.activity_overview);
         setProgressLabel();
         init();
+
+        Spinner spinner = (Spinner)findViewById(R.id.category_selector);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.categories, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         TableLayout table = (TableLayout) findViewById(R.id.table);
         TableRow t = new TableRow(this);
@@ -623,4 +635,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         startActivity(backToHome);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Spinner spinner = (Spinner) findViewById(R.id.category_selector);
+        String selectedCategory = spinner.getSelectedItem().toString();
+        Log.d("selectedCat", selectedCategory);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

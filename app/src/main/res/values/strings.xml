@@ -63,4 +63,24 @@
     <string name="hasPIN">hasPIN</string>
     <string name="PINNum">PIN</string>
     <string name="prefKey">edu.uw.tcss450.PREFS</string>
+
+    <string-array name="categories">
+        <item>Show All</item>
+        <item>Income</item>
+        <item>Miscellaneous</item>
+        <item>Expense</item>
+        <item>Education</item>
+        <item>Shopping</item>
+        <item>Personal Care</item>
+        <item>Health and Fitness</item>
+        <item>Kids</item>
+        <item>Food and Dining</item>
+        <item>Donations</item>
+        <item>Bills</item>
+        <item>Transport</item>
+        <item>Travel</item>
+        <item>Business Services</item>
+        <item>Taxes</item>
+    </string-array>
+
 </resources>
