@@ -1,6 +1,8 @@
 package tcss450.uw.edu.gvtest;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -70,7 +72,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
-//    public static final String FILE_NAME = "temp.jpg";
     public static String mCurrentPhotoPath;
     private static File photo;
 
@@ -81,7 +82,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     private TextView myImageDetails;
     private Uri myImageUri;
-    private boolean myAccessedGallery;
 
     /**
      * Called at the creation of the Activity.
@@ -144,6 +144,19 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
+    public void onLogoutPressed(View theView) {
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                getString(R.string.prefKey), Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(getString(R.string.isloggedin), false);
+        editor.commit();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        this.finish();
+    }
+
     public void startCamera() throws IOException {
         if (PermissionUtils.requestPermission(
                 this,
@@ -151,8 +164,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA)) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+
             if(Build.VERSION.SDK_INT>=24){
                 try{
                     Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
@@ -225,7 +238,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
                 // Needed for some reason even though it is not used.
                 Bitmap galleryBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), theUri);
-                myAccessedGallery = true;
                 Bitmap bitmap =
                         scaleBitmapDown(
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), theUri),

@@ -107,6 +107,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="21dp"
-        android:id="@+id/button8"
+        android:id="@+id/ok_button"
         />
 </RelativeLayout>

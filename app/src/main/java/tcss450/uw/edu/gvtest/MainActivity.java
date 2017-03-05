@@ -32,9 +32,9 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
 
-    EditText myEmail;
-    EditText myPassword;
-    SharedPreferences mPrefs;
+    private EditText myEmail;
+    private EditText myPassword;
+    private SharedPreferences mPrefs;
 
     /**
      * Initializes activity
