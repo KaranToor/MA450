@@ -188,16 +188,4 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    public void setPINFieldVisibility(View view) {
-                CheckBox checkBox = (CheckBox) view;
-                EditText pinBox = (EditText) findViewById(R.id.newPIN);
-                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_sign_up);
-                if (checkBox.isChecked()){
-                        pinBox.setVisibility(View.VISIBLE);
-                    } else {
-                        pinBox.setVisibility(View.GONE);
-                   }
-                pinBox.invalidate();
-               linearLayout.requestLayout();
-    }
 }
