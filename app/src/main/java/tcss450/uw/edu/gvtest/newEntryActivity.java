@@ -33,7 +33,14 @@ public class newEntryActivity extends AppCompatActivity {
         editText.setText(message);
         EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
         paymentEdit.setText(payment);
-        findLastPicture();
+
+        String cameraOrGallery = intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY);
+        if (cameraOrGallery.equals(OverviewActivity.GALLERY_IMAGE_REQUEST)) {
+//            Bitmap bitmap = (Bitmap) intent.getStringExtra(OverviewActivity.BITMAP_IMG);
+        } else if (cameraOrGallery.equals(OverviewActivity.CAMERA_IMAGE_REQUEST)) {
+            findLastPicture();
+        }
+
     }
 
     private void findLastPicture() {

@@ -62,6 +62,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final String LOCATION = "location-from-pic";
     public static final String PAYMENT_TYPE = "payment-from-pic";
     public static final String DATE = "date-from-pic";
+    public static final String BITMAP_IMG = "bitmap-from-gallery";
+    public static final String CAMERA_OR_GALLERY = "camera-or-gallery";
+    public static final int GALLERY_PERMISSIONS_REQUEST = 0;
+    public static final int GALLERY_IMAGE_REQUEST = 1;
+    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
+    public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
 //    public static final String FILE_NAME = "temp.jpg";
@@ -72,12 +78,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int GALLERY_PERMISSIONS_REQUEST = 0;
-    private static final int GALLERY_IMAGE_REQUEST = 1;
-    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
-    public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private TextView myImageDetails;
+    private Bitmap myGalleryBitmap;
+    private boolean myAccessedGallery;
 
     /**
      * Called at the creation of the Activity.
@@ -200,7 +204,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         super.onActivityResult(theRequestCode, theResultCode, theData);
 
         if (theRequestCode == GALLERY_IMAGE_REQUEST && theResultCode == RESULT_OK && theData != null) {
+            mCurrentPhotoPath = theData.getData().toString();
             uploadImage(theData.getData());
+
+
+
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             uploadImage(Uri.fromFile(photo));
         }
@@ -215,6 +223,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         if (theUri != null) {
             try {
                 // scale the image to save on bandwidth
+                myGalleryBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), theUri);
+                myAccessedGallery = true;
                 Bitmap bitmap =
                         scaleBitmapDown(
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), theUri),
@@ -362,6 +372,16 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         intent.putExtra(LOCATION, parseLocation(theMessage));
         intent.putExtra(PAYMENT_TYPE, parsePaymentType(theMessage));
         intent.putExtra(DATE, parseDate(theMessage));
+        if (!myAccessedGallery) {
+            intent.putExtra(CAMERA_OR_GALLERY, CAMERA_IMAGE_REQUEST);
+        } else {
+            intent.putExtra(CAMERA_OR_GALLERY, GALLERY_IMAGE_REQUEST);
+            if (myAccessedGallery) {
+                intent.putExtra(BITMAP_IMG, myGalleryBitmap);
+                myAccessedGallery = false;
+        }
+
+        }
         startActivity(intent);
     }
 
