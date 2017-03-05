@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isLoggedIn = mPrefs.getBoolean(getString(R.string.isloggedin), false);
         System.out.print(isLoggedIn);
         if (isLoggedIn){
-            boolean hasPIN = mPrefs.getBoolean(getString(R.string.hasPIN), true);
+            boolean hasPIN = mPrefs.getBoolean(getString(R.string.hasPIN), false);
             if (!hasPIN) {
                 startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
                 System.out.print(isLoggedIn);
