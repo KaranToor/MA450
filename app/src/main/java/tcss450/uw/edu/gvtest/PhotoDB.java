@@ -6,5 +6,5 @@ package tcss450.uw.edu.gvtest;
 
 class PhotoDB {
 
-    P
+
 }
