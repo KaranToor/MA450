@@ -42,7 +42,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +64,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final String DATE = "date-from-pic";
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
-    public static final String FILE_NAME = "temp.jpg";
+//    public static final String FILE_NAME = "temp.jpg";
+    public static String mCurrentPhotoPath;
+    private static File photo;
+
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
 
@@ -111,7 +116,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startCamera();
+                        try {
+                            startCamera();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
         builder.create().show();
@@ -131,13 +140,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
-    public void startCamera() {
+    public void startCamera() throws IOException {
         if (PermissionUtils.requestPermission(
                 this,
                 CAMERA_PERMISSIONS_REQUEST,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA)) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
             if(Build.VERSION.SDK_INT>=24){
                 try{
@@ -156,10 +166,27 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      *
      * @return The image file.
      */
-    public File getCameraFile() {
-        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        return new File(dir, FILE_NAME);
+    private File getCameraFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        photo = image;
+        return image;
     }
+
+//    public File getCameraFile() {
+//        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        return new File(dir, FILE_NAME);
+//    }
 
     /**
      * Checks if the permissions were authorized.
@@ -175,7 +202,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         if (theRequestCode == GALLERY_IMAGE_REQUEST && theResultCode == RESULT_OK && theData != null) {
             uploadImage(theData.getData());
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
-            uploadImage(Uri.fromFile(getCameraFile()));
+            uploadImage(Uri.fromFile(photo));
         }
     }
 
