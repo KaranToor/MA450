@@ -1,7 +1,9 @@
 package tcss450.uw.edu.gvtest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 
 
 public class newEntryActivity extends AppCompatActivity {
@@ -9,5 +11,14 @@ public class newEntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
         setContentView(R.layout.activity_new_entry);
+
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(OverviewActivity.TOTAL_AMOUNT);
+        String loc = intent.getStringExtra(OverviewActivity.LOCATION);
+
+        EditText locationEditText = (EditText) findViewById(R.id.locationId);
+        locationEditText.setText(loc);
+        EditText editText = (EditText) findViewById(R.id.amountId);
+        editText.setText(message);
     }
 }

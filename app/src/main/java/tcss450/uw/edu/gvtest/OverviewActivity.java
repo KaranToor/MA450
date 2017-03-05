@@ -46,6 +46,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 /**
  * This Activity allows the user to view their receipts and add a new receipt via the camera button.
  *
@@ -54,6 +56,8 @@ import java.util.regex.Pattern;
  */
 public class OverviewActivity extends AppCompatActivity implements View.OnLongClickListener {
 
+    public static final String TOTAL_AMOUNT = "picture-total-text";
+    public static final String LOCATION = "location-from-pic";
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
     public static final String FILE_NAME = "temp.jpg";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
@@ -268,16 +272,94 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
              * @param theResult the String result of text found in the image.
              */
             protected void onPostExecute(String theResult) {
-                Pattern pattern = Pattern.compile("(\\d{1,10}\\.\\d{2})");
-                Matcher matcher = pattern.matcher(theResult);
-                myImageDetails.setText(theResult);
-                Log.d(getString(R.string.testCaps), theResult);
-                myImageDetails.append(getString(R.string.startParse));
-                while (matcher.find()) {
-                    myImageDetails.append(" " + matcher.group() + "\n");
-                }
+                System.out.println("*****The Result " + theResult);
+                startNewEntry(theResult);
+//                myImageDetails.setText(theResult);
+//                Log.d(getString(R.string.testCaps), theResult);
+//                myImageDetails.append(getString(R.string.startParse));
+//                while (matcher.find()) {
+//                    myImageDetails.append(" " + matcher.group() + "\n");
+//                }
             }
         }.execute();
+    }
+
+    public void startNewEntry(String theMessage) {
+        Pattern pattern = Pattern.compile("\\$?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)+\\.[0-9]{1,2}");
+        // TODO parsing location, payment type, date
+        Matcher matcher = pattern.matcher(theMessage);
+        StringBuilder sb = new StringBuilder();
+        while (matcher.find()) {
+            sb.append(" " + matcher.group() + "\n");
+        }
+
+        Intent intent = new Intent(this, newEntryActivity.class);
+        System.out.println("*****Printing result" + sb.toString());
+        intent.putExtra(TOTAL_AMOUNT, parseREGEX(sb.toString()));
+        intent.putExtra(LOCATION, parseLocation(theMessage));
+        startActivity(intent);
+    }
+
+    public String parseLocation(String theInput) {
+        Pattern pattern = Pattern.compile("([^A-Z])(AL|AK|AR|AZ|CA|CO|CT|DC|DE|FL|G" +
+                "A|HI|IA|ID|IL|IN|KS|KY|LA|MA|MD|ME|MI|MN|MO|MS|MT|NC|ND|NE|NH|NJ|NM|NV|NY|" +
+                "OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VA|VT|WA|WI|WV|WY)([^A-Z])");
+        Matcher matcher = pattern.matcher(theInput);
+
+        StringBuilder sb = new StringBuilder();
+        String toReturn = "Not Found";
+        while (matcher.find()) {
+            sb.append(" " + matcher.group() + "\n");
+        }
+        String temp = sb.toString();
+        String[] tempArray = temp.split(" ");
+        for (int i = 0; i < tempArray.length; i++) {
+            if (!tempArray[i].isEmpty()) {
+                toReturn = tempArray[i];
+            }
+        }
+        return toReturn.trim();
+    }
+
+    public String parseREGEX(String theInput) {
+        String[] temp = theInput.split(" ");
+        String toReturn = "";
+        float highest = -1;
+        for (int i = 0; i < temp.length; i++) {
+            String toParse = temp[i].trim();
+            if (!toParse.isEmpty()) {
+                float tempPrice = Float.parseFloat(toParse);
+                if (tempPrice > highest) {
+                    highest = tempPrice;
+                }
+            }
+        }
+
+        toReturn += highest;
+
+        if (highest == -1) {
+            toReturn = "Price not found. Please enter.";
+        } else {
+            toReturn = formatDecimal(highest);
+            toReturn = toReturn.trim();
+        }
+        return toReturn;
+    }
+
+    /**
+     * From http://stackoverflow.com/questions/2379221/java-currency-number-format
+     * Used to format to currency.
+     *
+     * @param number the input float.
+     * @return The number as currency.
+     */
+    public String formatDecimal(float number) {
+        float epsilon = 0.004f; // 4 tenths of a cent
+        if (Math.abs(Math.round(number) - number) < epsilon) {
+            return String.format("%10.0f", number); // sdb
+        } else {
+            return String.format("%10.2f", number); // dj_segfault
+        }
     }
 
     /**
@@ -378,6 +460,4 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public void viewEntry(View theView) {
         Log.d(getString(R.string.print), getString(R.string.clicked));
     }
-
-
 }

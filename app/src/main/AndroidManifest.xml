@@ -22,6 +22,8 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".PINEntry" />
         <activity android:name=".OverviewActivity"></activity>
+        <activity android:name=".newEntryActivity"></activity>
+        <activity android:name=".viewEntryActivity"></activity>
     </application>
 
 </manifest>
