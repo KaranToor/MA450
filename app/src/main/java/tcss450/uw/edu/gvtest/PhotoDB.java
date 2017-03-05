@@ -6,5 +6,7 @@ package tcss450.uw.edu.gvtest;
 
 class PhotoDB {
 
+    private PictureObject picData;
 
+    
 }
