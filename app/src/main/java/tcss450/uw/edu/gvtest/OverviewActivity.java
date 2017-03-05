@@ -379,8 +379,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             if (myAccessedGallery) {
                 intent.putExtra(BITMAP_IMG, myGalleryBitmap);
                 myAccessedGallery = false;
-        }
-
+             }
         }
         startActivity(intent);
     }
