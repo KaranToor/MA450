@@ -373,9 +373,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         intent.putExtra(PAYMENT_TYPE, parsePaymentType(theMessage));
         intent.putExtra(DATE, parseDate(theMessage));
         if (!myAccessedGallery) {
-            intent.putExtra(CAMERA_OR_GALLERY, CAMERA_IMAGE_REQUEST);
+            intent.putExtra(CAMERA_OR_GALLERY, "" + CAMERA_IMAGE_REQUEST);
         } else {
-            intent.putExtra(CAMERA_OR_GALLERY, GALLERY_IMAGE_REQUEST);
+            intent.putExtra(CAMERA_OR_GALLERY, "" + GALLERY_IMAGE_REQUEST);
             if (myAccessedGallery) {
 //                intent.putExtra(BITMAP_IMG, myGalleryBitmap);
                 myAccessedGallery = false;
