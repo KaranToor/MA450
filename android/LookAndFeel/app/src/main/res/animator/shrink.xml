@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="sequentially">
+    <objectAnimator
+        android:duration="1000"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="scaleX"
+            android:valueFrom="1"
+            android:valueTo="2" />
+        <propertyValuesHolder
+            android:propertyName="scaleY"
+            android:valueFrom="1"
+            android:valueTo="2" />
+        </objectAnimator>
+    <!--<objectAnimator android:duration="0">-->
+        <!--<propertyValuesHolder-->
+            <!--android:propertyName="backgroundColor"-->
+            <!--android:valueTo="@color/uwG" />-->
+        <!--<propertyValuesHolder-->
+            <!--android:propertyName="textColor"-->
+            <!--android:valueTo="@color/uwP" />-->
+    <!--</objectAnimator>-->
+    <objectAnimator
+        android:duration="1000"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="scaleX"
+            android:valueFrom="2"
+            android:valueTo="1" />
+        <propertyValuesHolder
+            android:propertyName="scaleY"
+            android:valueFrom="2"
+            android:valueTo="1" />
+    </objectAnimator>
+    <objectAnimator
+        android:duration="1000"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="scaleX"
+            android:valueFrom="1"
+            android:valueTo="3" />
+        <propertyValuesHolder
+            android:propertyName="scaleY"
+            android:valueFrom="1"
+            android:valueTo="3" />
+    </objectAnimator>
+    <objectAnimator
+        android:duration="1000"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="scaleX"
+            android:valueFrom="3"
+            android:valueTo=".5" />
+        <propertyValuesHolder
+            android:propertyName="scaleY"
+            android:valueFrom="3"
+            android:valueTo=".5" />
+    </objectAnimator>
+    <objectAnimator
+        android:duration="1000"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="scaleX"
+            android:valueFrom=".5"
+            android:valueTo="1.5" />
+        <propertyValuesHolder
+            android:propertyName="scaleY"
+            android:valueFrom=".5"
+            android:valueTo="1.5" />
+    </objectAnimator>
+    <objectAnimator
+        android:duration="1000"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="scaleX"
+            android:valueFrom="1.5"
+            android:valueTo="1" />
+        <propertyValuesHolder
+            android:propertyName="scaleY"
+            android:valueFrom="1.5"
+            android:valueTo="1" />
+    </objectAnimator>
+</set>

@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">DataLab</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="auto_complete_colors">
+        <item>red</item>
+        <item>green</item>
+        <item>orange</item>
+        <item>blue</item>
+        <item>purple</item>
+        <item>black</item>
+        <item>yellow</item>
+        <item>cyan</item>
+        <item>magenta</item>
+    </string-array>
+    <string-array name="color_strings">
+        <item>red</item>
+        <item>green</item>
+        <item>#FFA500</item>
+        <item>blue</item>
+        <item>purple</item>
+        <item>black</item>
+        <item>yellow</item>
+        <item>cyan</item>
+        <item>magenta</item>
+    </string-array>
+    <string name="SHARED_PREFS">edu.uw.tcss450.PREFS</string>
+    <string name="COLOR">colorstring</string>
+    <string name="POSITION">pos</string>
+    <string name="COLOR_SELECTIONS">myColors</string>
+    <string name="CREATE_COLORS_SQL">
+ CREATE TABLE IF NOT EXISTS Colors
+ (id INTEGER PRIMARY KEY, red INTEGER,
+ green INTEGER, blue INTEGER)
+</string>
+<string name="DROP_COLORS_SQL">
+ DROP TABLE IF EXISTS Colors
+</string>
+    <string-array name="DB_COLUMN_NAMES">
+        <item>id</item>
+        <item>red</item>
+        <item>green</item>
+        <item>blue</item>
+    </string-array>
+    <string name="date_format">MM/dd/yyyy HH:mm:ss</string>
+    <string name="DB_NAME">Color.db</string>
+    <string name="TABLE_NAME">Colors</string>
+</resources>

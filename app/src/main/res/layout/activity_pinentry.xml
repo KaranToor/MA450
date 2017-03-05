@@ -33,7 +33,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
         android:background="@drawable/roundedtextbox"
-        android:id="@+id/editText8" />
+        android:id="@+id/PINInput" />
 
     <Button
         android:text="@string/submit"
@@ -41,5 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/button9" />
+        android:id="@+id/button9"
+        android:onClick="verifyPIN"/>
 </RelativeLayout>

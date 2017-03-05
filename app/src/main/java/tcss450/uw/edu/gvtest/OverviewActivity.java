@@ -389,5 +389,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Log.d(getString(R.string.print), getString(R.string.clicked));
     }
 
+    @Override
+    public void onBackPressed(){  //do not call super.onBackPressed() here
+        Intent backToHome = new Intent(Intent.ACTION_MAIN);
+        backToHome.addCategory(Intent.CATEGORY_HOME);
+        backToHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(backToHome);
+    }
 
 }

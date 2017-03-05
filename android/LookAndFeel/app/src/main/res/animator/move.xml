@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="sequentially">
+    <objectAnimator
+        android:duration="2000"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="translationX"
+            android:valueTo="0" />
+        <propertyValuesHolder
+            android:propertyName="translationY"
+            android:valueTo="1000" />
+    </objectAnimator>
+    <objectAnimator
+        android:duration="2000"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="translationX"
+            android:valueTo="-300" />
+        <propertyValuesHolder
+            android:propertyName="translationY"
+            android:valueTo="0" />
+    </objectAnimator>
+    <objectAnimator
+        android:duration="500"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="translationX"
+            android:valueTo="300" />
+        <propertyValuesHolder
+            android:propertyName="translationY"
+            android:valueTo="0" />
+    </objectAnimator>
+    <objectAnimator
+        android:duration="500"
+        android:interpolator="@android:anim/linear_interpolator">
+        <propertyValuesHolder
+            android:propertyName="translationX"
+            android:valueTo="0" />
+        <propertyValuesHolder
+            android:propertyName="translationY"
+            android:valueTo="0" />
+    </objectAnimator>
+
+</set>
