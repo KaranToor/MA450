@@ -74,8 +74,21 @@
             android:id="@+id/editText7"
             android:hint="@string/confirm_password"
             android:background="@drawable/underlinededittext"/>
-
-        <CheckBox
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/underlinededittext"
+                android:inputType="numberPassword"
+                android:layout_marginTop="20dp"
+                android:paddingEnd="10dp"
+                android:id="@+id/newPIN"
+                android:hint="@string/desired_pin"
+                android:visibility="visible"/>
+            <CheckBox
             android:text="@string/pin_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,16 +96,18 @@
             android:layout_marginTop="20dp"
             android:buttonTint="@color/colorPrimary"
             android:paddingEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/outlinedroundtextbox"
             android:checked="true"
+            android:onClick="setPINFieldVisibility"
             />
+        </LinearLayout>
+
 
         <Button
             android:text="@string/submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="121dp"
             android:onClick="createUser"
             android:id="@+id/button3" />
 

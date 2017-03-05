@@ -1,5 +1,8 @@
 package tcss450.uw.edu.gvtest;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText myEmail;
     EditText myPassword;
+    SharedPreferences mPrefs;
 
     /**
      * Initializes activity
@@ -40,7 +44,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
+        mPrefs = getApplicationContext().getSharedPreferences(
+                getString(R.string.prefKey), Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean isLoggedIn = mPrefs.getBoolean(getString(R.string.isloggedin), false);
+        System.out.print(isLoggedIn);
+        if (isLoggedIn){
+            boolean hasPIN = mPrefs.getBoolean(getString(R.string.hasPIN), true);
+            if (!hasPIN) {
+                startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
+                System.out.print(isLoggedIn);
+            } else {
+                startActivity(new Intent(getApplicationContext(), PINEntry.class));
+            }
+        }
     }
 
     /**
@@ -98,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             submit.setClickable(false);
+//            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = mPrefs.edit();
+            editor.putBoolean(getString(R.string.isloggedin), true);
+            editor.commit();
         }
 
         /**

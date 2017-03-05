@@ -58,4 +58,9 @@
     <string name="placeholder_extra2">more data</string>
     <string name="passwordError">Password must be at least 8 characters long</string>
     <string name="passwordErrorMessage">Password must be at least 8 characters long</string>
+    <string name="desired_pin">Desired PIN</string>
+    <string name="isloggedin">isLoggedIn</string>
+    <string name="hasPIN">hasPIN</string>
+    <string name="PINNum">PIN</string>
+    <string name="prefKey">edu.uw.tcss450.PREFS</string>
 </resources>
