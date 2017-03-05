@@ -15,10 +15,16 @@ public class newEntryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(OverviewActivity.TOTAL_AMOUNT);
         String loc = intent.getStringExtra(OverviewActivity.LOCATION);
+        String payment = intent.getStringExtra(OverviewActivity.PAYMENT_TYPE);
+        String date = intent.getStringExtra(OverviewActivity.DATE);
 
         EditText locationEditText = (EditText) findViewById(R.id.locationId);
         locationEditText.setText(loc);
+        EditText dateEdit = (EditText) findViewById(R.id.dateId);
+        dateEdit.setText(date);
         EditText editText = (EditText) findViewById(R.id.amountId);
         editText.setText(message);
+        EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
+        paymentEdit.setText(payment);
     }
 }

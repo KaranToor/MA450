@@ -1,6 +1,8 @@
 package tcss450.uw.edu.gvtest;
 
 import android.app.ProgressDialog;
+import android.os.Build;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,15 +41,12 @@ import com.google.api.services.vision.v1.model.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 /**
  * This Activity allows the user to view their receipts and add a new receipt via the camera button.
@@ -59,6 +58,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     public static final String TOTAL_AMOUNT = "picture-total-text";
     public static final String LOCATION = "location-from-pic";
+    public static final String PAYMENT_TYPE = "payment-from-pic";
+    public static final String DATE = "date-from-pic";
+
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
     public static final String FILE_NAME = "temp.jpg";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
@@ -67,6 +69,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int GALLERY_PERMISSIONS_REQUEST = 0;
     private static final int GALLERY_IMAGE_REQUEST = 1;
+    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private TextView myImageDetails;
@@ -104,6 +107,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                     public void onClick(DialogInterface dialog, int which) {
                         startGalleryChooser();
                     }
+                })
+                .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startCamera();
+                    }
                 });
         builder.create().show();
     }
@@ -119,6 +128,26 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePhotoPrompt)),
                     GALLERY_IMAGE_REQUEST);
+        }
+    }
+
+    public void startCamera() {
+        if (PermissionUtils.requestPermission(
+                this,
+                CAMERA_PERMISSIONS_REQUEST,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA)) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+            if(Build.VERSION.SDK_INT>=24){
+                try{
+                    Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                    m.invoke(null);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
         }
     }
 
@@ -187,14 +216,16 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String>() {
             ProgressDialog progressDialog;
+
             @Override
-            protected void onPreExecute(){
+            protected void onPreExecute() {
                 progressDialog = new ProgressDialog(OverviewActivity.this);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.setMessage("Processing image...");
                 progressDialog.show();
             }
+
             @Override
             protected String doInBackground(Object... theParams) {
                 try {
@@ -290,7 +321,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     }
 
     public void startNewEntry(String theMessage) {
-        Pattern pattern = Pattern.compile("\\$?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)+\\.[0-9]{1,2}");
+        Pattern pattern = Pattern.compile("(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)+\\.[0-9]{1,2}");
         // TODO parsing location, payment type, date
         Matcher matcher = pattern.matcher(theMessage);
         StringBuilder sb = new StringBuilder();
@@ -302,7 +333,48 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         System.out.println("*****Printing result" + sb.toString());
         intent.putExtra(TOTAL_AMOUNT, parseREGEX(sb.toString()));
         intent.putExtra(LOCATION, parseLocation(theMessage));
+        intent.putExtra(PAYMENT_TYPE, parsePaymentType(theMessage));
+        intent.putExtra(DATE, parseDate(theMessage));
         startActivity(intent);
+    }
+
+    public String parsePaymentType(String theInput) {
+        String toReturn = "Not Found";
+        if ((theInput.contains("Master") && theInput.contains("Card")) ||
+                theInput.contains("MASTERCARD") ||
+                (theInput.contains("MASTER") && theInput.contains("CARD"))) {
+            toReturn = "Master Card";
+        } else if (theInput.contains("Visa") || theInput.contains("VISA")) {
+            toReturn = "Visa";
+        } else if (theInput.contains("Discover") || theInput.contains("DISCOVER")) {
+            toReturn = "Discover";
+        } else if (theInput.contains("Cash") || theInput.contains("cash") || theInput.contains("CASH")) {
+            toReturn = "Cash";
+        } else if (theInput.contains("Check") || theInput.contains("check") || theInput.contains("CHECK")) {
+            toReturn = "Check";
+        } else if (theInput.contains("American") && theInput.contains("Express")) {
+            toReturn = "American Express";
+        }
+        return toReturn;
+    }
+
+    public String parseDate(String theInput) {
+        String toReturn = "Not Found";
+        Pattern pattern = Pattern.compile("[0-9]{1,4}[\\.\\/-][0-9]{1,4}[\\.\\/-][0-9]{1,4}");
+        Matcher matcher = pattern.matcher(theInput);
+
+        StringBuilder sb = new StringBuilder();
+        while (matcher.find()) {
+            sb.append(" " + matcher.group() + "\n");
+        }
+        String temp = sb.toString();
+        String[] tempArray = temp.split(" ");
+        for (int i = 0; i < tempArray.length; i++) {
+            if (!tempArray[i].isEmpty()) {
+                toReturn = tempArray[i];
+            }
+        }
+        return toReturn.trim();
     }
 
     public String parseLocation(String theInput) {
