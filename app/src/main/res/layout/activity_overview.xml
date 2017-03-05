@@ -141,7 +141,8 @@
             android:layout_below="@id/cameraButton"
             android:layout_marginLeft="@dimen/fab_margin"
             android:layout_marginBottom="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_account_circle_black_24dp" />
+            app:srcCompat="@drawable/ic_account_circle_black_24dp"
+            android:onClick="onLogoutPressed"/>
     </RelativeLayout>
 
 

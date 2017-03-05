@@ -67,7 +67,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final String LOCATION = "location-from-pic";
     public static final String PAYMENT_TYPE = "payment-from-pic";
     public static final String DATE = "date-from-pic";
-    public static final String BITMAP_IMG = "bitmap-from-gallery";
     public static final String CAMERA_OR_GALLERY = "camera-or-gallery";
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
     public static final int GALLERY_IMAGE_REQUEST = 1;
