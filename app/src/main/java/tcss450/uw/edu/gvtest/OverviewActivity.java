@@ -82,7 +82,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TextView myImageDetails;
-    private Bitmap myGalleryBitmap;
+    private Uri myImageUri;
     private boolean myAccessedGallery;
 
     /**
@@ -217,8 +217,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             mCurrentPhotoPath = theData.getData().toString();
             uploadImage(theData.getData());
 
-
-
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             uploadImage(Uri.fromFile(photo));
         }
@@ -233,7 +231,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         if (theUri != null) {
             try {
                 // scale the image to save on bandwidth
-                myGalleryBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), theUri);
+                myImageUri = theUri;
                 myAccessedGallery = true;
                 Bitmap bitmap =
                         scaleBitmapDown(
@@ -382,15 +380,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         intent.putExtra(LOCATION, parseLocation(theMessage));
         intent.putExtra(PAYMENT_TYPE, parsePaymentType(theMessage));
         intent.putExtra(DATE, parseDate(theMessage));
-        if (!myAccessedGallery) {
-            intent.putExtra(CAMERA_OR_GALLERY, CAMERA_IMAGE_REQUEST);
-        } else {
-            intent.putExtra(CAMERA_OR_GALLERY, GALLERY_IMAGE_REQUEST);
-            if (myAccessedGallery) {
-//                intent.putExtra(BITMAP_IMG, myGalleryBitmap);
-                myAccessedGallery = false;
-             }
-        }
+        intent.putExtra(CAMERA_OR_GALLERY, myImageUri.toString());
+
+//        if (!myAccessedGallery) {
+//            intent.putExtra(CAMERA_OR_GALLERY, "" + CAMERA_IMAGE_REQUEST);
+//        } else {
+//            intent.putExtra(CAMERA_OR_GALLERY, "" + GALLERY_IMAGE_REQUEST);
+//            if (myAccessedGallery) {
+////                intent.putExtra(BITMAP_IMG, myGalleryBitmap);
+//                myAccessedGallery = false;
+//             }
+//        }
         startActivity(intent);
     }
 
