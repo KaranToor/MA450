@@ -14,8 +14,9 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/imageView"
+        android:id="@+id/inputFields"
         android:layout_alignStart="@+id/imageView">
 
         <TableRow
@@ -100,7 +101,8 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:id="@+id/lastRow">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -150,7 +152,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/button7"
-        android:layout_below="@+id/button7"
+        android:layout_below="@+id/inputFields"
         android:layout_alignParentEnd="true"
         android:id="@+id/category_assigner">
 
