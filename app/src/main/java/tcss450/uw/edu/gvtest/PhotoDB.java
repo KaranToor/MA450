@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by Edward on 3/5/2017.
  */
@@ -139,19 +141,30 @@ public class PhotoDB {
         final StringBuilder sb = new StringBuilder();
         sb.append("?userid=" + userid);
 
+        Log.d("Starting debug photodb", "Starting debug");
+
         new AsyncTask<PictureObject, Void, String>() {
 
             @Override
             protected String doInBackground(PictureObject... params) {
+                Log.d("IN On background", "doInBackground: "+PARTIAL_URL + SERVICE + sb.toString());
+//                JSONParser
+//                JSONObject json
                 String response = "";
                 HttpURLConnection urlConnection = null;
                 try {
                     Log.d("IN On background", "doInBackground: "+PARTIAL_URL + SERVICE + sb.toString());
                     URL urlObject = new URL(PARTIAL_URL + SERVICE + sb.toString());
+                    Log.d("In on background", "" + 1);
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
+                    Log.d("In on background", "" + 2);
                     InputStream content = urlConnection.getInputStream();
+                    Log.d("In on background", "" + 3);
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    Log.d("In on background", "" + 4);
                     String s = "";
+                    Log.d("In on background", "" + 5);
+
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
@@ -162,6 +175,7 @@ public class PhotoDB {
                     if (urlConnection != null)
                         urlConnection.disconnect();
                 }
+//                Log.d("In On Background", response);
                 return response;
             }
 
@@ -172,17 +186,18 @@ public class PhotoDB {
                     Toast.makeText(context.getApplicationContext(), result, Toast.LENGTH_LONG)
                             .show();
                     return;
-                } else if (result.startsWith("{\"Success")) {
+                } else if (result.contains("Success")) {
                     try {
                         JSONObject root = new JSONObject(result);
                         JSONObject success = root.getJSONObject("Success");
+                        Log.d("Success", "Parsing json pic array now");
                         photoResult = getJsonPhotos(success.getJSONArray("photoData"));
-
+                        Log.d(TAG, "onPostExecute: " + result);
                         photoData = success.getJSONArray("photoData");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                } else if (result.startsWith("{\"Error")) {
+                } else if (result.contains("Error")) {
                     try {
                         JSONObject root = new JSONObject(result);
                         JSONObject error = root.getJSONObject("Error");
@@ -193,7 +208,7 @@ public class PhotoDB {
                 }
             }
         }.execute();
-        Log.d("After async task", "getAllPhotos: " + photoResult.toString());
+        //Log.d("After async task", "getAllPhotos: " + photoResult.toString());
         return photoResult;
     }
 

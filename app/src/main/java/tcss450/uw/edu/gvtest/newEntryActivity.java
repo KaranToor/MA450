@@ -63,6 +63,11 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
     public void okButtonPress(View theView) {
 
         sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+
+        Intent intent = new Intent(this, OverviewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        this.finish();
     }
 
     private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice,
@@ -86,8 +91,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         PictureObject pictureObject = new PictureObject(userId, myPhotoId.toString(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(getApplicationContext());
-        List<PictureObject> temp = photoDB.getAllPhotos();
-        //Log.d("PicturePrint", temp.toString());
+//        Log.d("PicturePrint", temp.toString());
         Log.d("DEBUGEK", pictureObject.toString());
         photoDB.addPhoto(pictureObject);
 

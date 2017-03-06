@@ -63,6 +63,9 @@ import java.util.regex.Pattern;
  */
 public class OverviewActivity extends AppCompatActivity implements View.OnLongClickListener, AdapterView.OnItemSelectedListener {
 
+    /**
+     * Used in the NewEntryActivity to get the price via getIntent.
+     */
     public static final String TOTAL_AMOUNT = "picture-total-text";
     public static final String LOCATION = "location-from-pic";
     public static final String PAYMENT_TYPE = "payment-from-pic";
@@ -118,6 +121,23 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public void onResume() {
         super.onResume();
         PhotoDB db = new PhotoDB(this.getApplicationContext());
+        List<PictureObject> temp = db.getAllPhotos();
+//        System.out.println(temp.get(0));
+        TableLayout table = (TableLayout) findViewById(R.id.table);
+//        for (int i = 1; i < 5; i++) {
+//            TableRow t = new TableRow(this);
+//            TextView text = new TextView(this);
+//            text.setText(R.string.testString);
+//            t.addView(text);
+//            t.setClickable(true);
+//            t.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    viewEntry(v);
+//                }
+//            });
+//            table.addView(t);
+//        }
 
     }
 
@@ -624,21 +644,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      * Initializes the rows of temporary receipts in the overview screen.
      */
     private void init() {
-        TableLayout table = (TableLayout) findViewById(R.id.table);
-//        for (int i = 1; i < 5; i++) {
-//            TableRow t = new TableRow(this);
-//            TextView text = new TextView(this);
-//            text.setText(R.string.testString);
-//            t.addView(text);
-//            t.setClickable(true);
-//            t.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    viewEntry(v);
-//                }
-//            });
-//            table.addView(t);
-//        }
+
 
     }
 
