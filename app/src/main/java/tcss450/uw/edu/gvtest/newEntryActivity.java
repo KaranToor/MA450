@@ -113,11 +113,8 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         // TODO Toork PhotoId.toString()
         PictureObject pictureObject = new PictureObject(userId, myPhotoId.toString(),
                 theLocation, price, thePaymentType, theDate, theCategory);
-        PhotoDB photoDB = new PhotoDB(getApplicationContext());
-//        Log.d("PicturePrint", temp.toString());
-        Log.d("DEBUGEK", pictureObject.toString());
+        PhotoDB photoDB = new PhotoDB(this);
         photoDB.addPhoto(pictureObject);
-
     }
 
     public void retakeClicked(View theView) {

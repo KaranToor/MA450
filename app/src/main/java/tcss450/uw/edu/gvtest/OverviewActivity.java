@@ -122,14 +122,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     @Override
     public void onResume() {
         super.onResume();
+        PhotoDB pdb = new PhotoDB(this);
+        pdb.getAllPhotos();
+        // Dont make any calls after getAllPhotos()
+    }
 
+
+    public void updateTable(List<PictureObject> allPhotos) {
         TableLayout table = (TableLayout) findViewById(R.id.table);
-        PhotoDB pdb = new PhotoDB(getApplicationContext());
-        List<PictureObject> allPhotos = new ArrayList<PictureObject>();
-
-
-        if(pdb.getAllPhotos() != null) {
-            allPhotos = pdb.getAllPhotos();
+        if(allPhotos != null) {
             for (int i = 0; i < allPhotos.size(); i++) {
                 TableRow t = new TableRow(this);
 

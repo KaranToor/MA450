@@ -1,9 +1,14 @@
 package tcss450.uw.edu.gvtest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -26,10 +31,11 @@ import static android.content.ContentValues.TAG;
  */
 
 public class PhotoDB {
-
+    private final String TAG = "PhotoDB";
     private PictureObject picData;
     private SharedPreferences prefs;
     private Context context;
+    private Activity myActivity;
     private int userid;
     private static final String PARTIAL_URL
             = "http://cssgate.insttech.washington.edu/" +
@@ -38,9 +44,10 @@ public class PhotoDB {
     private List<PictureObject> photoResult;
 
 
-    public PhotoDB(Context context) {
+    public PhotoDB(Activity activity) {
         this.picData = null;
-        this.context = context;
+        this.myActivity = activity;
+        this.context = activity.getApplicationContext();
         this.prefs = context.getSharedPreferences(context.getString(R.string.prefKey), Context.MODE_PRIVATE);
         userid = prefs.getInt(context.getString(R.string.UID) , -1);
         if (userid == -1){
@@ -206,6 +213,13 @@ public class PhotoDB {
                         e.printStackTrace();
                     }
                 }
+
+                if (myActivity instanceof  OverviewActivity) {
+                    ((OverviewActivity) myActivity).updateTable(photoResult);
+                }
+
+                Log.d(TAG, "onPostExecute photoResult: " + photoResult);
+                Log.d(TAG, "onPostExecute: photodata : " + photoData);
             }
         }.execute();
         //Log.d("After async task", "getAllPhotos: " + photoResult.toString());
