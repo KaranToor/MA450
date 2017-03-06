@@ -183,29 +183,33 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } else if (theResult.contains("Error")) {
-                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
-                        .show();
+
             } else {
 
             }
 
         }
 
-        private int getUserId(String theResult) throws JSONException {
-            int uId = -1;
-            try {
-                JSONObject json = new JSONObject(theResult);
-                JSONObject obj = json.getJSONObject("Success");
-                uId = obj.getInt("ID#");
-                System.out.println("ID is " + uId);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (uId == -1) {
-                throw new JSONException("ID was unable to be parsed");
-            }
-            return uId;
+        private String parseLoginErrorResponse(String theString) {
+            String toReturn = "";
+
+
+            return toReturn;
         }
     }
-
+    public int getUserId(String theResult) throws JSONException {
+        int uId = -1;
+        try {
+            JSONObject json = new JSONObject(theResult);
+            JSONObject obj = json.getJSONObject("Success");
+            uId = obj.getInt("ID#");
+            System.out.println("ID is " + uId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (uId == -1) {
+            throw new JSONException("ID was unable to be parsed");
+        }
+        return uId;
+    }
 }

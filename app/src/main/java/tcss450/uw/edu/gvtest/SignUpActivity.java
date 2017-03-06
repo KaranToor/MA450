@@ -8,12 +8,16 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -29,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText myUser;
     EditText myPassword;
     SharedPreferences mPrefs;
+    private int myUserId;
 
     /**
      * Initializes activity.
@@ -174,18 +179,37 @@ public class SignUpActivity extends AppCompatActivity {
         protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
             submit.setClickable(true);
-            if (theResult.startsWith(getString(R.string.unable))) {
-                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
-                        .show();
-            } else if (theResult.contains(getString(R.string.err))) {
-                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
-                        .show();
+            if (theResult.contains("Success")) {
+                try {
+                    myUserId = getUserId(theResult);
+                    Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else if (theResult.contains("Error")) {
+
             } else {
-                Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+
             }
         }
+    }
+    public int getUserId(String theResult) throws JSONException {
+        int uId = -1;
+        try {
+            JSONObject json = new JSONObject(theResult);
+            JSONObject obj = json.getJSONObject("Success");
+            uId = obj.getInt("ID#");
+            System.out.println("ID is " + uId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (uId == -1) {
+            throw new JSONException("ID was unable to be parsed");
+        }
+        return uId;
     }
 
 }
