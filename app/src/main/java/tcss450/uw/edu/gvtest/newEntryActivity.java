@@ -1,15 +1,13 @@
 package tcss450.uw.edu.gvtest;
 
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -17,29 +15,21 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import java.io.File;
-
+import java.math.BigDecimal;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    String category = "null";
+    private Uri myPhotoId;
+    private String myLocation;
+    private String myPrice;
+    private String myPaymentType;
+    private String myDate;
+    private String myCategory;
+
+
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
         setContentView(R.layout.activity_new_entry);
-
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(OverviewActivity.TOTAL_AMOUNT);
-        String loc = intent.getStringExtra(OverviewActivity.LOCATION);
-        String payment = intent.getStringExtra(OverviewActivity.PAYMENT_TYPE);
-        String date = intent.getStringExtra(OverviewActivity.DATE);
-
-        EditText locationEditText = (EditText) findViewById(R.id.locationId);
-        locationEditText.setText(loc);
-        EditText dateEdit = (EditText) findViewById(R.id.dateId);
-        dateEdit.setText(date);
-        EditText editText = (EditText) findViewById(R.id.amountId);
-        editText.setText(message);
-        EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
-        paymentEdit.setText(payment);
 
         Spinner spinner = (Spinner) findViewById(R.id.category_assigner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -50,14 +40,57 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        Uri image = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
-        setImage(image);
+        Intent intent = getIntent();
+        myPrice = intent.getStringExtra(OverviewActivity.TOTAL_AMOUNT);
+        myLocation = intent.getStringExtra(OverviewActivity.LOCATION);
+        myPaymentType = intent.getStringExtra(OverviewActivity.PAYMENT_TYPE);
+        myDate = intent.getStringExtra(OverviewActivity.DATE);
 
-//        if (cameraOrGallery.equals(OverviewActivity.GALLERY_IMAGE_REQUEST)) {
-////            Bitmap bitmap = (Bitmap) intent.getStringExtra(OverviewActivity.BITMAP_IMG);
-//        } else if (cameraOrGallery.equals(OverviewActivity.CAMERA_IMAGE_REQUEST)) {
-//            findLastPicture();
-//        }
+        EditText locationEditText = (EditText) findViewById(R.id.locationId);
+        locationEditText.setText(myLocation);
+        EditText dateEdit = (EditText) findViewById(R.id.dateId);
+        dateEdit.setText(myDate);
+        EditText editText = (EditText) findViewById(R.id.amountId);
+        editText.setText(myPrice);
+        EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
+        paymentEdit.setText(myPaymentType);
+
+        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
+        setImage(myPhotoId);
+    }
+
+    public void okButtonPress(View theView) {
+
+        sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+    }
+
+    private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice,
+                                String thePaymentType, String theDate,
+                                String theCategory) {
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                getString(R.string.prefKey), Context.MODE_PRIVATE);
+        int userId = prefs.getInt(getString(R.string.UID), -1);
+        if (userId == -1) {
+            throw new IllegalArgumentException("UserId was not set in SharedPreferences");
+        }
+
+        BigDecimal price;
+        if (!myPrice.equals("Not Found")) {
+            price = new BigDecimal(thePrice);
+        } else {
+            price = BigDecimal.ZERO;
+        }
+
+        PictureObject pictureObject = new PictureObject(userId, thePhotoId.toString(),
+                theLocation, price, thePaymentType, theDate, theCategory);
+        PhotoDB photoDB = new PhotoDB(getApplicationContext());
+        Log.d("DEBUGEK", pictureObject.toString());
+        photoDB.addPhoto(pictureObject);
+
+    }
+
+    public void retakeClicked(View theView) {
+
     }
 
     private void setImage(Uri theUri) {
@@ -69,10 +102,10 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Spinner spinner = (Spinner) findViewById(R.id.category_assigner);
         String selectedCategory = spinner.getSelectedItem().toString();
-        if (position>0){
-            category = selectedCategory;
+        if (position > 0) {
+            myCategory = selectedCategory;
         }
-        Log.d("selectedCat", category);
+//        Log.d("selectedCat", myCategory);
     }
 
     @Override
@@ -80,29 +113,4 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
     }
 
-
-//    private void findLastPicture() {
-//        // Find the last picture
-//        String[] projection = new String[]{
-//                MediaStore.Images.ImageColumns._ID,
-//                MediaStore.Images.ImageColumns.DATA,
-//                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-//                MediaStore.Images.ImageColumns.DATE_TAKEN,
-//                MediaStore.Images.ImageColumns.MIME_TYPE
-//        };
-//        final Cursor cursor = getApplicationContext().getContentResolver()
-//                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
-//                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
-//
-//// Put it in the image view
-//        if (cursor.moveToFirst()) {
-//            final ImageView imageView = (ImageView) findViewById(R.id.imageView);
-//            String imageLocation = cursor.getString(1);
-//            File imageFile = new File(imageLocation);
-//            if (imageFile.exists()) {   //
-//                Bitmap bm = BitmapFactory.decodeFile(imageLocation);
-//                imageView.setImageBitmap(bm);
-//            }
-//        }
-//    }
 }

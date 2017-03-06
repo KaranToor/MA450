@@ -32,9 +32,11 @@ public class PhotoDB {
             = "http://cssgate.insttech.washington.edu/" +
             "~ekoval/";
     private JSONArray photoData;
+    List<PictureObject> photoResult;
 
 
     public PhotoDB(Context context) {
+        photoResult = new ArrayList<>();
         this.picData = null;
         this.context = context;
         this.prefs = context.getSharedPreferences(context.getString(R.string.prefKey), Context.MODE_PRIVATE);
@@ -57,7 +59,7 @@ public class PhotoDB {
         sb.append("&date=" + picData.getMyDate());
         sb.append("&category=" + picData.getMyCategory());
 
-        final List<PictureObject>[] photoResult = null;
+
         new AsyncTask<PictureObject, Void, String>() {
 
             @Override
@@ -92,7 +94,7 @@ public class PhotoDB {
                 } else if (result.startsWith("{\"Success")) {
                     try {
                         JSONObject success = new JSONObject(result);
-                        photoResult[0] = getJsonPhotos(success.getJSONArray("photoData"));
+                        photoResult = getJsonPhotos(success.getJSONArray("photoData"));
 
                         photoData = success.getJSONArray("photoData");
                     } catch (JSONException e) {
@@ -101,14 +103,14 @@ public class PhotoDB {
                 } else if (result.startsWith("{\"Error")) {
                     try {
                         JSONObject error = new JSONObject(result);
-                        photoResult[0] = getJsonPhotos(error.getJSONArray("photoData"));
+                        photoResult = getJsonPhotos(error.getJSONArray("photoData"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }.execute(pictureObject);
-        return photoResult[0];
+        return photoResult;
     }
 
     private List<PictureObject> getJsonPhotos(JSONArray array) throws JSONException {
