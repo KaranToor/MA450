@@ -26,13 +26,34 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * @author MA450 Team 11
+ * @version Winter 2017
  * Adds a new user to the app's database and allows for future logins from this new user.
  */
 public class SignUpActivity extends AppCompatActivity {
+    /**
+     * The partial URL location used to access the server.
+     */
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
+
+    /**
+     * The field which contains the desired username.
+     */
     EditText myUser;
+
+    /**
+     * The field which contains the desired password.
+     */
     EditText myPassword;
+
+    /**
+     * The shared preferences for the application.
+     */
     SharedPreferences mPrefs;
+
+    /**
+     * The ID number of the current user.
+     */
     private int myUserId;
 
     /**
@@ -101,6 +122,10 @@ public class SignUpActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
+    /**
+     * Allows creating a pin or not, depending on the user's choice
+     * @param view
+     */
     public void setPINFieldVisibility(View view) {
         CheckBox checkBox = (CheckBox) view;
         EditText pinBox = (EditText) findViewById(R.id.newPIN);
@@ -112,6 +137,14 @@ public class SignUpActivity extends AppCompatActivity {
         }
         pinBox.invalidate();
         linearLayout.requestLayout();
+    }
+
+    /**
+     * Returns to the previous activity when the cancel button is pressed.
+     * @param view the view that was pressed
+     */
+    public void cancelRegistration(View view) {
+        this.onBackPressed();
     }
 
     /**
@@ -199,6 +232,12 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Returns the user Id
+     * @param theResult
+     * @return uId
+     * @throws JSONException
+     */
     public int getUserId(String theResult) throws JSONException {
         int uId = -1;
         try {

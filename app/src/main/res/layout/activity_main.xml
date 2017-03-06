@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    >
 
     <ImageView
         android:text="@string/app_name"

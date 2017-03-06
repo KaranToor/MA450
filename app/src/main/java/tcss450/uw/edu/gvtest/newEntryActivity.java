@@ -19,11 +19,34 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    /**
+     * The file location of the photo to be used.
+     */
     private Uri myPhotoId;
+
+    /**
+     * The location which was found via REGEX.
+     */
     private String myLocation;
+
+    /**
+     * The price which was found via REGEX.
+     */
     private String myPrice;
+
+    /**
+     * The payment type which was found via REGEX.
+     */
     private String myPaymentType;
+
+    /**
+     * The date which was found via REGEX.
+     */
     private String myDate;
+
+    /**
+     * The category set by the spinner.
+     */
     private String myCategory;
 
 

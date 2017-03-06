@@ -41,7 +41,7 @@ public class PhotoDB {
     public PhotoDB(Context context) {
         this.picData = null;
         this.context = context;
-        this.prefs = context.getApplicationContext().getSharedPreferences(context.getString(R.string.prefKey), Context.MODE_PRIVATE);
+        this.prefs = context.getSharedPreferences(context.getString(R.string.prefKey), Context.MODE_PRIVATE);
         userid = prefs.getInt(context.getString(R.string.UID) , -1);
         if (userid == -1){
             throw new IllegalArgumentException("User id not set in Prefs");

@@ -16,6 +16,10 @@ import android.widget.EditText;
  * @version Winter 2017
  */
 public class PINEntry extends AppCompatActivity {
+
+    /**
+     * The shared preferences for the application.
+     */
     SharedPreferences mPrefs;
 
     /**

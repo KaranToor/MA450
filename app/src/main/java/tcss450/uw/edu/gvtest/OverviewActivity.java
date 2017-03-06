@@ -71,7 +71,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final String PAYMENT_TYPE = "payment-from-pic";
     public static final String DATE = "date-from-pic";
     public static final String CAMERA_OR_GALLERY = "camera-or-gallery";
-
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
     public static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
@@ -99,14 +98,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         super.onCreate(theSavedInstanceState);
         setContentView(R.layout.activity_overview);
         setProgressLabel();
-        init();
+        //init();
 
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.categories, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
+// Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
+// Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -117,28 +116,39 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         table.addView(t);
     }
 
+    /**
+     * The defined behavior for when the activity is resumed.
+     */
     @Override
     public void onResume() {
         super.onResume();
-        PhotoDB db = new PhotoDB(this.getApplicationContext());
-        List<PictureObject> temp = db.getAllPhotos();
-//        System.out.println(temp.get(0));
-        TableLayout table = (TableLayout) findViewById(R.id.table);
-//        for (int i = 1; i < 5; i++) {
-//            TableRow t = new TableRow(this);
-//            TextView text = new TextView(this);
-//            text.setText(R.string.testString);
-//            t.addView(text);
-//            t.setClickable(true);
-//            t.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    viewEntry(v);
-//                }
-//            });
-//            table.addView(t);
-//        }
 
+        TableLayout table = (TableLayout) findViewById(R.id.table);
+        PhotoDB pdb = new PhotoDB(getApplicationContext());
+        List<PictureObject> allPhotos = new ArrayList<PictureObject>();
+
+
+        if(pdb.getAllPhotos() != null) {
+            allPhotos = pdb.getAllPhotos();
+            for (int i = 0; i < allPhotos.size(); i++) {
+                TableRow t = new TableRow(this);
+
+                TextView text = new TextView(this);
+                text.setText(allPhotos.get(i).getMyDate() + "  " + allPhotos.get(i).getMyLocation() + "  " + allPhotos.get(i).getMyPrice());
+
+                t.addView(text);
+                t.setClickable(true);
+                t.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewEntry(v);
+                    }
+                });
+                table.addView(t);
+            }
+        } else {
+            System.out.println("NO PHOTOS FOUND");
+        }
     }
 
     /**
@@ -183,6 +193,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
+    /**
+     * Presents the user with a confirmation prompt if the logout button is selected.
+     * @param theView the button that was pressed.
+     */
     public void onLogoutPressed(View theView) {
         new AlertDialog.Builder(OverviewActivity.this)
                 .setTitle("LOGOUT")
@@ -210,6 +224,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 .show();
     }
 
+    /**
+     * Launches the camera.
+     * @throws IOException
+     */
     public void startCamera() throws IOException {
         if (PermissionUtils.requestPermission(
                 this,
@@ -342,6 +360,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         new AsyncTask<Object, Void, String>() {
             ProgressDialog progressDialog;
 
+            /**
+             * Makes temporary changes to the UI to prevent user-created error.
+             */
             @Override
             protected void onPreExecute() {
                 progressDialog = new ProgressDialog(OverviewActivity.this);
@@ -353,6 +374,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 progressDialog.show();
             }
 
+            /**
+             * Sends the image to be processed by Google Vision.
+             * @param theParams is required to correctly override doInBackground but is not used.
+             * @return
+             */
             @Override
             protected String doInBackground(Object... theParams) {
                 try {
@@ -447,6 +473,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }.execute();
     }
 
+    /**
+     * Calls the methods which parse the REGEX response and sends their returns to a new newEntryActivity.
+     * @param theMessage the message to be parsed
+     */
     public void startNewEntry(String theMessage) {
         Pattern pattern = Pattern.compile("(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)+\\.[0-9]{1,2}");
         // TODO parsing location, payment type, date
@@ -476,6 +506,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         startActivity(intent);
     }
 
+    /**
+     * Parses the response from Google Vision which has been passed through REGEX for a payment type.
+     * @param theInput the response from Google Vision which has been passed through REGEX
+     * @return the discovered payment type
+     */
     public String parsePaymentType(String theInput) {
         String toReturn = "Not Found";
         if ((theInput.contains("Master") && theInput.contains("Card")) ||
@@ -496,6 +531,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         return toReturn;
     }
 
+    /**
+     * Parses the response from Google Vision which has been passed through REGEX for a date.
+     * @param theInput the response from Google Vision which has been passed through REGEX
+     * @return the date that was found
+     */
     public String parseDate(String theInput) {
         String toReturn = "Not Found";
         Pattern pattern = Pattern.compile("[0-9]{1,4}[\\.\\/-][0-9]{1,4}[\\.\\/-][0-9]{1,4}");
@@ -515,6 +555,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         return toReturn.trim();
     }
 
+    /**
+     * Parses the response from Google Vision which has been passed through REGEX for an abbreviated State location.
+     * @param theInput the response from Google Vision which has been passed through REGEX
+     * @return the abbreviated State location
+     */
     public String parseLocation(String theInput) {
         Pattern pattern = Pattern.compile("(([^A-Z])(AL|AK|AR|AZ|CA|CO|CT|DC|DE|FL|G" +
                 "A|HI|IA|ID|IL|IN|KS|KY|LA|MA|MD|ME|MI|MN|MO|MS|MT|NC|ND|NE|NH|NJ|NM|NV|NY|" +
@@ -552,6 +597,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         return toReturn.trim();
     }
 
+    /**
+     * Parses the response from Google Vision which has been run through REGEX, looking for a dollar amount.
+     * @param theInput the response from Google Vision which has been run through REGEX
+     * @return the dollar amount
+     */
     public String parseREGEX(String theInput) {
         String[] temp = theInput.split(" ");
         String toReturn = "";
@@ -678,6 +728,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Log.d(getString(R.string.print), getString(R.string.clicked));
     }
 
+    /**
+     * A method to completely override the functionality of the Back button so that the user cannot return to the login/register activity without logging out.
+     */
     @Override
     public void onBackPressed() {  //do not call super.onBackPressed() here
         Intent backToHome = new Intent(Intent.ACTION_MAIN);
@@ -686,6 +739,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         startActivity(backToHome);
     }
 
+    /**
+     * A method which is automatically called every time a spinner item is selected.
+     * @param parent the AdapterView that triggered the event
+     * @param view The view within the AdapterView that triggered the event
+     * @param position The position of the view that was selected
+     * @param id The row id of the item that was selected
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
@@ -693,6 +753,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Log.d("selectedCat", selectedCategory);
     }
 
+    /**
+     * An obligatory empty method to implement OnItemSelectedListener.
+     * @param parent
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
