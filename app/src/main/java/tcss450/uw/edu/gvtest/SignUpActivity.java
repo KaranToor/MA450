@@ -191,11 +191,10 @@ public class SignUpActivity extends AppCompatActivity {
 
             } else if (theResult.contains("Error")) {
 
-            } else {
-
             }
         }
     }
+
     public int getUserId(String theResult) throws JSONException {
         int uId = -1;
         try {
