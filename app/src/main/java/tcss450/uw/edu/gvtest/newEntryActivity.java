@@ -87,7 +87,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(getApplicationContext());
         List<PictureObject> temp = photoDB.getAllPhotos();
-        Log.d("PicturePrint", temp.toString());
+        //Log.d("PicturePrint", temp.toString());
         Log.d("DEBUGEK", pictureObject.toString());
         photoDB.addPhoto(pictureObject);
 

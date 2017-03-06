@@ -146,6 +146,7 @@ public class PhotoDB {
                 String response = "";
                 HttpURLConnection urlConnection = null;
                 try {
+                    Log.d("IN On background", "doInBackground: "+PARTIAL_URL + SERVICE + sb.toString());
                     URL urlObject = new URL(PARTIAL_URL + SERVICE + sb.toString());
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
                     InputStream content = urlConnection.getInputStream();
@@ -166,6 +167,7 @@ public class PhotoDB {
 
             @Override
             protected void onPostExecute(String result) {
+                Log.d("getphotos", "onPostExecute: " + result);
                 if (result.startsWith("Unable to") || result.startsWith("There was an error")) {
                     Toast.makeText(context.getApplicationContext(), result, Toast.LENGTH_LONG)
                             .show();
@@ -191,6 +193,7 @@ public class PhotoDB {
                 }
             }
         }.execute();
+        Log.d("After async task", "getAllPhotos: " + photoResult.toString());
         return photoResult;
     }
 
