@@ -69,6 +69,7 @@
     <string name="datestr">Date:</string>
     <string name="UID">userID</string>
     <string name="logoContentDesc">Receipt Suite logo</string>
+    <string name="category">Category</string>
 
     <string-array name="categories">
         <item>Show All</item>

@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,7 +133,7 @@ public class PhotoDB {
                 JSONObject photo = array.getJSONObject(i);
                 PictureObject pic = new PictureObject(photo.getInt("userid"),
                         photo.getString("photoid"), photo.getString("location"),
-                        new BigDecimal(photo.getDouble("total")),photo.getString("payment_type"),
+                        BigDecimal.valueOf(photo.getDouble("total")),photo.getString("payment_type"),
                         photo.getString("date"), photo.getString("category"));
                 result.add(pic);
             }

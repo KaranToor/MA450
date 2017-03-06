@@ -135,7 +135,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 TableRow t = new TableRow(this);
 
                 TextView text = new TextView(this);
-                text.setText(allPhotos.get(i).getMyDate() + "  " + allPhotos.get(i).getMyLocation() + "  " + allPhotos.get(i).getMyPrice() + "  " + allPhotos.get(i).getMyCategory());
+                text.setText(allPhotos.get(i).getMyDate() + "      " + allPhotos.get(i).getMyLocation()
+                        + "                  " + allPhotos.get(i).getMyPrice() + "             "
+                        + allPhotos.get(i).getMyCategory());
 
                 t.addView(text);
                 t.setClickable(true);
