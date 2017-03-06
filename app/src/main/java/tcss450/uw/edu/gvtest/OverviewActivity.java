@@ -95,7 +95,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         super.onCreate(theSavedInstanceState);
         setContentView(R.layout.activity_overview);
         setProgressLabel();
-        init();
+        //init();
 
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -112,6 +112,53 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         t.addView(myImageDetails);
         table.addView(t);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        TableLayout table = (TableLayout) findViewById(R.id.table);
+//        for (int i = 1; i < 5; i++) {
+//            TableRow t = new TableRow(this);
+//            TextView text = new TextView(this);
+//            text.setText(R.string.testString);
+//            t.addView(text);
+//            t.setClickable(true);
+//            t.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    viewEntry(v);
+//                }
+//            });
+//            table.addView(t);
+//        }
+
+        TableLayout table = (TableLayout) findViewById(R.id.table);
+        PhotoDB pdb = new PhotoDB(getApplicationContext());
+        List<PictureObject> allPhotos = new ArrayList<PictureObject>();
+
+        if(pdb.getAllPhotos() != null) {
+            allPhotos = pdb.getAllPhotos();
+            for (int i = 0; i < allPhotos.size(); i++) {
+                TableRow t = new TableRow(this);
+
+                TextView text = new TextView(this);
+                text.setText(allPhotos.get(i).getMyDate() + "  " + allPhotos.get(i).getMyLocation() + "  " + allPhotos.get(i).getMyPrice());
+
+                t.addView(text);
+                t.setClickable(true);
+                t.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewEntry(v);
+                    }
+                });
+                table.addView(t);
+            }
+        }
+
+
+    }
+
 
     /**
      * Launches the dialog for the user to choose a picture from their gallery.

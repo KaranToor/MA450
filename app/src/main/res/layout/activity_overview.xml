@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="tcss450.uw.edu.gvtest.OverviewActivity">
+    tools:context="tcss450.uw.edu.gvtest.OverviewActivity"
+    >
 
     <LinearLayout
         android:id="@+id/activity_overview"
