@@ -188,4 +188,66 @@ public class PhotoDB {
         }.execute();
         return photoResult[0];
     }
+
+
+    public List<PictureObject> getCategoryAll(String category) {
+        final String SERVICE = "getPhotoCat.php";
+        // build GET Statement
+        final StringBuilder sb = new StringBuilder();
+        sb.append("?userid=" + userid);
+        sb.append("&category=" + category);
+
+        final List<PictureObject>[] photoResult = null;
+        new AsyncTask<PictureObject, Void, String>() {
+
+            @Override
+            protected String doInBackground(PictureObject... params) {
+                String response = "";
+                HttpURLConnection urlConnection = null;
+                try {
+                    URL urlObject = new URL(PARTIAL_URL + SERVICE + sb.toString());
+                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+                    InputStream content = urlConnection.getInputStream();
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+                } catch (Exception e) {
+                    response = "Unable to connect, Reason: "
+                            + e.getMessage();
+                } finally {
+                    if (urlConnection != null)
+                        urlConnection.disconnect();
+                }
+                return response;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                if (result.startsWith("Unable to") || result.startsWith("There was an error")) {
+                    Toast.makeText(context.getApplicationContext(), result, Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                } else if (result.startsWith("{\"Success")) {
+                    try {
+                        JSONObject success = new JSONObject(result);
+                        photoResult[0] = getJsonPhotos(success.getJSONArray("photoData"));
+
+                        photoData = success.getJSONArray("photoData");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else if (result.startsWith("{\"Error")) {
+                    try {
+                        JSONObject error = new JSONObject(result);
+                        photoResult[0] = getJsonPhotos(error.getJSONArray("photoData"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.execute();
+        return photoResult[0];
+    }
 }
