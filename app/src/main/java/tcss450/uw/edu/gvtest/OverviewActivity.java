@@ -136,6 +136,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         PhotoDB pdb = new PhotoDB(getApplicationContext());
         List<PictureObject> allPhotos = new ArrayList<PictureObject>();
 
+
         if(pdb.getAllPhotos() != null) {
             allPhotos = pdb.getAllPhotos();
             for (int i = 0; i < allPhotos.size(); i++) {
@@ -154,6 +155,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 });
                 table.addView(t);
             }
+        } else {
+            System.out.println("NO PHOTOS FOUND");
         }
 
 

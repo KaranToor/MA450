@@ -26,6 +26,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * @author MA450 Team 11
+ * @version Winter 2017
  * Adds a new user to the app's database and allows for future logins from this new user.
  */
 public class SignUpActivity extends AppCompatActivity {
@@ -101,6 +103,10 @@ public class SignUpActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
+    /**
+     * Allows creating a pin or not, depending on the user's choice
+     * @param view
+     */
     public void setPINFieldVisibility(View view) {
         CheckBox checkBox = (CheckBox) view;
         EditText pinBox = (EditText) findViewById(R.id.newPIN);
@@ -199,6 +205,12 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Returns the user Id
+     * @param theResult
+     * @return uId
+     * @throws JSONException
+     */
     public int getUserId(String theResult) throws JSONException {
         int uId = -1;
         try {
