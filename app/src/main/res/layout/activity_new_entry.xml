@@ -20,36 +20,70 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-
-            <EditText
-                android:text="@string/location"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                android:text="@string/locationstr"
+                    android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/locationId"
-                android:inputType="text"
-                android:background="@drawable/underlinededittext"
+                    android:paddingRight="10dp"
                 android:textSize="24sp"
-                android:layout_marginBottom="5dp"/>
+                />
+
+                <EditText
+                    android:text="@string/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/locationId"
+                    android:inputType="text"
+                    android:paddingRight="10dp"
+                    android:background="@drawable/underlinededittext"
+                    android:textSize="24sp"
+                    android:layout_marginBottom="5dp"/></LinearLayout>
+
         </TableRow>
 
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="match_parent" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/amountstr"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="20dp"
+                android:textSize="24sp"
+                />
 
             <EditText
                 android:text="@string/amount"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/amountId"
                 android:inputType="text"
                 android:textSize="24sp"
+                android:paddingRight="10dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/underlinededittext"/>
+            </LinearLayout>
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/paymentstr"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="10dp"
+                android:textSize="24sp"
+                />
 
             <EditText
                 android:text="@string/payment_method"
@@ -60,21 +94,33 @@
                 android:id="@+id/paymentId"
                 android:layout_marginBottom="5dp"
                 android:textSize="24sp" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/datestr"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="55dp"
+                android:textSize="24sp"
+                />
             <EditText
                 android:text="@string/date"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="date"
                 android:id="@+id/dateId"
                 android:layout_marginBottom="5dp"
                 android:textSize="24sp"
                 android:background="@drawable/underlinededittext" />
+            </LinearLayout>
         </TableRow>
     </TableLayout>
 

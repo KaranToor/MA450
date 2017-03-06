@@ -116,6 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
         private final String SERVICE = "register.php";
         Button submit = (Button) findViewById(R.id.button3);
 
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
