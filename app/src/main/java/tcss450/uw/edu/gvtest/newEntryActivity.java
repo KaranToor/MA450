@@ -8,13 +8,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import java.io.File;
 
 
-public class newEntryActivity extends AppCompatActivity {
+public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    String category = "null";
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
@@ -35,6 +41,15 @@ public class newEntryActivity extends AppCompatActivity {
         EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
         paymentEdit.setText(payment);
 
+        Spinner spinner = (Spinner) findViewById(R.id.category_assigner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.category_assignment, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
         Uri image = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
         setImage(image);
 
@@ -48,6 +63,21 @@ public class newEntryActivity extends AppCompatActivity {
     private void setImage(Uri theUri) {
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageURI(theUri);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Spinner spinner = (Spinner) findViewById(R.id.category_assigner);
+        String selectedCategory = spinner.getSelectedItem().toString();
+        if (position>0){
+            category = selectedCategory;
+        }
+        Log.d("selectedCat", category);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
 
@@ -69,7 +99,7 @@ public class newEntryActivity extends AppCompatActivity {
 //            final ImageView imageView = (ImageView) findViewById(R.id.imageView);
 //            String imageLocation = cursor.getString(1);
 //            File imageFile = new File(imageLocation);
-//            if (imageFile.exists()) {   // TODO: is there a better way to do this?
+//            if (imageFile.exists()) {   //
 //                Bitmap bm = BitmapFactory.decodeFile(imageLocation);
 //                imageView.setImageBitmap(bm);
 //            }
