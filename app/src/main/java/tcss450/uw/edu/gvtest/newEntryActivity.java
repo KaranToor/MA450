@@ -85,6 +85,11 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
     public void okButtonPress(View theView) {
 
+        myLocation = ((EditText) findViewById(R.id.locationId)).getText().toString();
+        myDate = ((EditText) findViewById(R.id.dateId)).getText().toString();
+        myPrice = ((EditText) findViewById(R.id.amountId)).getText().toString();
+        myPaymentType = ((EditText) findViewById(R.id.paymentId)).getText().toString();
+
         sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
 
         Intent intent = new Intent(this, OverviewActivity.class);
