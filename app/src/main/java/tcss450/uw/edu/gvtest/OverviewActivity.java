@@ -608,6 +608,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             });
             table.addView(t);
         }
+
     }
 
     /**

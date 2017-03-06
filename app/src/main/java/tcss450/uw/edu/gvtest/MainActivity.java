@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
                     editor.putInt(getString(R.string.UID), myUserId);
                     editor.commit();
                     Log.d("AFTER LOGIN :", "onPostExecute: result " + theResult);
+                    Log.d("UID:", mPrefs.getInt(getString(R.string.UID), -1) + "");
                     startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
                 } catch (JSONException e) {
                     e.printStackTrace();
