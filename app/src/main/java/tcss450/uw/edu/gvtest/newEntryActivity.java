@@ -3,22 +3,21 @@ package tcss450.uw.edu.gvtest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import java.io.File;
 import java.math.BigDecimal;
 
-
-public class newEntryActivity extends AppCompatActivity {
+public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private Uri myPhotoId;
     private String myLocation;
     private String myPrice;
@@ -26,10 +25,20 @@ public class newEntryActivity extends AppCompatActivity {
     private String myDate;
     private String myCategory;
 
+
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
         setContentView(R.layout.activity_new_entry);
+
+        Spinner spinner = (Spinner) findViewById(R.id.category_assigner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.category_assignment, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         Intent intent = getIntent();
         myPrice = intent.getStringExtra(OverviewActivity.TOTAL_AMOUNT);
@@ -81,4 +90,20 @@ public class newEntryActivity extends AppCompatActivity {
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageURI(theUri);
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Spinner spinner = (Spinner) findViewById(R.id.category_assigner);
+        String selectedCategory = spinner.getSelectedItem().toString();
+        if (position > 0) {
+            myCategory = selectedCategory;
+        }
+        Log.d("selectedCat", myCategory);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
 }
