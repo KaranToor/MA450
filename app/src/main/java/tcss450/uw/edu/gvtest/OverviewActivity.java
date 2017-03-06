@@ -218,13 +218,26 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      */
     private File getCameraFile() throws IOException {
         // Create an image file name
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
+        int userid = prefs.getInt(getString(R.string.UID), -1);
+        if (userid == -1) {
+            throw new IllegalArgumentException("userid is not set in Prefs");
+        }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+        String imageFileName = userid + "_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+
+        File image = new File(
+                storageDir,
+                imageFileName +  /* prefix */
+                ".jpg"        /* suffix */
+                      /* directory */
         );
 
         // Save a file: path for use with ACTION_VIEW intents
@@ -254,8 +267,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             uploadImage(theData.getData());
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
+            galleryAddPic();
             uploadImage(Uri.fromFile(photo));
         }
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
     /**

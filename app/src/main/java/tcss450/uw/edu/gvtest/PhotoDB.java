@@ -33,11 +33,10 @@ public class PhotoDB {
             = "http://cssgate.insttech.washington.edu/" +
             "~ekoval/";
     private JSONArray photoData;
-    List<PictureObject> photoResult;
+    private List<PictureObject> photoResult;
 
 
     public PhotoDB(Context context) {
-        photoResult = new ArrayList<>();
         this.picData = null;
         this.context = context;
         this.prefs = context.getApplicationContext().getSharedPreferences(context.getString(R.string.prefKey), Context.MODE_PRIVATE);
@@ -140,7 +139,6 @@ public class PhotoDB {
         final StringBuilder sb = new StringBuilder();
         sb.append("?userid=" + userid);
 
-//        final List<PictureObject>[] photoResult = null;
         new AsyncTask<PictureObject, Void, String>() {
 
             @Override
@@ -204,7 +202,6 @@ public class PhotoDB {
         sb.append("?userid=" + userid);
         sb.append("&category=" + category);
 
-//        final List<PictureObject>[] photoResult = null;
         new AsyncTask<PictureObject, Void, String>() {
 
             @Override
