@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -18,6 +19,12 @@ import java.math.BigDecimal;
 
 
 public class newEntryActivity extends AppCompatActivity {
+    private Uri myPhotoId;
+    private String myLocation;
+    private String myPrice;
+    private String myPaymentType;
+    private String myDate;
+    private String myCategory;
 
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
@@ -25,34 +32,32 @@ public class newEntryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_entry);
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra(OverviewActivity.TOTAL_AMOUNT);
-        String loc = intent.getStringExtra(OverviewActivity.LOCATION);
-        String payment = intent.getStringExtra(OverviewActivity.PAYMENT_TYPE);
-        String date = intent.getStringExtra(OverviewActivity.DATE);
-        String category = intent.getStringExtra(OverviewActivity.CATEGORY);
+        myPrice = intent.getStringExtra(OverviewActivity.TOTAL_AMOUNT);
+        myLocation = intent.getStringExtra(OverviewActivity.LOCATION);
+        myPaymentType = intent.getStringExtra(OverviewActivity.PAYMENT_TYPE);
+        myDate = intent.getStringExtra(OverviewActivity.DATE);
 
         EditText locationEditText = (EditText) findViewById(R.id.locationId);
-        locationEditText.setText(loc);
+        locationEditText.setText(myLocation);
         EditText dateEdit = (EditText) findViewById(R.id.dateId);
-        dateEdit.setText(date);
+        dateEdit.setText(myDate);
         EditText editText = (EditText) findViewById(R.id.amountId);
-        editText.setText(message);
+        editText.setText(myPrice);
         EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
-        paymentEdit.setText(payment);
+        paymentEdit.setText(myPaymentType);
 
-
-        Uri image = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
-        setImage(image);
-
-//        if (cameraOrGallery.equals(OverviewActivity.GALLERY_IMAGE_REQUEST)) {
-////            Bitmap bitmap = (Bitmap) intent.getStringExtra(OverviewActivity.BITMAP_IMG);
-//        } else if (cameraOrGallery.equals(OverviewActivity.CAMERA_IMAGE_REQUEST)) {
-//            findLastPicture();
-//        }
+        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
+        setImage(myPhotoId);
     }
 
-    private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice, String thePaymentType,
-                                String theDate, String theCategory) {
+    private void okButtonPressed(View theView) {
+
+        sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+    }
+
+    private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice,
+                                String thePaymentType, String theDate,
+                                String theCategory) {
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(
                 getString(R.string.prefKey), Context.MODE_PRIVATE);
         int userId = prefs.getInt(getString(R.string.UID), -1);
@@ -61,10 +66,14 @@ public class newEntryActivity extends AppCompatActivity {
         }
         BigDecimal price = new BigDecimal(thePrice);
 
-        PictureObject pictureObject = new PictureObject(userId, thePhotoId.toString(), theLocation, price,
-                thePaymentType, theDate, theCategory);
+        PictureObject pictureObject = new PictureObject(userId, thePhotoId.toString(),
+                theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(getApplicationContext());
         photoDB.addPhoto(pictureObject);
+
+    }
+
+    public void retakeClicked(View theView) {
 
     }
 
@@ -72,30 +81,4 @@ public class newEntryActivity extends AppCompatActivity {
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageURI(theUri);
     }
-
-
-//    private void findLastPicture() {
-//        // Find the last picture
-//        String[] projection = new String[]{
-//                MediaStore.Images.ImageColumns._ID,
-//                MediaStore.Images.ImageColumns.DATA,
-//                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-//                MediaStore.Images.ImageColumns.DATE_TAKEN,
-//                MediaStore.Images.ImageColumns.MIME_TYPE
-//        };
-//        final Cursor cursor = getApplicationContext().getContentResolver()
-//                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
-//                        null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
-//
-//// Put it in the image view
-//        if (cursor.moveToFirst()) {
-//            final ImageView imageView = (ImageView) findViewById(R.id.imageView);
-//            String imageLocation = cursor.getString(1);
-//            File imageFile = new File(imageLocation);
-//            if (imageFile.exists()) {   // TODO: is there a better way to do this?
-//                Bitmap bm = BitmapFactory.decodeFile(imageLocation);
-//                imageView.setImageBitmap(bm);
-//            }
-//        }
-//    }
 }

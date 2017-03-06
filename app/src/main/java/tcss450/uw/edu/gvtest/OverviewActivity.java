@@ -68,7 +68,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final String PAYMENT_TYPE = "payment-from-pic";
     public static final String DATE = "date-from-pic";
     public static final String CAMERA_OR_GALLERY = "camera-or-gallery";
-    public static final String CATEGORY = "category-from-spinner";
 
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
     public static final int GALLERY_IMAGE_REQUEST = 1;
@@ -102,9 +101,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.categories, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
+        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
+        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
@@ -515,7 +514,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 }
             }
         }
-
         toReturn += highest;
 
         if (highest == -1) {
