@@ -118,7 +118,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public void onResume() {
         super.onResume();
         PhotoDB db = new PhotoDB(this.getApplicationContext());
-        
+
     }
 
     /**
@@ -306,6 +306,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 progressDialog.setIndeterminate(true);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.setMessage("Processing image...");
+                progressDialog.setCancelable(false);
+                progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
             }
 
@@ -437,7 +439,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         if ((theInput.contains("Master") && theInput.contains("Card")) ||
                 theInput.contains("MASTERCARD") ||
                 (theInput.contains("MASTER") && theInput.contains("CARD"))) {
-            toReturn = "Master Card";
+            toReturn = "Master_Card";
         } else if (theInput.contains("Visa") || theInput.contains("VISA")) {
             toReturn = "Visa";
         } else if (theInput.contains("Discover") || theInput.contains("DISCOVER")) {
@@ -447,7 +449,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         } else if (theInput.contains("Check") || theInput.contains("check") || theInput.contains("CHECK")) {
             toReturn = "Check";
         } else if (theInput.contains("American") && theInput.contains("Express")) {
-            toReturn = "American Express";
+            toReturn = "American_Express";
         }
         return toReturn;
     }

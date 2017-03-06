@@ -3,6 +3,7 @@ package tcss450.uw.edu.gvtest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -52,14 +53,14 @@ public class PhotoDB {
         // build GET Statement
         final StringBuilder sb = new StringBuilder();
         sb.append("?userid=" + userid);
-        sb.append("&photo=" + picData.getMyPhotoId());
+        sb.append("&photoid=" + picData.getMyPhotoId());
         sb.append("&location=" + picData.getMyLocation());
         sb.append("&total=" + picData.getMyPrice());
         sb.append("&payment_type=" + picData.getMyPaymentType());
         sb.append("&date=" + picData.getMyDate());
         sb.append("&category=" + picData.getMyCategory());
 
-
+        Log.d("addphoto", "addPhoto: " + PARTIAL_URL + SERVICE + sb.toString());
         new AsyncTask<PictureObject, Void, String>() {
 
             @Override
@@ -92,17 +93,19 @@ public class PhotoDB {
                             .show();
                     return;
                 } else if (result.startsWith("{\"Success")) {
-                    try {
-                        JSONObject success = new JSONObject(result);
-                        photoResult = getJsonPhotos(success.getJSONArray("photoData"));
-
-                        photoData = success.getJSONArray("photoData");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        JSONObject root = new JSONObject(result);
+//                        JSONObject success = root.getJSONObject("Success");
+//                        photoResult = getJsonPhotos(success.getJSONArray("Status"));
+//
+//                        photoData = success.getJSONArray("photoData");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
                 } else if (result.startsWith("{\"Error")) {
                     try {
-                        JSONObject error = new JSONObject(result);
+                        JSONObject root = new JSONObject(result);
+                        JSONObject error = root.getJSONObject("Error");
                         photoResult = getJsonPhotos(error.getJSONArray("photoData"));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -137,7 +140,7 @@ public class PhotoDB {
         final StringBuilder sb = new StringBuilder();
         sb.append("?userid=" + userid);
 
-        final List<PictureObject>[] photoResult = null;
+//        final List<PictureObject>[] photoResult = null;
         new AsyncTask<PictureObject, Void, String>() {
 
             @Override
@@ -171,8 +174,9 @@ public class PhotoDB {
                     return;
                 } else if (result.startsWith("{\"Success")) {
                     try {
-                        JSONObject success = new JSONObject(result);
-                        photoResult[0] = getJsonPhotos(success.getJSONArray("photoData"));
+                        JSONObject root = new JSONObject(result);
+                        JSONObject success = root.getJSONObject("Success");
+                        photoResult = getJsonPhotos(success.getJSONArray("photoData"));
 
                         photoData = success.getJSONArray("photoData");
                     } catch (JSONException e) {
@@ -180,15 +184,16 @@ public class PhotoDB {
                     }
                 } else if (result.startsWith("{\"Error")) {
                     try {
-                        JSONObject error = new JSONObject(result);
-                        photoResult[0] = getJsonPhotos(error.getJSONArray("photoData"));
+                        JSONObject root = new JSONObject(result);
+                        JSONObject error = root.getJSONObject("Error");
+                        photoResult = getJsonPhotos(error.getJSONArray("photoData"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }.execute();
-        return photoResult[0];
+        return photoResult;
     }
 
 
@@ -199,7 +204,7 @@ public class PhotoDB {
         sb.append("?userid=" + userid);
         sb.append("&category=" + category);
 
-        final List<PictureObject>[] photoResult = null;
+//        final List<PictureObject>[] photoResult = null;
         new AsyncTask<PictureObject, Void, String>() {
 
             @Override
@@ -232,24 +237,25 @@ public class PhotoDB {
                             .show();
                     return;
                 } else if (result.startsWith("{\"Success")) {
-                    try {
-                        JSONObject success = new JSONObject(result);
-                        photoResult[0] = getJsonPhotos(success.getJSONArray("photoData"));
-
-                        photoData = success.getJSONArray("photoData");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        JSONObject success = new JSONObject(result);
+//                        photoResult = getJsonPhotos(success.getJSONArray("photoData"));
+//
+//                        photoData = success.getJSONArray("photoData");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
                 } else if (result.startsWith("{\"Error")) {
                     try {
-                        JSONObject error = new JSONObject(result);
-                        photoResult[0] = getJsonPhotos(error.getJSONArray("photoData"));
+                        JSONObject root = new JSONObject(result);
+                        JSONObject error = root.getJSONObject("Error");
+                        photoResult = getJsonPhotos(error.getJSONArray("photoData"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }.execute();
-        return photoResult[0];
+        return photoResult;
     }
 }

@@ -16,6 +16,7 @@ import android.widget.Spinner;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private Uri myPhotoId;
@@ -81,9 +82,12 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
             price = BigDecimal.ZERO;
         }
 
-        PictureObject pictureObject = new PictureObject(userId, thePhotoId.toString(),
+        // TODO Toork PhotoId.toString()
+        PictureObject pictureObject = new PictureObject(userId, myPhotoId.toString(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(getApplicationContext());
+        List<PictureObject> temp = photoDB.getAllPhotos();
+        Log.d("PicturePrint", temp.toString());
         Log.d("DEBUGEK", pictureObject.toString());
         photoDB.addPhoto(pictureObject);
 
