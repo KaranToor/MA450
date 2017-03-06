@@ -159,7 +159,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     }
 
-
     /**
      * Launches the dialog for the user to choose a picture from their gallery.
      *
@@ -257,13 +256,26 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      */
     private File getCameraFile() throws IOException {
         // Create an image file name
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
+        int userid = prefs.getInt(getString(R.string.UID), -1);
+        if (userid == -1) {
+            throw new IllegalArgumentException("userid is not set in Prefs");
+        }
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+        String imageFileName = userid + "_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+
+        File image = new File(
+                storageDir,
+                imageFileName +  /* prefix */
+                ".jpg"        /* suffix */
+                      /* directory */
         );
 
         // Save a file: path for use with ACTION_VIEW intents
@@ -293,8 +305,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             uploadImage(theData.getData());
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
+            galleryAddPic();
             uploadImage(Uri.fromFile(photo));
         }
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
     /**
@@ -345,6 +366,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 progressDialog.setIndeterminate(true);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.setMessage("Processing image...");
+                progressDialog.setCancelable(false);
+                progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
             }
 
@@ -476,7 +499,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         if ((theInput.contains("Master") && theInput.contains("Card")) ||
                 theInput.contains("MASTERCARD") ||
                 (theInput.contains("MASTER") && theInput.contains("CARD"))) {
-            toReturn = "Master Card";
+            toReturn = "Master_Card";
         } else if (theInput.contains("Visa") || theInput.contains("VISA")) {
             toReturn = "Visa";
         } else if (theInput.contains("Discover") || theInput.contains("DISCOVER")) {
@@ -486,7 +509,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         } else if (theInput.contains("Check") || theInput.contains("check") || theInput.contains("CHECK")) {
             toReturn = "Check";
         } else if (theInput.contains("American") && theInput.contains("Express")) {
-            toReturn = "American Express";
+            toReturn = "American_Express";
         }
         return toReturn;
     }
@@ -560,7 +583,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 }
             }
         }
-
         toReturn += highest;
 
         if (highest == -1) {
@@ -641,20 +663,21 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      */
     private void init() {
         TableLayout table = (TableLayout) findViewById(R.id.table);
-        for (int i = 1; i < 5; i++) {
-            TableRow t = new TableRow(this);
-            TextView text = new TextView(this);
-            text.setText(R.string.testString);
-            t.addView(text);
-            t.setClickable(true);
-            t.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    viewEntry(v);
-                }
-            });
-            table.addView(t);
-        }
+//        for (int i = 1; i < 5; i++) {
+//            TableRow t = new TableRow(this);
+//            TextView text = new TextView(this);
+//            text.setText(R.string.testString);
+//            t.addView(text);
+//            t.setClickable(true);
+//            t.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    viewEntry(v);
+//                }
+//            });
+//            table.addView(t);
+//        }
+
     }
 
     /**
