@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 //        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean isLoggedIn = mPrefs.getBoolean(getString(R.string.isloggedin), false);
         System.out.print(isLoggedIn);
-        if (isLoggedIn){
+        if (isLoggedIn) {
             boolean hasPIN = mPrefs.getBoolean(getString(R.string.hasPIN), false);
             if (!hasPIN) {
                 startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.incompleteFormMsg), Toast.LENGTH_LONG).show();
 
             }
-        } else if (!SignUpActivity.isValidEmail(myEmail.getText())){
+        } else if (!SignUpActivity.isValidEmail(myEmail.getText())) {
             myEmail.requestFocus();
             myEmail.setError(getString(R.string.invalidEmailMsg));
         } else {
@@ -186,11 +186,14 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } else if (theResult.contains("Error")) {
-
-            } else {
-
+                if (theResult.contains("Username Does not Exist")) {
+                    myEmail.requestFocus();
+                    myEmail.setError("Username Does Not Exist");
+                } else if (theResult.contains("Incorrect Password")) {
+                    myPassword.requestFocus();
+                    myPassword.setError("Incorrect Password");
+                }
             }
-
         }
 
         private String parseLoginErrorResponse(String theString) {
@@ -200,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
             return toReturn;
         }
     }
+
     public int getUserId(String theResult) throws JSONException {
         int uId = -1;
         try {

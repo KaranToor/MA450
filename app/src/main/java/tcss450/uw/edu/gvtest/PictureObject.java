@@ -15,8 +15,9 @@ public class PictureObject {
     private String myCategory;
     private String myPhotoId;
 
-    public PictureObject(int myUserId, String myLocation, String myPaymentType, String myDate,
-                         BigDecimal myPrice, String myCategory, String myPhotoId) {
+    public PictureObject(int myUserId, String myPhotoId, String myLocation,
+                         BigDecimal myPrice, String myPaymentType, String myDate,
+                         String myCategory) {
         this.myUserId = myUserId;
         this.myLocation = myLocation;
         this.myPaymentType = myPaymentType;
