@@ -31,10 +31,29 @@ import java.net.URL;
  * Adds a new user to the app's database and allows for future logins from this new user.
  */
 public class SignUpActivity extends AppCompatActivity {
+    /**
+     * The partial URL location used to access the server.
+     */
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
+
+    /**
+     * The field which contains the desired username.
+     */
     EditText myUser;
+
+    /**
+     * The field which contains the desired password.
+     */
     EditText myPassword;
+
+    /**
+     * The shared preferences for the application.
+     */
     SharedPreferences mPrefs;
+
+    /**
+     * The ID number of the current user.
+     */
     private int myUserId;
 
     /**

@@ -36,9 +36,24 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
 
+    /**
+     * The EditText which holds the inputted Email.
+     */
     private EditText myEmail;
+
+    /**
+     * The EditText which holds the inputted password.
+     */
     private EditText myPassword;
+
+    /**
+     * The application's SharedPreferences
+     */
     private SharedPreferences mPrefs;
+
+    /**
+     * A field to hold the unique ID number of the user.
+     */
     private int myUserId;
 
     /**
@@ -54,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    /**
+     * Starts the activity.
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -121,7 +139,9 @@ public class MainActivity extends AppCompatActivity {
         private final String SERVICE = getString(R.string.loginExtension);
         Button submit = (Button) findViewById(R.id.button2);
 
-
+        /**
+         * Things to be done before executing the AsyncTask.
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -205,6 +225,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Parses the result for the ID of the current user.
+     * @param theResult is the result
+     * @return the ID number of the logged-in user
+     * @throws JSONException
+     */
     public int getUserId(String theResult) throws JSONException {
         int uId = -1;
         try {

@@ -9,12 +9,39 @@ import java.math.BigDecimal;
  */
 
 public class PictureObject {
+    /**
+     * Holds the ID number of the current user.
+     */
     private int myUserId;
+
+    /**
+     * The location field for this PictureObject.
+     */
     private String myLocation;
+
+    /**
+     * The payment type field for this PictureObject.
+     */
     private String myPaymentType;
+
+    /**
+     * The date field for this PictureObject.
+     */
     private String myDate;
+
+    /**
+     * The price field for this PictureObject.
+     */
     private BigDecimal myPrice;
+
+    /**
+     * The category field for this PictureObject.
+     */
     private String myCategory;
+
+    /**
+     * The photoID field for this PictureObject.
+     */
     private String myPhotoId;
 
     /**
