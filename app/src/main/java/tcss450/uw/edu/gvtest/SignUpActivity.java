@@ -1,14 +1,23 @@
 package tcss450.uw.edu.gvtest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -23,6 +32,8 @@ public class SignUpActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
     EditText myUser;
     EditText myPassword;
+    SharedPreferences mPrefs;
+    private int myUserId;
 
     /**
      * Initializes activity.
@@ -32,6 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
+        mPrefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
         setContentView(R.layout.activity_sign_up);
     }
 
@@ -44,6 +56,8 @@ public class SignUpActivity extends AppCompatActivity {
         myUser = (EditText) findViewById(R.id.editText4);
         myPassword = (EditText) findViewById(R.id.editText6);
         EditText myPass2 = (EditText) findViewById(R.id.editText7);
+        CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
+        EditText pinBox = (EditText) findViewById(R.id.newPIN);
 
         if (isValidEmail(myUser.getText()) && myPassword.getText().length() >= 8
                 && myPass2.getText().length() >= 8) {
@@ -64,12 +78,15 @@ public class SignUpActivity extends AppCompatActivity {
                 myPass2.requestFocus();
                 myPass2.setError(getString(R.string.confirmPasswordErr));
             }
-        } else if (myPassword.getText().length() < 8){
+        } else if (myPassword.getText().length() < 8) {
             myPassword.requestFocus();
             myPassword.setError(getString(R.string.passwordErrorMessage));
         } else if (myPass2.getText().length() < 8) {
             myPass2.requestFocus();
             myPass2.setError(getString(R.string.passwordErrorMessage));
+        } else if (checkBox.isChecked() && pinBox.getText().toString().length() < 4) {
+            pinBox.requestFocus();
+            pinBox.setError("PIN must contain at least 4 digits");
         }
     }
 
@@ -84,6 +101,19 @@ public class SignUpActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
+    public void setPINFieldVisibility(View view) {
+        CheckBox checkBox = (CheckBox) view;
+        EditText pinBox = (EditText) findViewById(R.id.newPIN);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_sign_up);
+        if (checkBox.isChecked()) {
+            pinBox.setVisibility(View.VISIBLE);
+        } else {
+            pinBox.setVisibility(View.GONE);
+        }
+        pinBox.invalidate();
+        linearLayout.requestLayout();
+    }
+
     /**
      * Asynchronously reaches out to the app's database and adds the credentials of the new user
      */
@@ -91,10 +121,23 @@ public class SignUpActivity extends AppCompatActivity {
         private final String SERVICE = "register.php";
         Button submit = (Button) findViewById(R.id.button3);
 
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             submit.setClickable(false);
+            CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
+            EditText pinBox = (EditText) findViewById(R.id.newPIN);
+            //            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = mPrefs.edit();
+            if (checkBox.isChecked()) {
+                editor.putBoolean(getString(R.string.hasPIN), true);
+                editor.putString(getString(R.string.PINNum), pinBox.getText().toString());
+                editor.commit();
+            } else {
+                editor.putBoolean(getString(R.string.hasPIN), false);
+                editor.commit();
+            }
         }
 
         /**
@@ -137,17 +180,39 @@ public class SignUpActivity extends AppCompatActivity {
         protected void onPostExecute(String theResult) {
             // Something wrong with the network or the URL.
             submit.setClickable(true);
-            if (theResult.startsWith(getString(R.string.unable))) {
-                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
-                        .show();
-            } else if (theResult.contains(getString(R.string.err))) {
-                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
-                        .show();
-            } else {
-                Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+            if (theResult.contains("Success")) {
+                try {
+                    myUserId = getUserId(theResult);
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putInt(getString(R.string.UID), myUserId);
+                    editor.commit();
+                    Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else if (theResult.contains("Error")) {
+
             }
         }
     }
+
+    public int getUserId(String theResult) throws JSONException {
+        int uId = -1;
+        try {
+            JSONObject json = new JSONObject(theResult);
+            JSONObject obj = json.getJSONObject("Success");
+            uId = obj.getInt("ID#");
+            System.out.println("ID is " + uId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (uId == -1) {
+            throw new JSONException("ID was unable to be parsed");
+        }
+        return uId;
+    }
+
 }

@@ -21,6 +21,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * Initial screen upon app startup. Provides user capability to login
@@ -32,9 +36,10 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
 
-    EditText myEmail;
-    EditText myPassword;
-    SharedPreferences mPrefs;
+    private EditText myEmail;
+    private EditText myPassword;
+    private SharedPreferences mPrefs;
+    private int myUserId;
 
     /**
      * Initializes activity
@@ -55,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 //        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean isLoggedIn = mPrefs.getBoolean(getString(R.string.isloggedin), false);
         System.out.print(isLoggedIn);
-        if (isLoggedIn){
+        if (isLoggedIn) {
             boolean hasPIN = mPrefs.getBoolean(getString(R.string.hasPIN), false);
             if (!hasPIN) {
                 startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.incompleteFormMsg), Toast.LENGTH_LONG).show();
 
             }
-        } else if (!SignUpActivity.isValidEmail(myEmail.getText())){
+        } else if (!SignUpActivity.isValidEmail(myEmail.getText())) {
             myEmail.requestFocus();
             myEmail.setError(getString(R.string.invalidEmailMsg));
         } else {
@@ -165,22 +170,54 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(String theResult) {
+
             // Something wrong with the network or the URL.
             submit.setClickable(true);
-            if (theResult.startsWith(getString(R.string.unable))) {
-                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
-                        .show();
-                return;
-            } else if (theResult.contains(getString(R.string.err))) {
-                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
-                        .show();
-                return;
-            } else {
-                Log.d("AFTER LOGIN :", "onPostExecute: result " + theResult);
-                startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
-            }
+            if (theResult.contains("Success")) {
+                try {
+                    myUserId = getUserId(theResult);
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putInt(getString(R.string.UID), myUserId);
+                    editor.commit();
+                    Log.d("AFTER LOGIN :", "onPostExecute: result " + theResult);
+                    startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
+            } else if (theResult.contains("Error")) {
+                if (theResult.contains("Username Does not Exist")) {
+                    myEmail.requestFocus();
+                    myEmail.setError("Username Does Not Exist");
+                } else if (theResult.contains("Incorrect Password")) {
+                    myPassword.requestFocus();
+                    myPassword.setError("Incorrect Password");
+                }
+            }
         }
+
+        private String parseLoginErrorResponse(String theString) {
+            String toReturn = "";
+
+
+            return toReturn;
+        }
+    }
+
+    public int getUserId(String theResult) throws JSONException {
+        int uId = -1;
+        try {
+            JSONObject json = new JSONObject(theResult);
+            JSONObject obj = json.getJSONObject("Success");
+            uId = obj.getInt("ID#");
+            System.out.println("ID is " + uId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (uId == -1) {
+            throw new JSONException("ID was unable to be parsed");
+        }
+        return uId;
     }
 
 }

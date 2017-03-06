@@ -1,13 +1,18 @@
 package tcss450.uw.edu.gvtest;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -56,13 +61,12 @@ import java.util.regex.Pattern;
  * @author Google Cloud Vision sample modified by MA450 Team 11
  * @version Winter 2017
  */
-public class OverviewActivity extends AppCompatActivity implements View.OnLongClickListener {
+public class OverviewActivity extends AppCompatActivity implements View.OnLongClickListener, AdapterView.OnItemSelectedListener {
 
     public static final String TOTAL_AMOUNT = "picture-total-text";
     public static final String LOCATION = "location-from-pic";
     public static final String PAYMENT_TYPE = "payment-from-pic";
     public static final String DATE = "date-from-pic";
-    public static final String BITMAP_IMG = "bitmap-from-gallery";
     public static final String CAMERA_OR_GALLERY = "camera-or-gallery";
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
     public static final int GALLERY_IMAGE_REQUEST = 1;
@@ -70,7 +74,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
-//    public static final String FILE_NAME = "temp.jpg";
     public static String mCurrentPhotoPath;
     private static File photo;
 
@@ -80,8 +83,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TextView myImageDetails;
-    private Bitmap myGalleryBitmap;
-    private boolean myAccessedGallery;
+    private Uri myImageUri;
 
     /**
      * Called at the creation of the Activity.
@@ -94,6 +96,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         setContentView(R.layout.activity_overview);
         setProgressLabel();
         init();
+
+        Spinner spinner = (Spinner) findViewById(R.id.category_selector);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.categories, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         TableLayout table = (TableLayout) findViewById(R.id.table);
         TableRow t = new TableRow(this);
@@ -144,6 +155,33 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
+    public void onLogoutPressed(View theView) {
+        new AlertDialog.Builder(OverviewActivity.this)
+                .setTitle("LOGOUT")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                                getString(R.string.prefKey), Context.MODE_PRIVATE);
+
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean(getString(R.string.isloggedin), false);
+                        editor.commit();
+                        Intent intent = new Intent(OverviewActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        OverviewActivity.this.finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
     public void startCamera() throws IOException {
         if (PermissionUtils.requestPermission(
                 this,
@@ -151,13 +189,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA)) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
-            if(Build.VERSION.SDK_INT>=24){
-                try{
+
+            if (Build.VERSION.SDK_INT >= 24) {
+                try {
                     Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
                     m.invoke(null);
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -207,8 +245,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             mCurrentPhotoPath = theData.getData().toString();
             uploadImage(theData.getData());
 
-
-
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             uploadImage(Uri.fromFile(photo));
         }
@@ -223,8 +259,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         if (theUri != null) {
             try {
                 // scale the image to save on bandwidth
-                myGalleryBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), theUri);
-                myAccessedGallery = true;
+                myImageUri = theUri;
+
+                // Needed for some reason even though it is not used.
+                Bitmap galleryBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), theUri);
                 Bitmap bitmap =
                         scaleBitmapDown(
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), theUri),
@@ -372,15 +410,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         intent.putExtra(LOCATION, parseLocation(theMessage));
         intent.putExtra(PAYMENT_TYPE, parsePaymentType(theMessage));
         intent.putExtra(DATE, parseDate(theMessage));
-        if (!myAccessedGallery) {
-            intent.putExtra(CAMERA_OR_GALLERY, "" + CAMERA_IMAGE_REQUEST);
-        } else {
-            intent.putExtra(CAMERA_OR_GALLERY, "" + GALLERY_IMAGE_REQUEST);
-            if (myAccessedGallery) {
-//                intent.putExtra(BITMAP_IMG, myGalleryBitmap);
-                myAccessedGallery = false;
-             }
-        }
+        intent.putExtra(CAMERA_OR_GALLERY, myImageUri.toString());
+
+//        if (!myAccessedGallery) {
+//            intent.putExtra(CAMERA_OR_GALLERY, "" + CAMERA_IMAGE_REQUEST);
+//        } else {
+//            intent.putExtra(CAMERA_OR_GALLERY, "" + GALLERY_IMAGE_REQUEST);
+//            if (myAccessedGallery) {
+////                intent.putExtra(BITMAP_IMG, myGalleryBitmap);
+//                myAccessedGallery = false;
+//             }
+//        }
         startActivity(intent);
     }
 
@@ -477,7 +517,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         toReturn += highest;
 
         if (highest == -1) {
-            toReturn = "Price not found. Please enter.";
+            toReturn = "Not Found";
         } else {
             toReturn = formatDecimal(highest);
             toReturn = toReturn.trim();
@@ -601,11 +641,22 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     }
 
     @Override
-    public void onBackPressed(){  //do not call super.onBackPressed() here
+    public void onBackPressed() {  //do not call super.onBackPressed() here
         Intent backToHome = new Intent(Intent.ACTION_MAIN);
         backToHome.addCategory(Intent.CATEGORY_HOME);
         backToHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(backToHome);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Spinner spinner = (Spinner) findViewById(R.id.category_selector);
+        String selectedCategory = spinner.getSelectedItem().toString();
+        Log.d("selectedCat", selectedCategory);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
