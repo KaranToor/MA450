@@ -1,6 +1,8 @@
 package tcss450.uw.edu.gvtest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +17,7 @@ import java.io.File;
 
 
 public class newEntryActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
@@ -43,6 +46,16 @@ public class newEntryActivity extends AppCompatActivity {
 //        } else if (cameraOrGallery.equals(OverviewActivity.CAMERA_IMAGE_REQUEST)) {
 //            findLastPicture();
 //        }
+    }
+
+    private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice, String thePaymentType,
+                                String theDate) {
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                getString(R.string.prefKey), Context.MODE_PRIVATE);
+        prefs.getInt(R.string.UID)
+        int userId;
+        PictureObject pictureObject = new PictureObject(userId, thePhotoId, theLocation, price,
+                thePaymentType, theDate, theCategory);
     }
 
     private void setImage(Uri theUri) {
