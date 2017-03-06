@@ -140,6 +140,14 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     /**
+     * Returns to the previous activity when the cancel button is pressed.
+     * @param view the view that was pressed
+     */
+    public void cancelRegistration(View view) {
+        this.onBackPressed();
+    }
+
+    /**
      * Asynchronously reaches out to the app's database and adds the credentials of the new user
      */
     private class CreatingUserWebServiceTask extends AsyncTask<String, Void, String> {
