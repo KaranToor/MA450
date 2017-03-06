@@ -121,6 +121,7 @@ public class SignUpActivity extends AppCompatActivity {
         private final String SERVICE = "register.php";
         Button submit = (Button) findViewById(R.id.button3);
 
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -182,6 +183,9 @@ public class SignUpActivity extends AppCompatActivity {
             if (theResult.contains("Success")) {
                 try {
                     myUserId = getUserId(theResult);
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putInt(getString(R.string.UID), myUserId);
+                    editor.commit();
                     Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getApplicationContext().startActivity(intent);

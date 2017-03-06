@@ -176,6 +176,9 @@ public class MainActivity extends AppCompatActivity {
             if (theResult.contains("Success")) {
                 try {
                     myUserId = getUserId(theResult);
+                    SharedPreferences.Editor editor = mPrefs.edit();
+                    editor.putInt(getString(R.string.UID), myUserId);
+                    editor.commit();
                     Log.d("AFTER LOGIN :", "onPostExecute: result " + theResult);
                     startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
                 } catch (JSONException e) {
@@ -216,4 +219,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return uId;
     }
+
 }

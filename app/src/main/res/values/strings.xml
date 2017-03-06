@@ -63,6 +63,11 @@
     <string name="hasPIN">hasPIN</string>
     <string name="PINNum">PIN</string>
     <string name="prefKey">edu.uw.tcss450.PREFS</string>
+    <string name="locationstr">Location:</string>
+    <string name="amountstr">Amount:</string>
+    <string name="paymentstr">Payment:</string>
+    <string name="datestr">Date:</string>
+    <string name="UID">userID</string>
 
     <string-array name="categories">
         <item>Show All</item>
