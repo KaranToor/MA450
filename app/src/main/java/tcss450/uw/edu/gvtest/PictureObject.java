@@ -82,4 +82,11 @@ public class PictureObject {
     public void setMyPhotoId(String myPhotoId) {
         this.myPhotoId = myPhotoId;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(myPhotoId);
+        return sb.toString();
+    }
 }

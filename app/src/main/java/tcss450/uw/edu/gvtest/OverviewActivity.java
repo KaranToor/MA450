@@ -114,6 +114,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         table.addView(t);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        PhotoDB db = new PhotoDB(this.getApplicationContext());
+        
+    }
+
     /**
      * Launches the dialog for the user to choose a picture from their gallery.
      *
@@ -594,20 +601,21 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      */
     private void init() {
         TableLayout table = (TableLayout) findViewById(R.id.table);
-        for (int i = 1; i < 5; i++) {
-            TableRow t = new TableRow(this);
-            TextView text = new TextView(this);
-            text.setText(R.string.testString);
-            t.addView(text);
-            t.setClickable(true);
-            t.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    viewEntry(v);
-                }
-            });
-            table.addView(t);
-        }
+//        for (int i = 1; i < 5; i++) {
+//            TableRow t = new TableRow(this);
+//            TextView text = new TextView(this);
+//            text.setText(R.string.testString);
+//            t.addView(text);
+//            t.setClickable(true);
+//            t.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    viewEntry(v);
+//                }
+//            });
+//            table.addView(t);
+//        }
+
     }
 
     /**

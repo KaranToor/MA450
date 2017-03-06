@@ -59,7 +59,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         setImage(myPhotoId);
     }
 
-    private void okButtonPressed(View theView) {
+    public void okButtonPress(View theView) {
 
         sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
     }
@@ -73,11 +73,18 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         if (userId == -1) {
             throw new IllegalArgumentException("UserId was not set in SharedPreferences");
         }
-        BigDecimal price = new BigDecimal(thePrice);
+
+        BigDecimal price;
+        if (!myPrice.equals("Not Found")) {
+            price = new BigDecimal(thePrice);
+        } else {
+            price = BigDecimal.ZERO;
+        }
 
         PictureObject pictureObject = new PictureObject(userId, thePhotoId.toString(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(getApplicationContext());
+        Log.d("DEBUGEK", pictureObject.toString());
         photoDB.addPhoto(pictureObject);
 
     }
@@ -98,7 +105,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         if (position > 0) {
             myCategory = selectedCategory;
         }
-        Log.d("selectedCat", myCategory);
+//        Log.d("selectedCat", myCategory);
     }
 
     @Override
