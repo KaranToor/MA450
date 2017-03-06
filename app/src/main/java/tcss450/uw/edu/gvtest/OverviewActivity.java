@@ -68,6 +68,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final String PAYMENT_TYPE = "payment-from-pic";
     public static final String DATE = "date-from-pic";
     public static final String CAMERA_OR_GALLERY = "camera-or-gallery";
+    public static final String CATEGORY = "category-from-spinner";
+
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
     public static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;

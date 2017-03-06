@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.math.BigDecimal;
 
 
 public class newEntryActivity extends AppCompatActivity {
@@ -28,6 +29,7 @@ public class newEntryActivity extends AppCompatActivity {
         String loc = intent.getStringExtra(OverviewActivity.LOCATION);
         String payment = intent.getStringExtra(OverviewActivity.PAYMENT_TYPE);
         String date = intent.getStringExtra(OverviewActivity.DATE);
+        String category = intent.getStringExtra(OverviewActivity.CATEGORY);
 
         EditText locationEditText = (EditText) findViewById(R.id.locationId);
         locationEditText.setText(loc);
@@ -37,6 +39,7 @@ public class newEntryActivity extends AppCompatActivity {
         editText.setText(message);
         EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
         paymentEdit.setText(payment);
+
 
         Uri image = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
         setImage(image);
@@ -49,13 +52,20 @@ public class newEntryActivity extends AppCompatActivity {
     }
 
     private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice, String thePaymentType,
-                                String theDate) {
+                                String theDate, String theCategory) {
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(
                 getString(R.string.prefKey), Context.MODE_PRIVATE);
-        prefs.getInt(R.string.UID)
-        int userId;
-        PictureObject pictureObject = new PictureObject(userId, thePhotoId, theLocation, price,
+        int userId = prefs.getInt(getString(R.string.UID), -1);
+        if (userId == -1) {
+            throw new IllegalArgumentException("UserId was not set in SharedPreferences");
+        }
+        BigDecimal price = new BigDecimal(thePrice);
+
+        PictureObject pictureObject = new PictureObject(userId, thePhotoId.toString(), theLocation, price,
                 thePaymentType, theDate, theCategory);
+        PhotoDB photoDB = new PhotoDB(getApplicationContext());
+        photoDB.addPhoto(pictureObject);
+
     }
 
     private void setImage(Uri theUri) {
