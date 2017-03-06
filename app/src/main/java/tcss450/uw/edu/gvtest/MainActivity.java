@@ -21,6 +21,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * Initial screen upon app startup. Provides user capability to login
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText myEmail;
     private EditText myPassword;
     private SharedPreferences mPrefs;
+    private int myUserId;
 
     /**
      * Initializes activity
@@ -165,21 +170,41 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(String theResult) {
+
             // Something wrong with the network or the URL.
             submit.setClickable(true);
-            if (theResult.startsWith(getString(R.string.unable))) {
+            if (theResult.contains("Success")) {
+                try {
+                    myUserId = getUserId(theResult);
+                    Log.d("AFTER LOGIN :", "onPostExecute: result " + theResult);
+                    startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else if (theResult.contains("Error")) {
                 Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
                         .show();
-                return;
-            } else if (theResult.contains(getString(R.string.err))) {
-                Toast.makeText(getApplicationContext(), theResult, Toast.LENGTH_LONG)
-                        .show();
-                return;
             } else {
-                Log.d("AFTER LOGIN :", "onPostExecute: result " + theResult);
-                startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
+
             }
 
+        }
+
+        private int getUserId(String theResult) throws JSONException {
+            int uId = -1;
+            try {
+                JSONObject json = new JSONObject(theResult);
+                JSONObject obj = json.getJSONObject("Success");
+                uId = obj.getInt("ID#");
+                System.out.println("ID is " + uId);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (uId == -1) {
+                throw new JSONException("ID was unable to be parsed");
+            }
+            return uId;
         }
     }
 
