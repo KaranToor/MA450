@@ -277,14 +277,17 @@ public class PhotoDB {
                             .show();
                     return;
                 } else if (result.startsWith("{\"Success")) {
-//                    try {
-//                        JSONObject success = new JSONObject(result);
-//                        photoResult = getJsonPhotos(success.getJSONArray("photoData"));
-//
-//                        photoData = success.getJSONArray("photoData");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        JSONObject root = new JSONObject(result);
+                        JSONObject success = root.getJSONObject("Success");
+                        photoResult = getJsonPhotos(success.getJSONArray("photoData"));
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 } else if (result.startsWith("{\"Error")) {
                     try {
                         JSONObject root = new JSONObject(result);
@@ -293,6 +296,10 @@ public class PhotoDB {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+
+                if (myActivity instanceof  OverviewActivity) {
+                    ((OverviewActivity) myActivity).updateTable(photoResult);
                 }
             }
         }.execute();

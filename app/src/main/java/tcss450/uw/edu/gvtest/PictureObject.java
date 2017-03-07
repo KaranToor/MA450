@@ -46,13 +46,13 @@ public class PictureObject {
 
     /**
      * Instantiates the variables of Picture Object
-     * @param myUserId
-     * @param myPhotoId
-     * @param myLocation
-     * @param myPrice
-     * @param myPaymentType
-     * @param myDate
-     * @param myCategory
+     * @param myUserId the user's id
+     * @param myPhotoId the id associated with the photo
+     * @param myLocation the location of purchase
+     * @param myPrice the total price of purchases on any one receipt
+     * @param myPaymentType the payment type used for purchases
+     * @param myDate the date of purchases
+     * @param myCategory the category of these purchases
      */
     public PictureObject(int myUserId, String myPhotoId, String myLocation,
                          BigDecimal myPrice, String myPaymentType, String myDate,
@@ -68,7 +68,7 @@ public class PictureObject {
 
     /**
      * Gets the user id
-     * @return myUserId
+     * @return myUserId to be retrieved
      */
     public int getMyUserId() {
         return myUserId;
@@ -76,7 +76,7 @@ public class PictureObject {
 
     /**
      * sets the user id
-     * @param myUserId
+     * @param myUserId to be set
      */
     public void setMyUserId(int myUserId) {
         this.myUserId = myUserId;
@@ -84,7 +84,7 @@ public class PictureObject {
 
     /**
      * Gets the location of purchase from receipt
-     * @return myLocation
+     * @return myLocation to be retrieved
      */
     public String getMyLocation() {
         return myLocation;
@@ -92,7 +92,7 @@ public class PictureObject {
 
     /**
      * Sets my location
-     * @param myLocation
+     * @param myLocation to be set
      */
     public void setMyLocation(String myLocation) {
         this.myLocation = myLocation;
@@ -100,7 +100,7 @@ public class PictureObject {
 
     /**
      * Gets the payment type
-     * @return myPaymentType
+     * @return myPaymentType to be retrieved
      */
     public String getMyPaymentType() {
         return myPaymentType;
@@ -108,7 +108,7 @@ public class PictureObject {
 
     /**
      * Sets the payment type
-     * @param myPaymentType
+     * @param myPaymentType to be set
      */
     public void setMyPaymentType(String myPaymentType) {
         this.myPaymentType = myPaymentType;
@@ -116,7 +116,7 @@ public class PictureObject {
 
     /**
      * Gets the date from purchase on receipt
-     * @return myDate
+     * @return myDate to be retrieved
      */
     public String getMyDate() {
         return myDate;
@@ -124,7 +124,7 @@ public class PictureObject {
 
     /**
      * Sets the date
-     * @param myDate
+     * @param myDate to be set
      */
     public void setMyDate(String myDate) {
         this.myDate = myDate;
@@ -132,7 +132,7 @@ public class PictureObject {
 
     /**
      * Gets the cost of purchase
-     * @return myPrice
+     * @return myPrice to be retrieved
      */
     public BigDecimal getMyPrice() {
         return myPrice;
@@ -140,7 +140,7 @@ public class PictureObject {
 
     /**
      * Sets the cost of the purchase
-     * @param myPrice
+     * @param myPrice to be set
      */
     public void setMyPrice(BigDecimal myPrice) {
         this.myPrice = myPrice;
@@ -148,7 +148,7 @@ public class PictureObject {
 
     /**
      * Gets my category
-     * @return myCategory
+     * @return myCategory to be retrieved
      */
     public String getMyCategory() {
         return myCategory;
@@ -156,7 +156,7 @@ public class PictureObject {
 
     /**
      * Sets the category
-     * @param myCategory
+     * @param myCategory to be set
      */
     public void setMyCategory(String myCategory) {
         this.myCategory = myCategory;
@@ -164,7 +164,7 @@ public class PictureObject {
 
     /**
      * Gets the photo Id
-     * @return myPhotoId
+     * @return myPhotoId to be retrieved
      */
     public String getMyPhotoId() {
         return myPhotoId;
@@ -172,7 +172,7 @@ public class PictureObject {
 
     /**
      * Sets my photo id
-     * @param myPhotoId
+     * @param myPhotoId to be set
      */
     public void setMyPhotoId(String myPhotoId) {
         this.myPhotoId = myPhotoId;

@@ -81,6 +81,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
+    PhotoDB pdb;
+
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
     public static String mCurrentPhotoPath;
@@ -128,7 +130,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     @Override
     public void onResume() {
         super.onResume();
-        PhotoDB pdb = new PhotoDB(this);
+        //PhotoDB pdb = new PhotoDB(this);
+        pdb = new PhotoDB(this);
+
         pdb.getAllPhotos();
         // Dont make any calls after getAllPhotos()
     }
@@ -836,10 +840,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
         String selectedCategory = spinner.getSelectedItem().toString();
         Log.d("selectedCat", selectedCategory);
+        //PhotoDB pdb = new PhotoDB(this);
+        pdb.getCategoryAll(selectedCategory);
     }
 
     /**
-     * An obligatory empty method to implement OnItemSelectedListener.
+     * An
+     * obligatory empty method to implement OnItemSelectedListener.
      * @param parent
      */
     @Override
