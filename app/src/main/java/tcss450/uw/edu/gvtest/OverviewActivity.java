@@ -248,7 +248,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             TextView date = new TextView(this);
             date.setText("NO ENTRIES FOUND");
             t.addView(date);
-            table.addView(t);
+            //table.addView(t);
 
         }
     }
