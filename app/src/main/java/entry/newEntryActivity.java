@@ -1,4 +1,4 @@
-package tcss450.uw.edu.gvtest;
+package entry;
 
 import android.Manifest;
 import android.content.Context;
@@ -27,7 +27,11 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+
+import picture.PhotoDB;
+import picture.PictureObject;
+import tcss450.uw.edu.gvtest.R;
+import utils.PermissionUtils;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;

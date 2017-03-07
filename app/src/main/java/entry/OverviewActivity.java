@@ -1,26 +1,20 @@
-package tcss450.uw.edu.gvtest;
+package entry;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.StrictMode;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.Space;
 import android.widget.Spinner;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -50,8 +44,6 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
-import org.w3c.dom.Text;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +54,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import picture.PhotoDB;
+import picture.PictureObject;
+import tcss450.uw.edu.gvtest.MainActivity;
+import tcss450.uw.edu.gvtest.R;
+import utils.PackageManagerUtils;
+import utils.PermissionUtils;
 
 
 /**
@@ -224,13 +223,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
                     gridLayout.addView(date, i);
 //                    titleText.setCompoundDrawablesWithIntrinsicBounds(rightIc, 0, 0, 0);
-                    GridLayout.LayoutParams dateparam = new GridLayout.LayoutParams();
+                    GridLayout.LayoutParams dateparam = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, .3f),      GridLayout.spec(GridLayout.UNDEFINED, .3f));
                     dateparam.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                    dateparam.width = 350;
+                    dateparam.width = GridLayout.LayoutParams.WRAP_CONTENT;
                     dateparam.rightMargin = 5;
                     dateparam.topMargin = 5;
                     dateparam.setGravity(Gravity.CENTER);
-                    dateparam.columnSpec = GridLayout.spec(0);
+                    dateparam.columnSpec = GridLayout.spec(0, 0.3f);
+//                GridLayout.LayoutParams parem = new LayoutParams();
+//                v.setLayoutParams(parem);
                     dateparam.rowSpec = GridLayout.spec(i);
                     date.setLayoutParams(dateparam);
                     gridLayout.addView(location, i);
@@ -238,23 +239,23 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 GridLayout.LayoutParams locationParam = new GridLayout.LayoutParams();
                 locationParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
                 locationParam.width = GridLayout.LayoutParams.WRAP_CONTENT;
-                locationParam.leftMargin = getWindowManager().getDefaultDisplay().getWidth()/32;
-                locationParam.rightMargin = 5;
+                locationParam.leftMargin = 0;
+                locationParam.rightMargin = 0;
                 locationParam.topMargin = 5;
-                locationParam.setGravity(Gravity.CENTER);
+                locationParam.setGravity(Gravity.START);
 //                date.setLayoutParams(param);
 //                gridLayout.addView(location);
-                locationParam.columnSpec = GridLayout.spec(1);
+                locationParam.columnSpec = GridLayout.spec(1, .3f);
                 locationParam.rowSpec = GridLayout.spec(i);
                     location.setLayoutParams(locationParam);
 
                 GridLayout.LayoutParams priceParam= new GridLayout.LayoutParams();
                 priceParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                priceParam.width = 350;
+                priceParam.width = GridLayout.LayoutParams.WRAP_CONTENT;
                 priceParam.rightMargin = 0;
                 priceParam.topMargin = 5;
                 priceParam.setGravity(Gravity.RIGHT);
-                priceParam.columnSpec = GridLayout.spec(2);
+                priceParam.columnSpec = GridLayout.spec(2, .3f);
                 priceParam.rowSpec = GridLayout.spec(i);
                 price.setLayoutParams(priceParam);
 //                price.setGravity(Gravity.RIGHT);
@@ -263,11 +264,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
                 GridLayout.LayoutParams categoryParam = new GridLayout.LayoutParams();
                 categoryParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                categoryParam.width = 600;
+                categoryParam.width = GridLayout.LayoutParams.WRAP_CONTENT;
                 categoryParam.leftMargin = 0;
                 categoryParam.topMargin = 5;
                 categoryParam.setGravity(Gravity.CENTER);
-                categoryParam.columnSpec = GridLayout.spec(3);
+                categoryParam.columnSpec = GridLayout.spec(3, 0.5f);
                 categoryParam.rowSpec = GridLayout.spec(i);
                 category.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 category.setLayoutParams(categoryParam);
@@ -277,7 +278,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             }
         } else {
             System.out.println("NO PHOTOS FOUND");
-            TableRow t = new TableRow(this);
+//            TableRow t = new TableRow(this);
+//            TextView date = new TextView(this);
+//            date.setText("NO ENTRIES FOUND");
+//            t.addView(date);
+//            //table.addView(t);
             TextView date = new TextView(this);
             date.setText("NO ENTRIES");
             gridLayout.addView(date, 0);

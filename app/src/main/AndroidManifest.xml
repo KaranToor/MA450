@@ -29,13 +29,13 @@
         <activity android:name=".PINEntry"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".OverviewActivity"
+        <activity android:name="entry.OverviewActivity"
             android:screenOrientation="portrait"
             ></activity>
-        <activity android:name=".newEntryActivity"
+        <activity android:name="entry.newEntryActivity"
             android:screenOrientation="portrait"
             ></activity>
-        <activity android:name=".viewEntryActivity"
+        <activity android:name="entry.viewEntryActivity"
             android:screenOrientation="portrait"
             ></activity>
     </application>

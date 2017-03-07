@@ -46,7 +46,7 @@
     <string name="PIN_prompt">Enter PIN</string>
     <string name="submit">Submit</string>
     <string name="sign_up">Sign Up</string>
-    <string name="address_example_com">address@example.com</string>
+    <string name="address_example_com">Login email@email.com</string>
     <string name="enter_password">Enter Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="pin_create">I would like to create a PIN for added security</string>
