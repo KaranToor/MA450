@@ -518,7 +518,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         String toReturn = "Not Found";
         if ((theInput.contains("Master") && theInput.contains("Card")) ||
                 theInput.contains("MASTERCARD") ||
-                (theInput.contains("MASTER") && theInput.contains("CARD"))) {
+                (theInput.contains("MASTER") && theInput.contains("CARD")) ||
+                theInput.contains("Mastercard")) {
             toReturn = "Master_Card";
         } else if (theInput.contains("Visa") || theInput.contains("VISA")) {
             toReturn = "Visa";
