@@ -249,11 +249,11 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         if (!myPrice.equals("Not Found")) {
             price = new BigDecimal(thePrice);
         } else {
-            price = BigDecimal.ZERO;
+            price = new BigDecimal(0.00001); //BigDecimal.ZERO;
         }
 
         // TODO Toork PhotoId.toString()
-        PictureObject pictureObject = new PictureObject(userId, myPhotoId.toString(),
+        PictureObject pictureObject = new PictureObject(userId, myPhotoId.getPath(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(this);
         photoDB.addPhoto(pictureObject);
