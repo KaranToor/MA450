@@ -1,7 +1,9 @@
-package tcss450.uw.edu.gvtest;
+package entry;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import tcss450.uw.edu.gvtest.R;
 
 /**
  * @author MA450 Team 11

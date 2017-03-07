@@ -1,4 +1,4 @@
-package tcss450.uw.edu.gvtest;
+package entry;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,11 +16,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.List;
+
+import picture.PhotoDB;
+import picture.PictureObject;
+import tcss450.uw.edu.gvtest.R;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     /**

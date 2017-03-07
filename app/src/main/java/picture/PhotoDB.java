@@ -1,4 +1,4 @@
-package tcss450.uw.edu.gvtest;
+package picture;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +20,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import tcss450.uw.edu.gvtest.MainActivity;
+import entry.OverviewActivity;
+import tcss450.uw.edu.gvtest.R;
 
 /**
  * Created by Edward on 3/5/2017.
@@ -225,7 +229,7 @@ public class PhotoDB {
                     }
                 }
 
-                if (myActivity instanceof  OverviewActivity) {
+                if (myActivity instanceof OverviewActivity) {
                     ((OverviewActivity) myActivity).updateTable(photoResult);
                 }
 

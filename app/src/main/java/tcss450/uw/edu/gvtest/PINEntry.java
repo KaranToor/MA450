@@ -3,11 +3,12 @@ package tcss450.uw.edu.gvtest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.health.ServiceHealthStats;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import entry.OverviewActivity;
 
 /**
  * Provides a pin entry for users to sign in rather than with a myEmail and myPassword.

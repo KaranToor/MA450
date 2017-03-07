@@ -1,4 +1,4 @@
-package tcss450.uw.edu.gvtest;
+package picture;
 
 import java.math.BigDecimal;
 
