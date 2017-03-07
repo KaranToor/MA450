@@ -1,14 +1,20 @@
 package entry;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,15 +22,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-
-import picture.PhotoDB;
-import picture.PictureObject;
-import tcss450.uw.edu.gvtest.R;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    public static final int GALLERY_PERMISSIONS_REQUEST = 0;
+    public static final int GALLERY_IMAGE_REQUEST = 1;
+    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
+    public static final int CAMERA_IMAGE_REQUEST = 3;
+
     /**
      * The file location of the photo to be used.
      */
@@ -55,7 +66,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
      */
     private String myCategory;
 
-    private boolean myOldEntry;
+    private boolean isEditEntry;
 
 
     @Override
@@ -87,13 +98,6 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
         paymentEdit.setText(myPaymentType);
 
-        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
-//        if (new File(myPhotoId).exists()) {
-//            // do something if it exists
-//        } else {
-//            // File was not found
-//        }
-        setImage(myPhotoId);
         if (Build.VERSION.SDK_INT >= 24) {
             try {
                 Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
@@ -103,9 +107,70 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
             }
         }
 
-        if (myOldEntry = intent.getBooleanExtra("fromTable", false)) {
+        /////////put in if statement? to bottom slashes ////////////////////////////////////////
+        Button retakePhotoButton = (Button) findViewById(R.id.button7);
+        retakePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(newEntryActivity.this);
+                builder
+                        .setMessage(R.string.dialog_select_prompt)
+                        .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (PermissionUtils.requestPermission(newEntryActivity.this, GALLERY_PERMISSIONS_REQUEST,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                    Intent intent = new Intent();
+                                    intent.setType(getString(R.string.intenttype));
+                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePhotoPrompt)),
+                                            GALLERY_IMAGE_REQUEST);
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    if (PermissionUtils.requestPermission(
+                                            newEntryActivity.this,
+                                            CAMERA_PERMISSIONS_REQUEST,
+                                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                                            Manifest.permission.CAMERA)) {
+                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+
+                                        if (Build.VERSION.SDK_INT >= 24) {
+                                            try {
+                                                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                                                m.invoke(null);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                builder.create().show();
+            }
+        });
+////////////////////////////////////////////////////////////////////////////////
+        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
+        if (new File(myPhotoId.getPath()).exists() || myPhotoId.toString().startsWith("content://")) {
+            setImage(myPhotoId);
+        } else {
+            // File was not found
+        }
+//        setImage(myPhotoId);
+
+        if (isEditEntry = intent.getBooleanExtra("fromTable", false)) {
             Button b = (Button) findViewById(R.id.ok_button);
-            b.setText(R.string.UpdateStr);
+            b.setText(getString(R.string.updateStr));
             b = (Button) findViewById(R.id.new_entry_back_button);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,6 +188,37 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
                 spinner.setSelection(spinnerPosition);
             }
         }
+    }
+
+
+
+    //ADDED THIS METHOD FROM OVERVIEW
+    private File getCameraFile() throws IOException {
+        // Create an image file name
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
+        int userid = prefs.getInt(getString(R.string.UID), -1);
+        if (userid == -1) {
+            throw new IllegalArgumentException("userid is not set in Prefs");
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = userid + "_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+
+        File image = new File(
+                storageDir,
+                imageFileName +  /* prefix */
+                        ".jpg"        /* suffix */
+                      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        return image;
     }
 
     public void okButtonPress(View theView) {
@@ -154,11 +250,11 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         if (!myPrice.equals("Not Found")) {
             price = new BigDecimal(thePrice);
         } else {
-            price = BigDecimal.ZERO;
+            price = new BigDecimal(0.00001); //BigDecimal.ZERO;
         }
 
         // TODO Toork PhotoId.toString()
-        PictureObject pictureObject = new PictureObject(userId, myPhotoId.toString(),
+        PictureObject pictureObject = new PictureObject(userId, myPhotoId.getPath(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(this);
         photoDB.addPhoto(pictureObject);

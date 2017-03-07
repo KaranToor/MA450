@@ -79,6 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
         EditText myPass2 = (EditText) findViewById(R.id.editText7);
         CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
         EditText pinBox = (EditText) findViewById(R.id.newPIN);
+        EditText nameTextField = (EditText) findViewById(R.id.editText);
 
         if (isValidEmail(myUser.getText()) && myPassword.getText().length() >= 8
                 && myPass2.getText().length() >= 8) {
@@ -99,7 +100,11 @@ public class SignUpActivity extends AppCompatActivity {
                 myPass2.requestFocus();
                 myPass2.setError(getString(R.string.confirmPasswordErr));
             }
-        } else if (myPassword.getText().length() < 8) {
+        } else if(!isValidEmail(myUser.getText())){
+            myUser.requestFocus();
+            myUser.setError("Please enter an email with address@example.com format");
+        }
+        else if (myPassword.getText().length() < 8) {
             myPassword.requestFocus();
             myPassword.setError(getString(R.string.passwordErrorMessage));
         } else if (myPass2.getText().length() < 8) {
@@ -108,6 +113,12 @@ public class SignUpActivity extends AppCompatActivity {
         } else if (checkBox.isChecked() && pinBox.getText().toString().length() < 4) {
             pinBox.requestFocus();
             pinBox.setError("PIN must contain at least 4 digits");
+        } else if (nameTextField.getText().toString().length() < 1) {
+            nameTextField.requestFocus();
+            nameTextField.setError("Please enter a Name");
+        } else if (myUser.getText().toString().length() < 1) {
+            myUser.requestFocus();
+            myUser.setError("Please enter an email address");
         }
     }
 
@@ -227,7 +238,11 @@ public class SignUpActivity extends AppCompatActivity {
                 }
 
             } else if (theResult.contains("Error")) {
-
+                if (theResult.contains("Already Registered")) {
+                    EditText editText = (EditText) findViewById(R.id.editText4);
+                    editText.requestFocus();
+                    editText.setError("Error: Email already registered");
+                }
             }
         }
     }
