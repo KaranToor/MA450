@@ -159,9 +159,8 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
             }
         });
 ////////////////////////////////////////////////////////////////////////////////
-        if (myOldEntry = intent.getBooleanExtra("fromTable", false)) {
         myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
-        if (new File(myPhotoId.getPath()).exists()) {
+        if (new File(myPhotoId.getPath()).exists() || myPhotoId.toString().startsWith("content://")) {
             setImage(myPhotoId);
         } else {
             // File was not found
@@ -192,6 +191,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
 
 
+    //ADDED THIS METHOD FROM OVERVIEW
     private File getCameraFile() throws IOException {
         // Create an image file name
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
@@ -256,11 +256,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         PictureObject pictureObject = new PictureObject(userId, myPhotoId.toString(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(this);
-        if (isEditEntry) {
-            photoDB.updatePhoto(pictureObject);
-        } else {
-            photoDB.addPhoto(pictureObject);
-        }
+        photoDB.addPhoto(pictureObject);
     }
 
     public void retakeClicked(View theView) throws IOException {
