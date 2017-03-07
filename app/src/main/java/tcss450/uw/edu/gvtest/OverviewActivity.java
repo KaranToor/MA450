@@ -139,9 +139,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     }
 
 
-    public void updateTable(List<PictureObject> allPhotos) {
-        TableLayout table = (TableLayout) findViewById(R.id.table);
-        table.removeViewsInLayout(1, table.getChildCount() - 1);
+    public void updateTable(final List<PictureObject> allPhotos) {
+//        TableLayout table = (TableLayout) findViewById(R.id.table);
+//        table.removeViewsInLayout(1, table.getChildCount() - 1);
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.entries);
+        gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
+        gridLayout.setColumnCount(4);
+        gridLayout.setRowCount(allPhotos.size() + 1);
 
         if(allPhotos != null) {
             for (int i = 1; i < allPhotos.size() +1; i++) {
@@ -150,41 +154,46 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 if (myCategory.equals(getString(R.string.nullStr))){
                     myCategory = "none";
                 }
-                int finalI = i-1;
+                final int finalI = i-1;
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         viewEntry(v,allPhotos.get(finalI));
                     }
-                });
+                };
 
                 TextView date = new TextView(this);
 //                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                date.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 date.setText(allPhotos.get(i-1).getMyDate());
                 date.setClickable(true);
-                date.setOnClickListener(onClickListener)
+                date.setOnClickListener(onClickListener);
+
                 TextView location = new TextView(this);
                 location.setText(allPhotos.get(i-1).getMyLocation());
+                location.setClickable(true);
+                location.setOnClickListener(onClickListener);
+
                 TextView price = new TextView(this);
                 price.setText("$"+allPhotos.get(i-1).getMyPrice());
-//                price.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+                price.setClickable(true);
+                price.setOnClickListener(onClickListener);
+
                 TextView category = new TextView(this);
                 category.setText(myCategory);
+                category.setClickable(true);
+                category.setOnClickListener(onClickListener);
 //                text.setText(allPhotos.get(i).getMyDate() + "      " + allPhotos.get(i).getMyLocation()
 //                        + "                          " + allPhotos.get(i).getMyPrice() + "             "
 //                        + myCategory);
 
-                GridLayout gridLayout = (GridLayout) findViewById(R.id.entries);
-                gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
-                gridLayout.setColumnCount(4);
-                gridLayout.setRowCount(allPhotos.size() + 1);
+
 
                     gridLayout.addView(date, i);
 //                    titleText.setCompoundDrawablesWithIntrinsicBounds(rightIc, 0, 0, 0);
                     GridLayout.LayoutParams dateparam = new GridLayout.LayoutParams();
                     dateparam.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                    dateparam.width = 250;
+                    dateparam.width = 350;
                     dateparam.rightMargin = 5;
                     dateparam.topMargin = 5;
                     dateparam.setGravity(Gravity.CENTER);
@@ -208,8 +217,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
                 GridLayout.LayoutParams priceParam= new GridLayout.LayoutParams();
                 priceParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                priceParam.width = 250;
-                priceParam.rightMargin = getWindowManager().getDefaultDisplay().getWidth()/8;
+                priceParam.width = 350;
+                priceParam.rightMargin = 0;
                 priceParam.topMargin = 5;
                 priceParam.setGravity(Gravity.RIGHT);
                 priceParam.columnSpec = GridLayout.spec(2);
@@ -221,12 +230,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
                 GridLayout.LayoutParams categoryParam = new GridLayout.LayoutParams();
                 categoryParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                categoryParam.width = GridLayout.LayoutParams.WRAP_CONTENT;
+                categoryParam.width = 600;
                 categoryParam.leftMargin = 0;
                 categoryParam.topMargin = 5;
                 categoryParam.setGravity(Gravity.CENTER);
                 categoryParam.columnSpec = GridLayout.spec(3);
                 categoryParam.rowSpec = GridLayout.spec(i);
+                category.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 category.setLayoutParams(categoryParam);
                 gridLayout.addView(category);
 
