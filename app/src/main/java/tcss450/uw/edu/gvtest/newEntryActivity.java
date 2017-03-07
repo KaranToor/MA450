@@ -112,50 +112,57 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(newEntryActivity.this);
-                builder
-                        .setMessage(R.string.dialog_select_prompt)
-                        .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (PermissionUtils.requestPermission(newEntryActivity.this, GALLERY_PERMISSIONS_REQUEST,
-                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                                    Intent intent = new Intent();
-                                    intent.setType(getString(R.string.intenttype));
-                                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePhotoPrompt)),
-                                            GALLERY_IMAGE_REQUEST);
-                                }
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    if (PermissionUtils.requestPermission(
-                                            newEntryActivity.this,
-                                            CAMERA_PERMISSIONS_REQUEST,
-                                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                                            Manifest.permission.CAMERA)) {
-                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+                Intent intent = new Intent(newEntryActivity.this, OverviewActivity.class);
+                //String message = "retake";
+                intent.putExtra("retake", "retake");
+                startActivity(intent);
 
-                                        if (Build.VERSION.SDK_INT >= 24) {
-                                            try {
-                                                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
-                                                m.invoke(null);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                        startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                builder.create().show();
+
+
+//                AlertDialog.Builder builder = new AlertDialog.Builder(newEntryActivity.this);
+//                builder
+//                        .setMessage(R.string.dialog_select_prompt)
+//                        .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                if (PermissionUtils.requestPermission(newEntryActivity.this, GALLERY_PERMISSIONS_REQUEST,
+//                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+//                                    Intent intent = new Intent();
+//                                    intent.setType(getString(R.string.intenttype));
+//                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePhotoPrompt)),
+//                                            GALLERY_IMAGE_REQUEST);
+//                                }
+//                            }
+//                        })
+//                        .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                try {
+//                                    if (PermissionUtils.requestPermission(
+//                                            newEntryActivity.this,
+//                                            CAMERA_PERMISSIONS_REQUEST,
+//                                            Manifest.permission.READ_EXTERNAL_STORAGE,
+//                                            Manifest.permission.CAMERA)) {
+//                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+//
+//                                        if (Build.VERSION.SDK_INT >= 24) {
+//                                            try {
+//                                                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+//                                                m.invoke(null);
+//                                            } catch (Exception e) {
+//                                                e.printStackTrace();
+//                                            }
+//                                        }
+//                                        startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
+//                                    }
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                builder.create().show();
             }
         });
 ////////////////////////////////////////////////////////////////////////////////
@@ -191,34 +198,34 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
 
 
-    //ADDED THIS METHOD FROM OVERVIEW
-    private File getCameraFile() throws IOException {
-        // Create an image file name
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
-        int userid = prefs.getInt(getString(R.string.UID), -1);
-        if (userid == -1) {
-            throw new IllegalArgumentException("userid is not set in Prefs");
-        }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = userid + "_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
+//    //ADDED THIS METHOD FROM OVERVIEW
+//    private File getCameraFile() throws IOException {
+//        // Create an image file name
+//        SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
+//        int userid = prefs.getInt(getString(R.string.UID), -1);
+//        if (userid == -1) {
+//            throw new IllegalArgumentException("userid is not set in Prefs");
+//        }
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = userid + "_" + timeStamp + "_";
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+////        File image = File.createTempFile(
+////                imageFileName,  /* prefix */
+////                ".jpg",         /* suffix */
+////                storageDir      /* directory */
+////        );
+//
+//        File image = new File(
+//                storageDir,
+//                imageFileName +  /* prefix */
+//                        ".jpg"        /* suffix */
+//                      /* directory */
 //        );
-
-        File image = new File(
-                storageDir,
-                imageFileName +  /* prefix */
-                        ".jpg"        /* suffix */
-                      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        return image;
-    }
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        return image;
+//    }
 
     public void okButtonPress(View theView) {
 
