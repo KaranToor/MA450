@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -115,11 +116,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        TableLayout table = (TableLayout) findViewById(R.id.table);
-        TableRow t = new TableRow(this);
+//        TableLayout table = (TableLayout) findViewById(R.id.table);
+//        TableRow t = new TableRow(this);
         myImageDetails = new TextView(this);
-        t.addView(myImageDetails);
-        table.addView(t);
+//        t.addView(myImageDetails);
+//        table.addView(t);
     }
 
     /**
@@ -135,12 +136,10 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
 
     public void updateTable(List<PictureObject> allPhotos) {
-        TableLayout table = (TableLayout) findViewById(R.id.table);
-        table.removeViewsInLayout(1, table.getChildCount() - 1);
         if(allPhotos != null) {
-            for (int i = 0; i < allPhotos.size(); i++) {
+            for (int i = 1; i < allPhotos.size() +1; i++) {
                 TableRow t = new TableRow(this);
-                String myCategory = allPhotos.get(i).getMyCategory();
+                String myCategory = allPhotos.get(i-1).getMyCategory();
                 if (myCategory.equals(getString(R.string.nullStr))){
                     myCategory = "none";
                 }
@@ -148,11 +147,18 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 TextView date = new TextView(this);
 //                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                date.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                date.setText(allPhotos.get(i).getMyDate());
+                date.setText(allPhotos.get(i-1).getMyDate());
+                date.setClickable(true);
+                date.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewEntry(v);
+                    }
+                });
                 TextView location = new TextView(this);
-                location.setText(allPhotos.get(i).getMyLocation());
+                location.setText(allPhotos.get(i-1).getMyLocation());
                 TextView price = new TextView(this);
-                price.setText("$"+allPhotos.get(i).getMyPrice());
+                price.setText("$"+allPhotos.get(i-1).getMyPrice());
 //                price.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
                 TextView category = new TextView(this);
                 category.setText(myCategory);
@@ -160,64 +166,62 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 //                        + "                          " + allPhotos.get(i).getMyPrice() + "             "
 //                        + myCategory);
 
-//                GridLayout gridLayout = new GridLayout(getBaseContext());
-//                gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
-//                gridLayout.setColumnCount(4);
-//                gridLayout.setRowCount(1);
-//
-//                    gridLayout.addView(date, 0);
+                GridLayout gridLayout = (GridLayout) findViewById(R.id.entries);
+                gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
+                gridLayout.setColumnCount(4);
+                gridLayout.setRowCount(allPhotos.size() + 1);
+
+                    gridLayout.addView(date, i);
 //                    titleText.setCompoundDrawablesWithIntrinsicBounds(rightIc, 0, 0, 0);
-//                    GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-//                    param.height = LayoutParams.WRAP_CONTENT;
-//                    param.width = LayoutParams.WRAP_CONTENT;
-//                    param.rightMargin = 5;
-//                    param.topMargin = 5;
-//                    param.setGravity(Gravity.CENTER);
-//                    param.columnSpec = GridLayout.spec(c);
-//                    param.rowSpec = GridLayout.spec(r);
-//                    titleText.setLayoutParams(param);
+                    GridLayout.LayoutParams dateparam = new GridLayout.LayoutParams();
+                    dateparam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                    dateparam.width = 250;
+                    dateparam.rightMargin = 5;
+                    dateparam.topMargin = 5;
+                    dateparam.setGravity(Gravity.CENTER);
+                    dateparam.columnSpec = GridLayout.spec(0);
+                    dateparam.rowSpec = GridLayout.spec(i);
+                    date.setLayoutParams(dateparam);
+                    gridLayout.addView(location, i);
+
+                GridLayout.LayoutParams locationParam = new GridLayout.LayoutParams();
+                locationParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                locationParam.width = GridLayout.LayoutParams.WRAP_CONTENT;
+                locationParam.leftMargin = getWindowManager().getDefaultDisplay().getWidth()/32;
+                locationParam.rightMargin = 5;
+                locationParam.topMargin = 5;
+                locationParam.setGravity(Gravity.CENTER);
+//                date.setLayoutParams(param);
+//                gridLayout.addView(location);
+                locationParam.columnSpec = GridLayout.spec(1);
+                locationParam.rowSpec = GridLayout.spec(i);
+                    location.setLayoutParams(locationParam);
+
+                GridLayout.LayoutParams priceParam= new GridLayout.LayoutParams();
+                priceParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                priceParam.width = 250;
+                priceParam.rightMargin = getWindowManager().getDefaultDisplay().getWidth()/8;
+                priceParam.topMargin = 5;
+                priceParam.setGravity(Gravity.RIGHT);
+                priceParam.columnSpec = GridLayout.spec(2);
+                priceParam.rowSpec = GridLayout.spec(i);
+                price.setLayoutParams(priceParam);
+//                price.setGravity(Gravity.RIGHT);
+                price.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+                gridLayout.addView(price);
+
+                GridLayout.LayoutParams categoryParam = new GridLayout.LayoutParams();
+                categoryParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                categoryParam.width = GridLayout.LayoutParams.WRAP_CONTENT;
+                categoryParam.leftMargin = 0;
+                categoryParam.topMargin = 5;
+                categoryParam.setGravity(Gravity.CENTER);
+                categoryParam.columnSpec = GridLayout.spec(3);
+                categoryParam.rowSpec = GridLayout.spec(i);
+                category.setLayoutParams(categoryParam);
+                gridLayout.addView(category);
+
 //
-//                Space space = new Space(getBaseContext());
-//                space.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                space.weight;
-
-//                RelativeLayout relativeLayout = new RelativeLayout(getBaseContext());
-//                relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams());
-
-//                LinearLayout linearLayout = new LinearLayout(getBaseContext());
-//                linearLayout.addView(date, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
-//                Space space = new Space(getBaseContext());
-//                space.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                linearLayout.addView(space, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float)0.125));
-//                linearLayout.addView(location, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
-//                Space space2 = new Space(getBaseContext());
-//                space2.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                linearLayout.addView(space2, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 0.25));
-//                linearLayout.addView(price, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
-//                Space space3 = new Space(getBaseContext());
-//                space3.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                linearLayout.addView(space3, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-//                linearLayout.addView(category, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
-//                Space space4 = new Space(getBaseContext());
-////                space4.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-////                linearLayout.addView(space4, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-//                t.addView(relativeLayout);
-//                t.addView(linearLayout);
-////                linearLayout.parent
-//                linearLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
-//                relativeLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
- t.addView(date);
-                t.addView(location);
-                t.addView(price);
-                t.addView(category);
-                t.setClickable(true);
-                t.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        viewEntry(v);
-                    }
-                });
-                table.addView(t);
             }
         } else {
             System.out.println("NO PHOTOS FOUND");
