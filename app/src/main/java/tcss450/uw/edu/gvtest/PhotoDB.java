@@ -174,33 +174,38 @@ public class PhotoDB {
              */
             @Override
             protected void onPostExecute(String result) {
-                if (result.startsWith("Unable to") || result.startsWith("There was an error")) {
+                if (result.startsWith("Unable to") || result.startsWith("There was an error") ||
+                        result.startsWith("Incorrect Number of Variables")) {
                     Toast.makeText(context.getApplicationContext(), result, Toast.LENGTH_LONG)
                             .show();
                     return;
                 } else if (result.startsWith("{\"Success")) {
                     Toast.makeText(context, "Photo Added", Toast.LENGTH_LONG).show();
 
-//                    try {
-//                        JSONObject root = new JSONObject(result);
-//                        JSONObject success = root.getJSONObject("Success");
-//                        photoResult = getJsonPhotos(success.getJSONArray("Status"));
-//
-//                        photoData = success.getJSONArray("photoData");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-                } else if (result.startsWith("{\"Error")) {
-                    Toast.makeText(context, "Photo Already Exists", Toast.LENGTH_LONG).show();
+                    try {
+                        JSONObject root = new JSONObject(result);
+                        JSONObject success = root.getJSONObject("Success");
+                        photoResult = getJsonPhotos(success.getJSONArray("Status"));
 
+                        photoData = success.getJSONArray("photoData");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else if (result.startsWith("{\"Error\"")) {
+                    //Toast.makeText(context, "Photo Already Exists", Toast.LENGTH_LONG).show();
                     try {
                         JSONObject root = new JSONObject(result);
                         JSONObject error = root.getJSONObject("Error");
-                        photoResult = getJsonPhotos(error.getJSONArray("photoData"));
+
+                        Toast.makeText(context, error.getString("Status"), Toast.LENGTH_LONG).show();
+
+                        //photoResult = getJsonPhotos(error.getJSONArray("photoData"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                Log.d("AddPhoto", "onPostExecute: "+ result);
+
             }
         }.execute(pictureObject);
         return photoResult;
