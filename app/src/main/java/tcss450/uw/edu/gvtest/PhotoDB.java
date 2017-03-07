@@ -179,6 +179,8 @@ public class PhotoDB {
                             .show();
                     return;
                 } else if (result.startsWith("{\"Success")) {
+                    Toast.makeText(context, "Photo Added", Toast.LENGTH_LONG).show();
+
 //                    try {
 //                        JSONObject root = new JSONObject(result);
 //                        JSONObject success = root.getJSONObject("Success");
@@ -189,6 +191,8 @@ public class PhotoDB {
 //                        e.printStackTrace();
 //                    }
                 } else if (result.startsWith("{\"Error")) {
+                    Toast.makeText(context, "Photo Already Exists", Toast.LENGTH_LONG).show();
+
                     try {
                         JSONObject root = new JSONObject(result);
                         JSONObject error = root.getJSONObject("Error");
@@ -411,6 +415,94 @@ public class PhotoDB {
                 }
             }
         }.execute();
+        return photoResult;
+    }
+
+    public List<PictureObject> updatePhoto(PictureObject pictureObject) {
+        picData = pictureObject;
+        final String SERVICE = "updatePhoto.php";
+        // build GET Statement
+        final StringBuilder sb = new StringBuilder();
+        sb.append("?userid=" + userid);
+        sb.append("&photoid=" + picData.getMyPhotoId());
+        sb.append("&location=" + picData.getMyLocation());
+        sb.append("&total=" + picData.getMyPrice());
+        sb.append("&payment_type=" + picData.getMyPaymentType());
+        sb.append("&date=" + picData.getMyDate());
+        sb.append("&category=" + picData.getMyCategory());
+
+        Log.d("addphoto", "addPhoto: " + PARTIAL_URL + SERVICE + sb.toString());
+
+        // Submit the picture object information to our database.
+        new AsyncTask<PictureObject, Void, String>() {
+
+            /**
+             * Executes the connection and fetches information in a thread separate from
+             * the UI thread.
+             * @param params The PictureObject to upload.
+             * @return The String JSON result.
+             */
+            @Override
+            protected String doInBackground(PictureObject... params) {
+                String response = "";
+                HttpURLConnection urlConnection = null;
+                try {
+                    URL urlObject = new URL(PARTIAL_URL + SERVICE + sb.toString());
+                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+                    InputStream content = urlConnection.getInputStream();
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+                } catch (Exception e) {
+                    response = "Unable to connect, Reason: "
+                            + e.getMessage();
+                } finally {
+                    if (urlConnection != null)
+                        urlConnection.disconnect();
+                }
+                return response;
+            }
+
+            /**
+             * Processing the JSON String to PictureObjects.
+             * @param result the JSON response from our server.
+             */
+            @Override
+            protected void onPostExecute(String result) {
+                if (result.startsWith("Unable to") || result.startsWith("There was an error")) {
+                    Toast.makeText(context.getApplicationContext(), result, Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                } else if (result.startsWith("{\"Success")) {
+                    Toast.makeText(context, "Photo Data Updated", Toast.LENGTH_LONG).show();
+
+//                    try {
+//                        JSONObject root = new JSONObject(result);
+//                        JSONObject success = root.getJSONObject("Success");
+//                        photoResult = getJsonPhotos(success.getJSONArray("Status"));
+//
+////                        photoData = success.getJSONArray("photoData");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+                } else if (result.startsWith("{\"Error")) {
+                    Toast.makeText(context, "No Update Occurred", Toast.LENGTH_LONG).show();
+//                    try {
+//                        JSONObject root = new JSONObject(result);
+//                        JSONObject error = root.getJSONObject("Error");
+//                        photoResult = getJsonPhotos(error.getJSONArray("photoData"));
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+                }
+
+//                if (myActivity instanceof OverviewActivity) {
+//                    ((OverviewActivity) myActivity).updateTable(photoResult);
+//                }
+            }
+        }.execute(pictureObject);
         return photoResult;
     }
 }

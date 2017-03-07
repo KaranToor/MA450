@@ -267,11 +267,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             }
         } else {
             System.out.println("NO PHOTOS FOUND");
-//            TableRow t = new TableRow(this);
-//            TextView date = new TextView(this);
-//            date.setText("NO ENTRIES FOUND");
-//            t.addView(date);
-//            //table.addView(t);
+            TableRow t = new TableRow(this);
             TextView date = new TextView(this);
             date.setText("NO ENTRIES");
             gridLayout.addView(date, 0);

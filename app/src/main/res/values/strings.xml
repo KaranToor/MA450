@@ -71,8 +71,9 @@
     <string name="logoContentDesc">Receipt Suite logo</string>
     <string name="category">Category</string>
     <string name="nullStr">null</string>
-    <string name="UpdateStr">Update</string>
+    <string name="updateStr">Update</string>
     <string name="overview">Overview</string>
+    <string name="backStr">Back</string>
 
     <string-array name="categories">
         <item>Show All</item>
