@@ -142,12 +142,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public void updateTable(final List<PictureObject> allPhotos) {
 //        TableLayout table = (TableLayout) findViewById(R.id.table);
 //        table.removeViewsInLayout(1, table.getChildCount() - 1);
+
         GridLayout gridLayout = (GridLayout) findViewById(R.id.entries);
+        gridLayout.removeViewsInLayout(1, gridLayout.getChildCount()-1);
         gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
         gridLayout.setColumnCount(4);
-        gridLayout.setRowCount(allPhotos.size() + 1);
 
         if(allPhotos != null) {
+            gridLayout.setRowCount(allPhotos.size() + 1);
+
             for (int i = 1; i < allPhotos.size() +1; i++) {
                 TableRow t = new TableRow(this);
                 String myCategory = allPhotos.get(i-1).getMyCategory();
@@ -244,11 +247,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             }
         } else {
             System.out.println("NO PHOTOS FOUND");
-            TableRow t = new TableRow(this);
+//            TableRow t = new TableRow(this);
+//            TextView date = new TextView(this);
+//            date.setText("NO ENTRIES FOUND");
+//            t.addView(date);
+//            //table.addView(t);
             TextView date = new TextView(this);
-            date.setText("NO ENTRIES FOUND");
-            t.addView(date);
-            //table.addView(t);
+            date.setText("NO ENTRIES");
+            gridLayout.addView(date, 1);
 
         }
     }
