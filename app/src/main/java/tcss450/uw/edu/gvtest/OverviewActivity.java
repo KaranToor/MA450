@@ -267,11 +267,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             }
         } else {
             System.out.println("NO PHOTOS FOUND");
-//            TableRow t = new TableRow(this);
-//            TextView date = new TextView(this);
-//            date.setText("NO ENTRIES FOUND");
-//            t.addView(date);
-//            //table.addView(t);
+            TableRow t = new TableRow(this);
             TextView date = new TextView(this);
             date.setText("NO ENTRIES");
             gridLayout.addView(date, 0);
@@ -643,7 +639,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         String toReturn = "Not Found";
         if ((theInput.contains("Master") && theInput.contains("Card")) ||
                 theInput.contains("MASTERCARD") ||
-                (theInput.contains("MASTER") && theInput.contains("CARD"))) {
+                (theInput.contains("MASTER") && theInput.contains("CARD")) ||
+                theInput.contains("Mastercard")) {
             toReturn = "Master_Card";
         } else if (theInput.contains("Visa") || theInput.contains("VISA")) {
             toReturn = "Visa";

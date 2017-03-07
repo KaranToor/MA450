@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -66,7 +65,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
      */
     private String myCategory;
 
-    private boolean myOldEntry;
+    private boolean isEditEntry;
 
 
     @Override
@@ -98,13 +97,6 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         EditText paymentEdit = (EditText) findViewById(R.id.paymentId);
         paymentEdit.setText(myPaymentType);
 
-        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
-//        if (new File(myPhotoId).exists()) {
-//            // do something if it exists
-//        } else {
-//            // File was not found
-//        }
-        setImage(myPhotoId);
         if (Build.VERSION.SDK_INT >= 24) {
             try {
                 Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
@@ -168,8 +160,17 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         });
 ////////////////////////////////////////////////////////////////////////////////
         if (myOldEntry = intent.getBooleanExtra("fromTable", false)) {
+        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
+        if (new File(myPhotoId.getPath()).exists()) {
+            setImage(myPhotoId);
+        } else {
+            // File was not found
+        }
+//        setImage(myPhotoId);
+
+        if (isEditEntry = intent.getBooleanExtra("fromTable", false)) {
             Button b = (Button) findViewById(R.id.ok_button);
-            b.setText(R.string.UpdateStr);
+            b.setText(getString(R.string.updateStr));
             b = (Button) findViewById(R.id.new_entry_back_button);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -255,7 +256,11 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         PictureObject pictureObject = new PictureObject(userId, myPhotoId.toString(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(this);
-        photoDB.addPhoto(pictureObject);
+        if (isEditEntry) {
+            photoDB.updatePhoto(pictureObject);
+        } else {
+            photoDB.addPhoto(pictureObject);
+        }
     }
 
     public void retakeClicked(View theView) throws IOException {

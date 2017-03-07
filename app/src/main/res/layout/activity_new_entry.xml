@@ -171,8 +171,8 @@
             android:id="@+id/new_entry_back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back"
-            android:visibility="gone"/>
+            android:text="@string/backStr"
+            android:visibility="visible"/>
 
         <Button
             android:text="@string/ok"
@@ -181,7 +181,6 @@
             android:id="@+id/ok_button"
             android:onClick="okButtonPress"
             />
-
     </LinearLayout>
 
 
