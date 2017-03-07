@@ -84,7 +84,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
     public static String mCurrentPhotoPath;
-    private static File photo;
+    private static File mPhoto;
 
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
@@ -353,7 +353,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
-        photo = image;
+        mPhoto = image;
         return image;
     }
 
@@ -379,7 +379,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             galleryAddPic();
-            uploadImage(Uri.fromFile(photo));
+            uploadImage(Uri.fromFile(mPhoto));
         }
     }
 
@@ -797,8 +797,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      *
      * @param theView The view used for event handling.
      */
-    public void viewEntry(View theView) {
+    public void viewEntry(View theView ) {
         Log.d(getString(R.string.print), getString(R.string.clicked));
+
     }
 
     /**
