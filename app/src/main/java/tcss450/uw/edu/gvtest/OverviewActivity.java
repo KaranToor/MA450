@@ -50,6 +50,8 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -142,22 +144,40 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public void updateTable(final List<PictureObject> allPhotos) {
 //        TableLayout table = (TableLayout) findViewById(R.id.table);
 //        table.removeViewsInLayout(1, table.getChildCount() - 1);
-
+//        TextView dateHeader = (TextView)findViewById(R.id.Date);
+//
+//        TextView locHeader = (TextView)findViewById(R.id.Location);
+//        TextView priceHeader = (TextView)findViewById(R.id.Cost);
+//        TextView catHeader = (TextView)findViewById(R.id.Category);
         GridLayout gridLayout = (GridLayout) findViewById(R.id.entries);
-        gridLayout.removeViewsInLayout(1, gridLayout.getChildCount()-1);
-        gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
-        gridLayout.setColumnCount(4);
+        gridLayout.removeViewsInLayout(0, gridLayout.getChildCount());
+//
+//
+//        gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
+//        gridLayout.setColumnCount(4);
+//        gridLayout.addView(dateHeader, 0);
+//                    titleText.setCompoundDrawablesWithIntrinsicBounds(rightIc, 0, 0, 0);
+
 
         if(allPhotos != null) {
             gridLayout.setRowCount(allPhotos.size() + 1);
+//            GridLayout.LayoutParams dhparam = new GridLayout.LayoutParams();
+//            dhparam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+//            dhparam.width = 350;
+//            dhparam.rightMargin = 5;
+//            dhparam.topMargin = 5;
+//            dhparam.setGravity(Gravity.CENTER);
+//            dhparam.columnSpec = GridLayout.spec(0);
+//            dhparam.rowSpec = GridLayout.spec(0);
+//            dateHeader.setLayoutParams(dhparam);
 
-            for (int i = 1; i < allPhotos.size() +1; i++) {
+            for (int i = 0; i < allPhotos.size(); i++) {
                 TableRow t = new TableRow(this);
-                String myCategory = allPhotos.get(i-1).getMyCategory();
+                String myCategory = allPhotos.get(i).getMyCategory();
                 if (myCategory.equals(getString(R.string.nullStr))){
                     myCategory = "none";
                 }
-                final int finalI = i-1;
+                final int finalI = i;
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -168,17 +188,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 TextView date = new TextView(this);
 //                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                date.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                date.setText(allPhotos.get(i-1).getMyDate());
+                date.setText(allPhotos.get(i).getMyDate());
                 date.setClickable(true);
                 date.setOnClickListener(onClickListener);
 
                 TextView location = new TextView(this);
-                location.setText(allPhotos.get(i-1).getMyLocation());
+                location.setText(allPhotos.get(i).getMyLocation());
                 location.setClickable(true);
                 location.setOnClickListener(onClickListener);
 
                 TextView price = new TextView(this);
-                price.setText("$"+allPhotos.get(i-1).getMyPrice());
+                price.setText("$"+allPhotos.get(i).getMyPrice());
                 price.setClickable(true);
                 price.setOnClickListener(onClickListener);
 
@@ -254,7 +274,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 //            //table.addView(t);
             TextView date = new TextView(this);
             date.setText("NO ENTRIES");
-            gridLayout.addView(date, 1);
+            gridLayout.addView(date, 0);
 
         }
     }
