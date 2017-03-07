@@ -134,7 +134,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     }
 
 
-    public void updateTable(List<PictureObject> allPhotos) {
+    public void updateTable(final List<PictureObject> allPhotos) {
         TableLayout table = (TableLayout) findViewById(R.id.table);
         table.removeViewsInLayout(1, table.getChildCount() - 1);
         if(allPhotos != null) {
@@ -211,10 +211,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 t.addView(price);
                 t.addView(category);
                 t.setClickable(true);
+                final int finalI = i;
                 t.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        viewEntry(v);
+                        viewEntry(v,allPhotos.get(finalI));
                     }
                 });
                 table.addView(t);
@@ -797,9 +798,19 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      *
      * @param theView The view used for event handling.
      */
-    public void viewEntry(View theView ) {
+    public void viewEntry(View theView, PictureObject photo) {
         Log.d(getString(R.string.print), getString(R.string.clicked));
 
+
+        Intent intent = new Intent(this, newEntryActivity.class);
+        intent.putExtra(TOTAL_AMOUNT, photo.getMyPrice().toPlainString());
+        intent.putExtra(LOCATION, photo.getMyLocation());
+        intent.putExtra(PAYMENT_TYPE, photo.getMyPaymentType());
+        intent.putExtra(DATE, photo.getMyDate());
+        intent.putExtra(CAMERA_OR_GALLERY, photo.getMyPhotoId());
+        intent.putExtra("fromTable",true);
+        intent.putExtra(getString(R.string.category), photo.getMyCategory());
+        startActivity(intent);
     }
 
     /**
