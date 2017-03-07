@@ -71,60 +71,40 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusable="true"
-                android:clickable="true"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:longClickable="true"
-                android:onClick="viewEntry"
-                android:id="@+id/table">
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    >
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        >
+            <GridLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/entries"
+                android:columnCount="4">
+                <TextView
+                android:text="@string/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Date"
+                    android:layout_columnWeight=".25"
+                android:layout_weight="1" />
 
-                        <TextView
-                            android:text="@string/date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/Date"
-                            android:layout_weight="1" />
+                <TextView
+                    android:text="@string/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Location"
+                    android:layout_columnWeight=".25" />
 
-                        <TextView
-                            android:text="@string/location"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/Location"
-                            android:layout_weight="1" />
+                <TextView
+                    android:text="@string/cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Cost"
+                    android:layout_columnWeight=".25"/>
 
-                        <TextView
-                            android:text="@string/cost"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/Cost"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:text="@string/category"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/Category"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-                </TableRow>
-            </TableLayout>
+                <TextView
+                    android:text="@string/category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Category"
+                    android:layout_columnWeight=".25" /></GridLayout>
         </ScrollView>
     </LinearLayout>
 
