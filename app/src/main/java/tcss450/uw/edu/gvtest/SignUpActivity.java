@@ -238,7 +238,11 @@ public class SignUpActivity extends AppCompatActivity {
                 }
 
             } else if (theResult.contains("Error")) {
-
+                if (theResult.contains("Already Registered")) {
+                    EditText editText = (EditText) findViewById(R.id.editText4);
+                    editText.requestFocus();
+                    editText.setError("Error: Email already registered");
+                }
             }
         }
     }
