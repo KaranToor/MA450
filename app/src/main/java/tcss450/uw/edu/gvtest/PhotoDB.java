@@ -292,7 +292,8 @@ public class PhotoDB {
                     try {
                         JSONObject root = new JSONObject(result);
                         JSONObject error = root.getJSONObject("Error");
-                        photoResult = getJsonPhotos(error.getJSONArray("photoData"));
+                        photoResult = null;
+                        //photoResult = getJsonPhotos(error.getJSONArray("photoData"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

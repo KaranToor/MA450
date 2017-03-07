@@ -133,7 +133,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         //PhotoDB pdb = new PhotoDB(this);
         pdb = new PhotoDB(this);
 
-        pdb.getAllPhotos();
+        //pdb.getAllPhotos(); // used in onItemSelected()
         // Dont make any calls after getAllPhotos()
     }
 
@@ -210,7 +210,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 ////                linearLayout.parent
 //                linearLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
 //                relativeLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
- t.addView(date);
+                t.addView(date);
                 t.addView(location);
                 t.addView(price);
                 t.addView(category);
@@ -225,6 +225,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             }
         } else {
             System.out.println("NO PHOTOS FOUND");
+            TableRow t = new TableRow(this);
+            TextView date = new TextView(this);
+            date.setText("NO ENTRIES FOUND");
+            t.addView(date);
+            table.addView(t);
+
         }
     }
 
@@ -829,8 +835,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
         String selectedCategory = spinner.getSelectedItem().toString();
         Log.d("selectedCat", selectedCategory);
-        //PhotoDB pdb = new PhotoDB(this);
-        pdb.getCategoryAll(selectedCategory);
+
+        if(selectedCategory.equals("Show All")){
+            pdb.getAllPhotos();
+
+        } else {
+            //PhotoDB pdb = new PhotoDB(this);
+            pdb.getCategoryAll(selectedCategory);
+        }
     }
 
     /**
