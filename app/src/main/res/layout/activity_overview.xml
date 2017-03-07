@@ -68,6 +68,37 @@
             </Spinner>
 
         </RelativeLayout>
+        <GridLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="4">
+            <TextView
+                android:text="@string/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Date"
+                android:layout_columnWeight=".25" />
+
+            <TextView
+                android:text="@string/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Location"
+                android:layout_columnWeight=".25" />
+
+            <TextView
+                android:text="@string/cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Cost"
+                android:layout_columnWeight=".25"/>
+
+            <TextView
+                android:text="@string/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Category"
+                android:layout_columnWeight=".25" /></GridLayout>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -77,34 +108,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/entries"
                 android:columnCount="4">
-                <TextView
-                android:text="@string/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/Date"
-                    android:layout_columnWeight=".25"
-                android:layout_weight="1" />
-
-                <TextView
-                    android:text="@string/location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/Location"
-                    android:layout_columnWeight=".25" />
-
-                <TextView
-                    android:text="@string/cost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/Cost"
-                    android:layout_columnWeight=".25"/>
-
-                <TextView
-                    android:text="@string/category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/Category"
-                    android:layout_columnWeight=".25" /></GridLayout>
+                </GridLayout>
         </ScrollView>
     </LinearLayout>
 
