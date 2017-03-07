@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,7 +27,11 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+
+import picture.PhotoDB;
+import picture.PictureObject;
+import tcss450.uw.edu.gvtest.R;
+import utils.PermissionUtils;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
