@@ -72,6 +72,7 @@
     <string name="category">Category</string>
     <string name="nullStr">null</string>
     <string name="UpdateStr">Update</string>
+    <string name="overview">Overview</string>
 
     <string-array name="categories">
         <item>Show All</item>

@@ -23,13 +23,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/progressBar3"
-                android:max="500"
-                android:progress="300"
+                android:max="100"
+                android:progress="100"
                 android:visibility="visible"
                 android:background="@color/colorPrimary"
                 android:progressTint="@color/colorLightPrimary"
                 android:progressTintMode="src_over"
                 android:scaleY="5"
+                android:scaleX="2"
                 android:layout_marginBottom="40dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
@@ -44,11 +45,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/progressBar3"
+                android:visibility="invisible"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/colorTextPrimary"
                 android:id="@+id/progressLabel" />
             <TextView
-                android:text="Overview"
+                android:text="@string/overview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorIcons"
@@ -68,6 +70,37 @@
             </Spinner>
 
         </RelativeLayout>
+        <GridLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="4">
+            <TextView
+                android:text="@string/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Date"
+                android:layout_columnWeight=".25" />
+
+            <TextView
+                android:text="@string/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Location"
+                android:layout_columnWeight=".25" />
+
+            <TextView
+                android:text="@string/cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Cost"
+                android:layout_columnWeight=".25"/>
+
+            <TextView
+                android:text="@string/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Category"
+                android:layout_columnWeight=".25" /></GridLayout>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -77,34 +110,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/entries"
                 android:columnCount="4">
-                <TextView
-                android:text="@string/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/Date"
-                    android:layout_columnWeight=".25"
-                android:layout_weight="1" />
-
-                <TextView
-                    android:text="@string/location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/Location"
-                    android:layout_columnWeight=".25" />
-
-                <TextView
-                    android:text="@string/cost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/Cost"
-                    android:layout_columnWeight=".25"/>
-
-                <TextView
-                    android:text="@string/category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/Category"
-                    android:layout_columnWeight=".25" /></GridLayout>
+                </GridLayout>
         </ScrollView>
     </LinearLayout>
 
