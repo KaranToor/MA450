@@ -5,13 +5,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -78,7 +84,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
     public static String mCurrentPhotoPath;
-    private static File photo;
+    private static File mPhoto;
 
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
@@ -130,16 +136,80 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     public void updateTable(List<PictureObject> allPhotos) {
         TableLayout table = (TableLayout) findViewById(R.id.table);
+        table.removeViewsInLayout(1, table.getChildCount() - 1);
         if(allPhotos != null) {
             for (int i = 0; i < allPhotos.size(); i++) {
                 TableRow t = new TableRow(this);
+                String myCategory = allPhotos.get(i).getMyCategory();
+                if (myCategory.equals(getString(R.string.nullStr))){
+                    myCategory = "none";
+                }
 
-                TextView text = new TextView(this);
-                text.setText(allPhotos.get(i).getMyDate() + "      " + allPhotos.get(i).getMyLocation()
-                        + "                  " + allPhotos.get(i).getMyPrice() + "             "
-                        + allPhotos.get(i).getMyCategory());
+                TextView date = new TextView(this);
+//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                date.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                date.setText(allPhotos.get(i).getMyDate());
+                TextView location = new TextView(this);
+                location.setText(allPhotos.get(i).getMyLocation());
+                TextView price = new TextView(this);
+                price.setText("$"+allPhotos.get(i).getMyPrice());
+//                price.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+                TextView category = new TextView(this);
+                category.setText(myCategory);
+//                text.setText(allPhotos.get(i).getMyDate() + "      " + allPhotos.get(i).getMyLocation()
+//                        + "                          " + allPhotos.get(i).getMyPrice() + "             "
+//                        + myCategory);
 
-                t.addView(text);
+//                GridLayout gridLayout = new GridLayout(getBaseContext());
+//                gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
+//                gridLayout.setColumnCount(4);
+//                gridLayout.setRowCount(1);
+//
+//                    gridLayout.addView(date, 0);
+//                    titleText.setCompoundDrawablesWithIntrinsicBounds(rightIc, 0, 0, 0);
+//                    GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+//                    param.height = LayoutParams.WRAP_CONTENT;
+//                    param.width = LayoutParams.WRAP_CONTENT;
+//                    param.rightMargin = 5;
+//                    param.topMargin = 5;
+//                    param.setGravity(Gravity.CENTER);
+//                    param.columnSpec = GridLayout.spec(c);
+//                    param.rowSpec = GridLayout.spec(r);
+//                    titleText.setLayoutParams(param);
+//
+//                Space space = new Space(getBaseContext());
+//                space.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                space.weight;
+
+//                RelativeLayout relativeLayout = new RelativeLayout(getBaseContext());
+//                relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams());
+
+//                LinearLayout linearLayout = new LinearLayout(getBaseContext());
+//                linearLayout.addView(date, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+//                Space space = new Space(getBaseContext());
+//                space.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                linearLayout.addView(space, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float)0.125));
+//                linearLayout.addView(location, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+//                Space space2 = new Space(getBaseContext());
+//                space2.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                linearLayout.addView(space2, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float) 0.25));
+//                linearLayout.addView(price, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+//                Space space3 = new Space(getBaseContext());
+//                space3.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                linearLayout.addView(space3, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+//                linearLayout.addView(category, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+//                Space space4 = new Space(getBaseContext());
+////                space4.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+////                linearLayout.addView(space4, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+//                t.addView(relativeLayout);
+//                t.addView(linearLayout);
+////                linearLayout.parent
+//                linearLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
+//                relativeLayout.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+ t.addView(date);
+                t.addView(location);
+                t.addView(price);
+                t.addView(category);
                 t.setClickable(true);
                 t.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -283,7 +353,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
-        photo = image;
+        mPhoto = image;
         return image;
     }
 
@@ -309,7 +379,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             galleryAddPic();
-            uploadImage(Uri.fromFile(photo));
+            uploadImage(Uri.fromFile(mPhoto));
         }
     }
 
@@ -727,8 +797,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      *
      * @param theView The view used for event handling.
      */
-    public void viewEntry(View theView) {
+    public void viewEntry(View theView ) {
         Log.d(getString(R.string.print), getString(R.string.clicked));
+
     }
 
     /**

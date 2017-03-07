@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -85,6 +86,11 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
     public void okButtonPress(View theView) {
 
+        myLocation = ((EditText) findViewById(R.id.locationId)).getText().toString();
+        myDate = ((EditText) findViewById(R.id.dateId)).getText().toString();
+        myPrice = ((EditText) findViewById(R.id.amountId)).getText().toString();
+        myPaymentType = ((EditText) findViewById(R.id.paymentId)).getText().toString();
+
         sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
 
         Intent intent = new Intent(this, OverviewActivity.class);
@@ -117,13 +123,25 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         photoDB.addPhoto(pictureObject);
     }
 
-    public void retakeClicked(View theView) {
-
+    public void retakeClicked(View theView) throws IOException {
+//        getApplicationContext().
+//        OverviewActivity oa = new OverviewActivity();
+//        //oa.onCreate(null);
+//        oa.cameraButtonClicked(theView.findViewById(R.id.cameraButton));
     }
 
-    private void setImage(Uri theUri) {
+    private void setImage(final Uri theUri) {
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageURI(theUri);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setDataAndType(theUri, "image/*");
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
