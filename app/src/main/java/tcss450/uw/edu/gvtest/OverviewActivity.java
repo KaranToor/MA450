@@ -5,13 +5,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -75,10 +82,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
+    PhotoDB pdb;
+
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
     public static String mCurrentPhotoPath;
-    private static File photo;
+    private static File mPhoto;
 
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
@@ -109,11 +118,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        TableLayout table = (TableLayout) findViewById(R.id.table);
-        TableRow t = new TableRow(this);
+//        TableLayout table = (TableLayout) findViewById(R.id.table);
+//        TableRow t = new TableRow(this);
         myImageDetails = new TextView(this);
-        t.addView(myImageDetails);
-        table.addView(t);
+//        t.addView(myImageDetails);
+//        table.addView(t);
     }
 
     /**
@@ -122,35 +131,131 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     @Override
     public void onResume() {
         super.onResume();
-        PhotoDB pdb = new PhotoDB(this);
-        pdb.getAllPhotos();
+        //PhotoDB pdb = new PhotoDB(this);
+        pdb = new PhotoDB(this);
+
+        //pdb.getAllPhotos(); // used in onItemSelected()
         // Dont make any calls after getAllPhotos()
     }
 
 
-    public void updateTable(List<PictureObject> allPhotos) {
-        TableLayout table = (TableLayout) findViewById(R.id.table);
+    public void updateTable(final List<PictureObject> allPhotos) {
+//        TableLayout table = (TableLayout) findViewById(R.id.table);
+//        table.removeViewsInLayout(1, table.getChildCount() - 1);
+
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.entries);
+        gridLayout.removeViewsInLayout(1, gridLayout.getChildCount()-1);
+        gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
+        gridLayout.setColumnCount(4);
+
         if(allPhotos != null) {
-            for (int i = 0; i < allPhotos.size(); i++) {
+            gridLayout.setRowCount(allPhotos.size() + 1);
+
+            for (int i = 1; i < allPhotos.size() +1; i++) {
                 TableRow t = new TableRow(this);
-
-                TextView text = new TextView(this);
-                text.setText(allPhotos.get(i).getMyDate() + "      " + allPhotos.get(i).getMyLocation()
-                        + "                  " + allPhotos.get(i).getMyPrice() + "             "
-                        + allPhotos.get(i).getMyCategory());
-
-                t.addView(text);
-                t.setClickable(true);
-                t.setOnClickListener(new View.OnClickListener() {
+                String myCategory = allPhotos.get(i-1).getMyCategory();
+                if (myCategory.equals(getString(R.string.nullStr))){
+                    myCategory = "none";
+                }
+                final int finalI = i-1;
+                View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        viewEntry(v);
+                        viewEntry(v,allPhotos.get(finalI));
                     }
-                });
-                table.addView(t);
+                };
+
+                TextView date = new TextView(this);
+//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                date.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                date.setText(allPhotos.get(i-1).getMyDate());
+                date.setClickable(true);
+                date.setOnClickListener(onClickListener);
+
+                TextView location = new TextView(this);
+                location.setText(allPhotos.get(i-1).getMyLocation());
+                location.setClickable(true);
+                location.setOnClickListener(onClickListener);
+
+                TextView price = new TextView(this);
+                price.setText("$"+allPhotos.get(i-1).getMyPrice());
+                price.setClickable(true);
+                price.setOnClickListener(onClickListener);
+
+                TextView category = new TextView(this);
+                category.setText(myCategory);
+                category.setClickable(true);
+                category.setOnClickListener(onClickListener);
+//                text.setText(allPhotos.get(i).getMyDate() + "      " + allPhotos.get(i).getMyLocation()
+//                        + "                          " + allPhotos.get(i).getMyPrice() + "             "
+//                        + myCategory);
+
+
+
+                    gridLayout.addView(date, i);
+//                    titleText.setCompoundDrawablesWithIntrinsicBounds(rightIc, 0, 0, 0);
+                    GridLayout.LayoutParams dateparam = new GridLayout.LayoutParams();
+                    dateparam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                    dateparam.width = 350;
+                    dateparam.rightMargin = 5;
+                    dateparam.topMargin = 5;
+                    dateparam.setGravity(Gravity.CENTER);
+                    dateparam.columnSpec = GridLayout.spec(0);
+                    dateparam.rowSpec = GridLayout.spec(i);
+                    date.setLayoutParams(dateparam);
+                    gridLayout.addView(location, i);
+
+                GridLayout.LayoutParams locationParam = new GridLayout.LayoutParams();
+                locationParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                locationParam.width = GridLayout.LayoutParams.WRAP_CONTENT;
+                locationParam.leftMargin = getWindowManager().getDefaultDisplay().getWidth()/32;
+                locationParam.rightMargin = 5;
+                locationParam.topMargin = 5;
+                locationParam.setGravity(Gravity.CENTER);
+//                date.setLayoutParams(param);
+//                gridLayout.addView(location);
+                locationParam.columnSpec = GridLayout.spec(1);
+                locationParam.rowSpec = GridLayout.spec(i);
+                    location.setLayoutParams(locationParam);
+
+                GridLayout.LayoutParams priceParam= new GridLayout.LayoutParams();
+                priceParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                priceParam.width = 350;
+                priceParam.rightMargin = 0;
+                priceParam.topMargin = 5;
+                priceParam.setGravity(Gravity.RIGHT);
+                priceParam.columnSpec = GridLayout.spec(2);
+                priceParam.rowSpec = GridLayout.spec(i);
+                price.setLayoutParams(priceParam);
+//                price.setGravity(Gravity.RIGHT);
+                price.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+                gridLayout.addView(price);
+
+                GridLayout.LayoutParams categoryParam = new GridLayout.LayoutParams();
+                categoryParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                categoryParam.width = 600;
+                categoryParam.leftMargin = 0;
+                categoryParam.topMargin = 5;
+                categoryParam.setGravity(Gravity.CENTER);
+                categoryParam.columnSpec = GridLayout.spec(3);
+                categoryParam.rowSpec = GridLayout.spec(i);
+                category.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                category.setLayoutParams(categoryParam);
+                gridLayout.addView(category);
+
+//
             }
         } else {
             System.out.println("NO PHOTOS FOUND");
+//            TableRow t = new TableRow(this);
+//            TextView date = new TextView(this);
+//            date.setText("NO ENTRIES FOUND");
+//            t.addView(date);
+//            //table.addView(t);
+            TextView date = new TextView(this);
+            date.setText("NO ENTRIES");
+            gridLayout.addView(date, 1);
+
         }
     }
 
@@ -283,7 +388,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
-        photo = image;
+        mPhoto = image;
         return image;
     }
 
@@ -309,7 +414,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             galleryAddPic();
-            uploadImage(Uri.fromFile(photo));
+            uploadImage(Uri.fromFile(mPhoto));
         }
     }
 
@@ -728,8 +833,19 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      *
      * @param theView The view used for event handling.
      */
-    public void viewEntry(View theView) {
+    public void viewEntry(View theView, PictureObject photo) {
         Log.d(getString(R.string.print), getString(R.string.clicked));
+
+
+        Intent intent = new Intent(this, newEntryActivity.class);
+        intent.putExtra(TOTAL_AMOUNT, photo.getMyPrice().toPlainString());
+        intent.putExtra(LOCATION, photo.getMyLocation());
+        intent.putExtra(PAYMENT_TYPE, photo.getMyPaymentType());
+        intent.putExtra(DATE, photo.getMyDate());
+        intent.putExtra(CAMERA_OR_GALLERY, photo.getMyPhotoId());
+        intent.putExtra("fromTable",true);
+        intent.putExtra(getString(R.string.category), photo.getMyCategory());
+        startActivity(intent);
     }
 
     /**
@@ -755,6 +871,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
         String selectedCategory = spinner.getSelectedItem().toString();
         Log.d("selectedCat", selectedCategory);
+
+        if(selectedCategory.equals("Show All")){
+            pdb.getAllPhotos();
+
+        } else {
+            //PhotoDB pdb = new PhotoDB(this);
+            pdb.getCategoryAll(selectedCategory);
+        }
     }
 
     /**

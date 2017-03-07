@@ -124,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     /**
      * Allows creating a pin or not, depending on the user's choice
-     * @param view
+     * @param view The view that was pressed
      */
     public void setPINFieldVisibility(View view) {
         CheckBox checkBox = (CheckBox) view;
@@ -234,8 +234,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     /**
      * Returns the user Id
-     * @param theResult
-     * @return uId
+     * @param theResult the String of user data
+     * @return uId the user's id to be retrieved
      * @throws JSONException
      */
     public int getUserId(String theResult) throws JSONException {

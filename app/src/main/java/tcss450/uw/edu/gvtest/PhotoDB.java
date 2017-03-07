@@ -2,13 +2,10 @@ package tcss450.uw.edu.gvtest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -21,11 +18,8 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Edward on 3/5/2017.
@@ -52,8 +46,24 @@ public class PhotoDB {
         this.prefs = context.getSharedPreferences(context.getString(R.string.prefKey), Context.MODE_PRIVATE);
         userid = prefs.getInt(context.getString(R.string.UID) , -1);
         if (userid == -1){
-            throw new IllegalArgumentException("User id not set in Prefs");
+            Toast.makeText(context, "There was an error, Please sign in again", Toast.LENGTH_LONG)
+                    .show();
+            forceLogout();
+            //throw new IllegalArgumentException("User id not set in Prefs");
         }
+    }
+
+    private void forceLogout(){
+        SharedPreferences prefs = context.getSharedPreferences(
+                context.getString(R.string.prefKey), Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(context.getString(R.string.isloggedin), false);
+        editor.commit();
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        myActivity.startActivity(intent);
+        myActivity.finish();
     }
 
     public List<PictureObject> addPhoto(PictureObject pictureObject) {
@@ -267,22 +277,30 @@ public class PhotoDB {
                             .show();
                     return;
                 } else if (result.startsWith("{\"Success")) {
-//                    try {
-//                        JSONObject success = new JSONObject(result);
-//                        photoResult = getJsonPhotos(success.getJSONArray("photoData"));
-//
-//                        photoData = success.getJSONArray("photoData");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        JSONObject root = new JSONObject(result);
+                        JSONObject success = root.getJSONObject("Success");
+                        photoResult = getJsonPhotos(success.getJSONArray("photoData"));
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 } else if (result.startsWith("{\"Error")) {
                     try {
                         JSONObject root = new JSONObject(result);
                         JSONObject error = root.getJSONObject("Error");
-                        photoResult = getJsonPhotos(error.getJSONArray("photoData"));
+                        photoResult = null;
+                        //photoResult = getJsonPhotos(error.getJSONArray("photoData"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+
+                if (myActivity instanceof  OverviewActivity) {
+                    ((OverviewActivity) myActivity).updateTable(photoResult);
                 }
             }
         }.execute();
