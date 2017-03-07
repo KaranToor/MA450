@@ -35,6 +35,10 @@ public class PINEntry extends AppCompatActivity {
         mPrefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
     }
 
+    /**
+     * Verifies the pin entered is the one associated with the user
+     * @param view The view that was pressed
+     */
     public void verifyPIN(View view) {
         EditText editText = (EditText)findViewById(R.id.PINInput);
 //        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);

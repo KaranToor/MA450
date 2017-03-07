@@ -82,10 +82,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
+    PhotoDB pdb;
+
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
     public static String mCurrentPhotoPath;
-    private static File photo;
+    private static File mPhoto;
 
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
@@ -129,13 +131,18 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     @Override
     public void onResume() {
         super.onResume();
-        PhotoDB pdb = new PhotoDB(this);
+        //PhotoDB pdb = new PhotoDB(this);
+        pdb = new PhotoDB(this);
+
         pdb.getAllPhotos();
         // Dont make any calls after getAllPhotos()
     }
 
 
     public void updateTable(List<PictureObject> allPhotos) {
+        TableLayout table = (TableLayout) findViewById(R.id.table);
+        table.removeViewsInLayout(1, table.getChildCount() - 1);
+
         if(allPhotos != null) {
             for (int i = 1; i < allPhotos.size() +1; i++) {
                 TableRow t = new TableRow(this);
@@ -143,18 +150,20 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 if (myCategory.equals(getString(R.string.nullStr))){
                     myCategory = "none";
                 }
+                int finalI = i-1;
+                View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewEntry(v,allPhotos.get(finalI));
+                    }
+                });
 
                 TextView date = new TextView(this);
 //                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //                date.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 date.setText(allPhotos.get(i-1).getMyDate());
                 date.setClickable(true);
-                date.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        viewEntry(v);
-                    }
-                });
+                date.setOnClickListener(onClickListener)
                 TextView location = new TextView(this);
                 location.setText(allPhotos.get(i-1).getMyLocation());
                 TextView price = new TextView(this);
@@ -357,7 +366,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
-        photo = image;
+        mPhoto = image;
         return image;
     }
 
@@ -383,7 +392,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             galleryAddPic();
-            uploadImage(Uri.fromFile(photo));
+            uploadImage(Uri.fromFile(mPhoto));
         }
     }
 
@@ -801,8 +810,19 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      *
      * @param theView The view used for event handling.
      */
-    public void viewEntry(View theView) {
+    public void viewEntry(View theView, PictureObject photo) {
         Log.d(getString(R.string.print), getString(R.string.clicked));
+
+
+        Intent intent = new Intent(this, newEntryActivity.class);
+        intent.putExtra(TOTAL_AMOUNT, photo.getMyPrice().toPlainString());
+        intent.putExtra(LOCATION, photo.getMyLocation());
+        intent.putExtra(PAYMENT_TYPE, photo.getMyPaymentType());
+        intent.putExtra(DATE, photo.getMyDate());
+        intent.putExtra(CAMERA_OR_GALLERY, photo.getMyPhotoId());
+        intent.putExtra("fromTable",true);
+        intent.putExtra(getString(R.string.category), photo.getMyCategory());
+        startActivity(intent);
     }
 
     /**
@@ -828,6 +848,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
         String selectedCategory = spinner.getSelectedItem().toString();
         Log.d("selectedCat", selectedCategory);
+        //PhotoDB pdb = new PhotoDB(this);
+        pdb.getCategoryAll(selectedCategory);
     }
 
     /**

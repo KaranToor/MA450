@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 public class viewEntryActivity extends AppCompatActivity {
     /**
      * Initializes activity
-     * @param theSavedInstanceState
+     * @param theSavedInstanceState the instance state.
      */
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {

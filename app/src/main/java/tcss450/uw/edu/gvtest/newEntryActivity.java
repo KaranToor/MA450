@@ -4,17 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -49,6 +54,8 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
      */
     private String myCategory;
 
+    private boolean myOldEntry;
+
 
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
@@ -80,7 +87,41 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         paymentEdit.setText(myPaymentType);
 
         myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
+//        if (new File(myPhotoId).exists()) {
+//            // do something if it exists
+//        } else {
+//            // File was not found
+//        }
         setImage(myPhotoId);
+        if (Build.VERSION.SDK_INT >= 24) {
+            try {
+                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                m.invoke(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (myOldEntry = intent.getBooleanExtra("fromTable", false)) {
+            Button b = (Button) findViewById(R.id.ok_button);
+            b.setText(R.string.UpdateStr);
+            b = (Button) findViewById(R.id.new_entry_back_button);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    newEntryActivity.this.onBackPressed();
+                }
+            });
+            b.setVisibility(View.VISIBLE);
+            //Spinner mSpinner = (Spinner) findViewById(R.id.category_assigner);
+
+            String category = intent.getStringExtra(getString(R.string.category));
+            //spinner.setAdapter(adapter);
+            if (!category.equals(null)) {
+                int spinnerPosition = adapter.getPosition(category);
+                spinner.setSelection(spinnerPosition);
+            }
+        }
     }
 
     public void okButtonPress(View theView) {
@@ -122,13 +163,26 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         photoDB.addPhoto(pictureObject);
     }
 
-    public void retakeClicked(View theView) {
-
+    public void retakeClicked(View theView) throws IOException {
+//        getApplicationContext().
+//        OverviewActivity oa = new OverviewActivity();
+//        //oa.onCreate(null);
+//        oa.cameraButtonClicked(theView.findViewById(R.id.cameraButton));
     }
 
-    private void setImage(Uri theUri) {
+    private void setImage(final Uri theUri) {
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
+
         imageView.setImageURI(theUri);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setDataAndType(theUri, "image/*");
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

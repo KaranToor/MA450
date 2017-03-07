@@ -158,14 +158,34 @@
 
     </Spinner>
 
-    <Button
-        android:text="@string/ok"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="21dp"
-        android:id="@+id/ok_button"
-        android:onClick="okButtonPress"
-        />
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+
+        android:layout_below="@id/category_assigner">
+
+        <Button
+            android:id="@+id/new_entry_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:visibility="gone"/>
+
+        <Button
+            android:text="@string/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ok_button"
+            android:onClick="okButtonPress"
+            />
+
+    </LinearLayout>
+
+
+
+
+
 </RelativeLayout>
