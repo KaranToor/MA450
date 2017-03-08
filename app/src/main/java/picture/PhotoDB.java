@@ -363,17 +363,17 @@ public class PhotoDB {
         // Fetches all pictures for this user on a separate thread.
         new AsyncTask<PictureObject, Void, String>() {
 
-            ProgressDialog progressDialog;
+            ProgressDialog progressDialog2;
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                progressDialog = new ProgressDialog(myActivity);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setMessage("Loading...");
-                progressDialog.setCancelable(false);
-                progressDialog.setCanceledOnTouchOutside(false);
-                progressDialog.show();
+                progressDialog2 = new ProgressDialog(myActivity);
+                progressDialog2.setIndeterminate(true);
+                progressDialog2.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog2.setMessage("Loading...");
+                progressDialog2.setCancelable(false);
+                progressDialog2.setCanceledOnTouchOutside(false);
+                progressDialog2.show();
             }
 
             /**
@@ -441,7 +441,7 @@ public class PhotoDB {
                 if (myActivity instanceof OverviewActivity) {
                     ((OverviewActivity) myActivity).updateTable(photoResult);
                 }
-                progressDialog.dismiss();
+                progressDialog2.dismiss();
             }
         }.execute();
         return photoResult;
