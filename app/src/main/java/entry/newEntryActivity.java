@@ -254,7 +254,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         if(isUpdate == false) {
             sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
         } else if (isUpdate == true) {
-            sendToDatabase2(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+            sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
         }
 
         Intent intent = new Intent(this, OverviewActivity.class);
