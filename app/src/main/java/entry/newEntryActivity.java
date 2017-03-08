@@ -1,4 +1,4 @@
-package tcss450.uw.edu.gvtest;
+package entry;
 
 import android.Manifest;
 import android.content.Context;
@@ -30,6 +30,7 @@ import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import entry.OverviewActivity;
 import picture.PhotoDB;
 import picture.PictureObject;
 import tcss450.uw.edu.gvtest.R;
@@ -175,9 +176,11 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 ////////////////////////////////////////////////////////////////////////////////
         myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
         Log.d("myPhotoId", "onCreate: " + myPhotoId);
-        if (myPhotoId.toString().startsWith("content://") || new File(myPhotoId.getPath()).exists()) {
+        File image = new File(myPhotoId.getPath());
+        if (myPhotoId.toString().startsWith("content://")) {
             setImage(myPhotoId);
-        } else {
+        } else  if (image.exists()) {
+            setImage(Uri.fromFile(image));
             // File was not found
         }
 //        setImage(myPhotoId);
