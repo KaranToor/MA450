@@ -1,4 +1,4 @@
-package tcss450.uw.edu.gvtest;
+package utils;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;

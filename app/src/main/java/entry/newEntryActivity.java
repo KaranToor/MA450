@@ -26,15 +26,21 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+
+import picture.PhotoDB;
+import picture.PictureObject;
+import tcss450.uw.edu.gvtest.R;
+import utils.PermissionUtils;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
     public static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
+    boolean isARetake = false;
 
     /**
      * The file location of the photo to be used.
@@ -113,50 +119,57 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(newEntryActivity.this);
-                builder
-                        .setMessage(R.string.dialog_select_prompt)
-                        .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (PermissionUtils.requestPermission(newEntryActivity.this, GALLERY_PERMISSIONS_REQUEST,
-                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                                    Intent intent = new Intent();
-                                    intent.setType(getString(R.string.intenttype));
-                                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePhotoPrompt)),
-                                            GALLERY_IMAGE_REQUEST);
-                                }
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    if (PermissionUtils.requestPermission(
-                                            newEntryActivity.this,
-                                            CAMERA_PERMISSIONS_REQUEST,
-                                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                                            Manifest.permission.CAMERA)) {
-                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+                Intent intent = new Intent(newEntryActivity.this, OverviewActivity.class);
+                //String message = "retake";
+                intent.putExtra("retake", "retake");
+                startActivity(intent);
 
-                                        if (Build.VERSION.SDK_INT >= 24) {
-                                            try {
-                                                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
-                                                m.invoke(null);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                        startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                builder.create().show();
+
+
+//                AlertDialog.Builder builder = new AlertDialog.Builder(newEntryActivity.this);
+//                builder
+//                        .setMessage(R.string.dialog_select_prompt)
+//                        .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                if (PermissionUtils.requestPermission(newEntryActivity.this, GALLERY_PERMISSIONS_REQUEST,
+//                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+//                                    Intent intent = new Intent();
+//                                    intent.setType(getString(R.string.intenttype));
+//                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePhotoPrompt)),
+//                                            GALLERY_IMAGE_REQUEST);
+//                                }
+//                            }
+//                        })
+//                        .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                try {
+//                                    if (PermissionUtils.requestPermission(
+//                                            newEntryActivity.this,
+//                                            CAMERA_PERMISSIONS_REQUEST,
+//                                            Manifest.permission.READ_EXTERNAL_STORAGE,
+//                                            Manifest.permission.CAMERA)) {
+//                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+//
+//                                        if (Build.VERSION.SDK_INT >= 24) {
+//                                            try {
+//                                                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+//                                                m.invoke(null);
+//                                            } catch (Exception e) {
+//                                                e.printStackTrace();
+//                                            }
+//                                        }
+//                                        startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
+//                                    }
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                builder.create().show();
             }
         });
 ////////////////////////////////////////////////////////////////////////////////
@@ -193,48 +206,84 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
 
 
-    //ADDED THIS METHOD FROM OVERVIEW
-    private File getCameraFile() throws IOException {
-        // Create an image file name
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
-        int userid = prefs.getInt(getString(R.string.UID), -1);
-        if (userid == -1) {
-            throw new IllegalArgumentException("userid is not set in Prefs");
-        }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = userid + "_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
+//    //ADDED THIS METHOD FROM OVERVIEW
+//    private File getCameraFile() throws IOException {
+//        // Create an image file name
+//        SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
+//        int userid = prefs.getInt(getString(R.string.UID), -1);
+//        if (userid == -1) {
+//            throw new IllegalArgumentException("userid is not set in Prefs");
+//        }
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = userid + "_" + timeStamp + "_";
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+////        File image = File.createTempFile(
+////                imageFileName,  /* prefix */
+////                ".jpg",         /* suffix */
+////                storageDir      /* directory */
+////        );
+//
+//        File image = new File(
+//                storageDir,
+//                imageFileName +  /* prefix */
+//                        ".jpg"        /* suffix */
+//                      /* directory */
 //        );
-
-        File image = new File(
-                storageDir,
-                imageFileName +  /* prefix */
-                        ".jpg"        /* suffix */
-                      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        return image;
-    }
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        return image;
+//    }
 
     public void okButtonPress(View theView) {
+        boolean isUpdate = false;
+
+        Button isthisUpdate = (Button) findViewById(R.id.ok_button);
+        if(isthisUpdate.getText().toString().equals("Update")) {
+            isUpdate = true;
+        }
 
         myLocation = ((EditText) findViewById(R.id.locationId)).getText().toString();
         myDate = ((EditText) findViewById(R.id.dateId)).getText().toString();
         myPrice = ((EditText) findViewById(R.id.amountId)).getText().toString();
         myPaymentType = ((EditText) findViewById(R.id.paymentId)).getText().toString();
 
-        sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+        if(isUpdate == false) {
+            sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+        } else if (isUpdate == true) {
+            sendToDatabase2(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+        }
 
         Intent intent = new Intent(this, OverviewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         this.finish();
+    }
+
+    private void sendToDatabase2(Uri thePhotoId, String theLocation, String thePrice,
+                                String thePaymentType, String theDate,
+                                String theCategory) {
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                getString(R.string.prefKey), Context.MODE_PRIVATE);
+        int userId = prefs.getInt(getString(R.string.UID), -1);
+        if (userId == -1) {
+            throw new IllegalArgumentException("UserId was not set in SharedPreferences");
+        }
+
+        BigDecimal price;
+        if (!myPrice.equals("Not Found")) {
+            price = new BigDecimal(thePrice);
+        } else {
+            price = new BigDecimal(0.00001); //BigDecimal.ZERO;
+        }
+
+        // TODO Toork PhotoId.toString()
+        PictureObject pictureObject = new PictureObject(userId, myPhotoId.getPath(),
+                theLocation, price, thePaymentType, theDate, theCategory);
+        PhotoDB photoDB = new PhotoDB(this);
+        System.out.println("this is is a retake right now" + isARetake);
+        photoDB.updatePhoto(pictureObject);
+
     }
 
     private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice,
