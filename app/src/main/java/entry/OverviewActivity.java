@@ -50,6 +50,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,6 +102,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     private Uri myImageUri;
 
     private newEntryActivity nea;
+    private Boolean retakePicture;
 
     /**
      * Called at the creation of the Activity.
@@ -111,14 +113,24 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String value = extras.getString("retake");
-//            nea = getIntent().getExtras().getSerializable("myclass");
-            if(value.equals("retake")){
-                cameraButtonClicked();
-            }
+        //Bundle extras = getIntent().getExtras();
+        Intent intent = getIntent();
+        retakePicture = intent.getBooleanExtra("Retake Picture",false);
+        if (retakePicture) {
+            mCurrentPhotoPath = intent.getStringExtra("OldPath");
+            Log.d("ifRetakePic", "onCreate: oldPath =" + mCurrentPhotoPath);
+            myImageUri = Uri.parse(mCurrentPhotoPath);
+            cameraButtonClicked();
         }
+
+//        if (extras != null) {
+//            String value = extras.getString("retake");
+////            nea = getIntent().getExtras().getSerializable("myclass");
+//            if(value.equals("retake")){
+//                //      cameraButtonClicked(); // ????????????
+//                retakePicture = true;
+//            }
+//        }
         setContentView(R.layout.activity_overview);
         setProgressLabel();
         //init();
@@ -383,7 +395,27 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA)) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+            if (retakePicture) {
+                Log.d(TAG, "startCamera: "+ mCurrentPhotoPath);
+
+                File overridePhoto = new File(Uri.parse(mCurrentPhotoPath).getPath());
+                if(overridePhoto.exists() && overridePhoto.delete()) {
+                    Log.d(TAG, "startCamera: oldphoto deleted");
+                    //overridePhoto = new File(Uri.parse(mCurrentPhotoPath).getPath());
+                    mPhoto = overridePhoto;
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(overridePhoto));
+
+                } else {
+                    mPhoto = overridePhoto;
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(overridePhoto));
+                    Log.d("ERROR DELETING", "startCamera: " + "FILE LINE ~399");
+                }
+
+            } else {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
+            }
+
+
 
             if (Build.VERSION.SDK_INT >= 24) {
                 try {
@@ -428,6 +460,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
+
+        Log.d(TAG, "New image File absolute path: " + mCurrentPhotoPath);
         mPhoto = image;
         return image;
     }
@@ -456,7 +490,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             galleryAddPic();
-            uploadImage(Uri.fromFile(mPhoto));
+            if (retakePicture) {
+                Log.d(TAG, "onActivityResult OldImage: " +Uri.fromFile(mPhoto));
+                uploadImage(Uri.fromFile(mPhoto));
+            } else {
+                Log.d(TAG, "onActivityResult newImage: "+Uri.fromFile(mPhoto));
+                uploadImage(Uri.fromFile(mPhoto));
+
+            }
         }
     }
 
@@ -643,7 +684,13 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         intent.putExtra(LOCATION, parseLocation(theMessage));
         intent.putExtra(PAYMENT_TYPE, parsePaymentType(theMessage));
         intent.putExtra(DATE, parseDate(theMessage));
-        intent.putExtra(CAMERA_OR_GALLERY, myImageUri.toString());
+        Log.d("OverView", "startNewEntry: filepath = " + mPhoto.getAbsolutePath());
+        intent.putExtra(CAMERA_OR_GALLERY,mPhoto.getAbsolutePath()); //myImageUri.toString());
+        if (retakePicture) {
+            intent.putExtra("fromTable",true);
+            intent.putExtra(getString(R.string.category), "null");
+            retakePicture = false;
+        }
 
 //        if (!myAccessedGallery) {
 //            intent.putExtra(CAMERA_OR_GALLERY, "" + CAMERA_IMAGE_REQUEST);
@@ -885,6 +932,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         intent.putExtra(LOCATION, photo.getMyLocation());
         intent.putExtra(PAYMENT_TYPE, photo.getMyPaymentType());
         intent.putExtra(DATE, photo.getMyDate());
+
+        Log.d(TAG, "viewEntry: photoID "+ photo.getMyPhotoId());
+
         intent.putExtra(CAMERA_OR_GALLERY, photo.getMyPhotoId());
         intent.putExtra("fromTable",true);
         intent.putExtra(getString(R.string.category), photo.getMyCategory());

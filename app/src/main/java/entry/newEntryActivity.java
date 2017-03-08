@@ -114,7 +114,8 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
                 e.printStackTrace();
             }
         }
-        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
+        final String imagePath = intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY);
+        myPhotoId = Uri.parse(imagePath);  ///intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
 
         /////////put in if statement? to bottom slashes ////////////////////////////////////////
         Button retakePhotoButton = (Button) findViewById(R.id.button7);
@@ -124,64 +125,23 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
                 Intent intent = new Intent(newEntryActivity.this, OverviewActivity.class);
                 //String message = "retake";
-                intent.putExtra("retake", "retake");
+//                intent.putExtra("retake", "retake");
+                intent.putExtra("Retake Picture", true);
+                intent.putExtra("OldPath", imagePath);
+                intent.putExtra(getString(R.string.category), "null");
+
                 startActivity(intent);
 
 
-
-//                AlertDialog.Builder builder = new AlertDialog.Builder(newEntryActivity.this);
-//                builder
-//                        .setMessage(R.string.dialog_select_prompt)
-//                        .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                if (PermissionUtils.requestPermission(newEntryActivity.this, GALLERY_PERMISSIONS_REQUEST,
-//                                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//                                    Intent intent = new Intent();
-//                                    intent.setType(getString(R.string.intenttype));
-//                                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                                    startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePhotoPrompt)),
-//                                            GALLERY_IMAGE_REQUEST);
-//                                }
-//                            }
-//                        })
-//                        .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                try {
-//                                    if (PermissionUtils.requestPermission(
-//                                            newEntryActivity.this,
-//                                            CAMERA_PERMISSIONS_REQUEST,
-//                                            Manifest.permission.READ_EXTERNAL_STORAGE,
-//                                            Manifest.permission.CAMERA)) {
-//                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
-//
-//                                        if (Build.VERSION.SDK_INT >= 24) {
-//                                            try {
-//                                                Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
-//                                                m.invoke(null);
-//                                            } catch (Exception e) {
-//                                                e.printStackTrace();
-//                                            }
-//                                        }
-//                                        startActivityForResult(intent, CAMERA_IMAGE_REQUEST);
-//                                    }
-//                                } catch (IOException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                builder.create().show();
             }
         });
-////////////////////////////////////////////////////////////////////////////////
-        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
-        Log.d("myPhotoId", "onCreate: " + myPhotoId);
+
+        Log.d("myPhotoId", "onCreate: " + myPhotoId.getPath());
         File image = new File(myPhotoId.getPath());
         if (myPhotoId.toString().startsWith("content://")) {
             setImage(myPhotoId);
-        } else  if (image.exists()) {
+        } else if (image.exists()) {
+            Log.d("image Exists", "onCreate: ");
             setImage(Uri.fromFile(image));
             // File was not found
         }
@@ -202,7 +162,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
             String category = intent.getStringExtra(getString(R.string.category));
             //spinner.setAdapter(adapter);
-            if (!category.equals(null)) {
+            if (!category.equals("null")) {
                 int spinnerPosition = adapter.getPosition(category);
                 spinner.setSelection(spinnerPosition);
             }
@@ -240,6 +200,8 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 //        return image;
 //    }
 
+
+
     public void okButtonPress(View theView) {
 //        boolean isUpdate = false;
 
@@ -263,6 +225,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 
         Intent intent = new Intent(this, OverviewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("Retake Picture", false);
         startActivity(intent);
         this.finish();
     }
@@ -304,7 +267,8 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         }
 
         BigDecimal price;
-        if (!myPrice.equals("Not Found")) {
+        Log.d("BIGDEC ZERO", "sendToDatabase: " + BigDecimal.ZERO);
+        if (!myPrice.equals("Not Found") && Double.parseDouble(thePrice) > 0.0){
             price = new BigDecimal(thePrice);
         } else {
             price = new BigDecimal(0.00001); //BigDecimal.ZERO;

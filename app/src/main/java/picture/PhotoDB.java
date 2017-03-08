@@ -187,15 +187,6 @@ public class PhotoDB {
                 } else if (result.startsWith("{\"Success")) {
                     Toast.makeText(context, "Photo Added", Toast.LENGTH_LONG).show();
 
-                    try {
-                        JSONObject root = new JSONObject(result);
-                        JSONObject success = root.getJSONObject("Success");
-                        photoResult = getJsonPhotos(success.getJSONArray("Status"));
-
-                        photoData = success.getJSONArray("photoData");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                 } else if (result.startsWith("{\"Error\"")) {
                     //Toast.makeText(context, "Photo Already Exists", Toast.LENGTH_LONG).show();
                     try {
@@ -372,6 +363,19 @@ public class PhotoDB {
         // Fetches all pictures for this user on a separate thread.
         new AsyncTask<PictureObject, Void, String>() {
 
+            ProgressDialog progressDialog;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = new ProgressDialog(myActivity);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage("Loading...");
+                progressDialog.setCancelable(false);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+            }
+
             /**
              * Executes the connection and fetches information in a thread separate from
              * the UI thread.
@@ -437,6 +441,7 @@ public class PhotoDB {
                 if (myActivity instanceof OverviewActivity) {
                     ((OverviewActivity) myActivity).updateTable(photoResult);
                 }
+                progressDialog.dismiss();
             }
         }.execute();
         return photoResult;
