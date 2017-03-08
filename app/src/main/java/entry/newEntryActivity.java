@@ -23,6 +23,7 @@ import android.widget.Spinner;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.SQLOutput;
@@ -34,7 +35,7 @@ import picture.PictureObject;
 import tcss450.uw.edu.gvtest.R;
 import utils.PermissionUtils;
 
-public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, Serializable {
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
     public static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
@@ -111,6 +112,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
                 e.printStackTrace();
             }
         }
+        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
 
         /////////put in if statement? to bottom slashes ////////////////////////////////////////
         Button retakePhotoButton = (Button) findViewById(R.id.button7);
@@ -122,6 +124,9 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
                 Intent intent = new Intent(newEntryActivity.this, OverviewActivity.class);
                 //String message = "retake";
                 intent.putExtra("retake", "retake");
+                //THIS IS AN ATTEMPT HEREEEEEEEEEEE...to ****
+                intent.putExtra("myclass", newEntryActivity.this);
+                //************
                 startActivity(intent);
 
 
@@ -173,7 +178,6 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
             }
         });
 ////////////////////////////////////////////////////////////////////////////////
-        myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
         if (new File(myPhotoId.getPath()).exists() || myPhotoId.toString().startsWith("content://")) {
             setImage(myPhotoId);
         } else {
@@ -247,11 +251,12 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         myPrice = ((EditText) findViewById(R.id.amountId)).getText().toString();
         myPaymentType = ((EditText) findViewById(R.id.paymentId)).getText().toString();
 
-        if(isUpdate == false) {
-            sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
-        } else if (isUpdate == true) {
-            sendToDatabase2(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
-        }
+//        if(isUpdate == false) {
+//            sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+//        } else if (isUpdate == true) {
+//            sendToDatabase2(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+//        }
+        sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
 
         Intent intent = new Intent(this, OverviewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -98,6 +98,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     private TextView myImageDetails;
     private Uri myImageUri;
 
+    private newEntryActivity nea;
+
     /**
      * Called at the creation of the Activity.
      *
@@ -110,6 +112,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String value = extras.getString("retake");
+//            nea = getIntent().getExtras().getSerializable("myclass");
             if(value.equals("retake")){
                 cameraButtonClicked();
             }
