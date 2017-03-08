@@ -106,6 +106,14 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("retake");
+            if(value.equals("retake")){
+                cameraButtonClicked();
+            }
+        }
         setContentView(R.layout.activity_overview);
         setProgressLabel();
         //init();
@@ -124,6 +132,8 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         myImageDetails = new TextView(this);
 //        t.addView(myImageDetails);
 //        table.addView(t);
+
+
     }
 
     /**
@@ -280,12 +290,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
-    /**
-     * Launches the dialog for the user to choose a picture from their gallery.
-     *
-     * @param theView The view used for event handling.
-     */
-    public void cameraButtonClicked(View theView) {
+    public void cameraButtonClicked() {
         AlertDialog.Builder builder = new AlertDialog.Builder(OverviewActivity.this);
         builder
                 .setMessage(R.string.dialog_select_prompt)
@@ -306,6 +311,15 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                     }
                 });
         builder.create().show();
+    }
+
+    /**
+     * Launches the dialog for the user to choose a picture from their gallery.
+     *
+     * @param theView The view used for event handling.
+     */
+    public void cameraButtonClicked(View theView) {
+        cameraButtonClicked();
     }
 
     /**
