@@ -1,6 +1,7 @@
 package picture;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -256,6 +257,19 @@ public class PhotoDB {
         // Fetches all pictures for this user on a separate thread.
         new AsyncTask<PictureObject, Void, String>() {
 
+            ProgressDialog progressDialog;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressDialog = new ProgressDialog(myActivity);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage("Loading...");
+                progressDialog.setCancelable(false);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
+            }
+
             /**
              * Executes the connection and fetches information in a thread separate from
              * the UI thread.
@@ -335,6 +349,7 @@ public class PhotoDB {
 
                 Log.d(TAG, "onPostExecute photoResult: " + photoResult);
                 Log.d(TAG, "onPostExecute: photodata : " + photoData);
+                progressDialog.dismiss();
             }
         }.execute();
         //Log.d("After async task", "getAllPhotos: " + photoResult.toString());
