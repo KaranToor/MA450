@@ -13,6 +13,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,7 @@ import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import entry.OverviewActivity;
 import picture.PhotoDB;
 import picture.PictureObject;
 import tcss450.uw.edu.gvtest.R;
@@ -117,7 +119,6 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         retakePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("IM SETTING IT");
 
                 Intent intent = new Intent(newEntryActivity.this, OverviewActivity.class);
                 //String message = "retake";
@@ -174,14 +175,17 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         });
 ////////////////////////////////////////////////////////////////////////////////
         myPhotoId = Uri.parse(intent.getStringExtra(OverviewActivity.CAMERA_OR_GALLERY));
-        if (new File(myPhotoId.getPath()).exists() || myPhotoId.toString().startsWith("content://")) {
+        Log.d("myPhotoId", "onCreate: " + myPhotoId);
+        File image = new File(myPhotoId.getPath());
+        if (myPhotoId.toString().startsWith("content://")) {
             setImage(myPhotoId);
-        } else {
+        } else  if (image.exists()) {
+            setImage(Uri.fromFile(image));
             // File was not found
         }
 //        setImage(myPhotoId);
-
-        if (isEditEntry = intent.getBooleanExtra("fromTable", false)) {
+        isEditEntry = intent.getBooleanExtra("fromTable", false);
+        if (isEditEntry) {
             Button b = (Button) findViewById(R.id.ok_button);
             b.setText(getString(R.string.updateStr));
             b = (Button) findViewById(R.id.new_entry_back_button);
@@ -306,10 +310,11 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         PictureObject pictureObject = new PictureObject(userId, myPhotoId.getPath(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(this);
-        System.out.println("this is is a retake right now" + isARetake);
-        photoDB.addPhoto(pictureObject);
-
-
+        if (isEditEntry){
+            photoDB.updatePhoto(pictureObject);
+        }else {
+            photoDB.addPhoto(pictureObject);
+        }
     }
 
     public void retakeClicked(View theView) throws IOException {
