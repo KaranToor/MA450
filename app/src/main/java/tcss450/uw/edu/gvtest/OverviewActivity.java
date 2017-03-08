@@ -3,6 +3,7 @@ package tcss450.uw.edu.gvtest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
@@ -56,6 +57,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -136,7 +138,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         //PhotoDB pdb = new PhotoDB(this);
         pdb = new PhotoDB(this);
 
-        //pdb.getAllPhotos(); // used in onItemSelected()
+        // pdb.getAllPhotos(); // used in onItemSelected()
         // Dont make any calls after getAllPhotos()
     }
 
@@ -426,7 +428,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         if (theRequestCode == GALLERY_IMAGE_REQUEST && theResultCode == RESULT_OK && theData != null) {
             mCurrentPhotoPath = theData.getData().toString();
-            uploadImage(theData.getData());
+
+            Log.d("ONACTICITYRESULT", "onActivityResult: " + mCurrentPhotoPath);
+            uploadImage(Uri.parse(mCurrentPhotoPath));    //theData.getData());
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             galleryAddPic();
@@ -455,6 +459,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
                 // Needed for some reason even though it is not used.
                 Bitmap galleryBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), theUri);
+
                 Bitmap bitmap =
                         scaleBitmapDown(
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), theUri),
@@ -890,7 +895,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         if(selectedCategory.equals("Show All")){
             pdb.getAllPhotos();
-
         } else {
             //PhotoDB pdb = new PhotoDB(this);
             pdb.getCategoryAll(selectedCategory);

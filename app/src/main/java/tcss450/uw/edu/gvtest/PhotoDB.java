@@ -247,7 +247,7 @@ public class PhotoDB {
         final StringBuilder sb = new StringBuilder();
         sb.append("?userid=" + userid);
 
-        Log.d("Starting debug photodb", "Starting debug");
+        //Log.d("Starting debug photodb", "Starting debug");
 
         // Fetches all pictures for this user on a separate thread.
         new AsyncTask<PictureObject, Void, String>() {
@@ -266,17 +266,17 @@ public class PhotoDB {
                 String response = "";
                 HttpURLConnection urlConnection = null;
                 try {
-                    Log.d("IN On background", "doInBackground: " + PARTIAL_URL + SERVICE + sb.toString());
+//                    Log.d("IN On background", "doInBackground: " + PARTIAL_URL + SERVICE + sb.toString());
                     URL urlObject = new URL(PARTIAL_URL + SERVICE + sb.toString());
-                    Log.d("In on background", "" + 1);
+//                    Log.d("In on background", "" + 1);
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
-                    Log.d("In on background", "" + 2);
+//                    Log.d("In on background", "" + 2);
                     InputStream content = urlConnection.getInputStream();
-                    Log.d("In on background", "" + 3);
+//                    Log.d("In on background", "" + 3);
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-                    Log.d("In on background", "" + 4);
+//                    Log.d("In on background", "" + 4);
                     String s = "";
-                    Log.d("In on background", "" + 5);
+//                    Log.d("In on background", "" + 5);
 
                     while ((s = buffer.readLine()) != null) {
                         response += s;
