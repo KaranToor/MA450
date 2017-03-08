@@ -294,12 +294,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         AlertDialog.Builder builder = new AlertDialog.Builder(OverviewActivity.this);
         builder
                 .setMessage(R.string.dialog_select_prompt)
-                .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startGalleryChooser();
-                    }
-                })
+//                .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        startGalleryChooser();
+//                    }
+//                })
                 .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

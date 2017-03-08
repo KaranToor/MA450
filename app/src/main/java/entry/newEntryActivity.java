@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -38,6 +39,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
     public static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
+    boolean isARetake = false;
 
     /**
      * The file location of the photo to be used.
@@ -115,6 +117,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         retakePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("IM SETTING IT");
 
                 Intent intent = new Intent(newEntryActivity.this, OverviewActivity.class);
                 //String message = "retake";
@@ -232,18 +235,54 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 //    }
 
     public void okButtonPress(View theView) {
+        boolean isUpdate = false;
+
+        Button isthisUpdate = (Button) findViewById(R.id.ok_button);
+        if(isthisUpdate.getText().toString().equals("Update")) {
+            isUpdate = true;
+        }
 
         myLocation = ((EditText) findViewById(R.id.locationId)).getText().toString();
         myDate = ((EditText) findViewById(R.id.dateId)).getText().toString();
         myPrice = ((EditText) findViewById(R.id.amountId)).getText().toString();
         myPaymentType = ((EditText) findViewById(R.id.paymentId)).getText().toString();
 
-        sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+        if(isUpdate == false) {
+            sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+        } else if (isUpdate == true) {
+            sendToDatabase2(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+        }
 
         Intent intent = new Intent(this, OverviewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         this.finish();
+    }
+
+    private void sendToDatabase2(Uri thePhotoId, String theLocation, String thePrice,
+                                String thePaymentType, String theDate,
+                                String theCategory) {
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                getString(R.string.prefKey), Context.MODE_PRIVATE);
+        int userId = prefs.getInt(getString(R.string.UID), -1);
+        if (userId == -1) {
+            throw new IllegalArgumentException("UserId was not set in SharedPreferences");
+        }
+
+        BigDecimal price;
+        if (!myPrice.equals("Not Found")) {
+            price = new BigDecimal(thePrice);
+        } else {
+            price = new BigDecimal(0.00001); //BigDecimal.ZERO;
+        }
+
+        // TODO Toork PhotoId.toString()
+        PictureObject pictureObject = new PictureObject(userId, myPhotoId.getPath(),
+                theLocation, price, thePaymentType, theDate, theCategory);
+        PhotoDB photoDB = new PhotoDB(this);
+        System.out.println("this is is a retake right now" + isARetake);
+        photoDB.updatePhoto(pictureObject);
+
     }
 
     private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice,
@@ -267,7 +306,10 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         PictureObject pictureObject = new PictureObject(userId, myPhotoId.getPath(),
                 theLocation, price, thePaymentType, theDate, theCategory);
         PhotoDB photoDB = new PhotoDB(this);
+        System.out.println("this is is a retake right now" + isARetake);
         photoDB.addPhoto(pictureObject);
+
+
     }
 
     public void retakeClicked(View theView) throws IOException {
