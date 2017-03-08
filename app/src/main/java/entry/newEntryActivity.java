@@ -241,23 +241,25 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
 //    }
 
     public void okButtonPress(View theView) {
-        boolean isUpdate = false;
+//        boolean isUpdate = false;
 
-        Button isthisUpdate = (Button) findViewById(R.id.ok_button);
-        if(isthisUpdate.getText().toString().equals("Update")) {
-            isUpdate = true;
-        }
+//        Button isthisUpdate = (Button) findViewById(R.id.ok_button);
+//        if(isthisUpdate.getText().toString().equals("Update")) {
+//            isUpdate = true;
+//        }
 
         myLocation = ((EditText) findViewById(R.id.locationId)).getText().toString();
         myDate = ((EditText) findViewById(R.id.dateId)).getText().toString();
         myPrice = ((EditText) findViewById(R.id.amountId)).getText().toString();
         myPaymentType = ((EditText) findViewById(R.id.paymentId)).getText().toString();
 
-        if(isUpdate == false) {
-            sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
-        } else if (isUpdate == true) {
-            sendToDatabase2(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
-        }
+//        if(isUpdate == false) {
+//            sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+//        } else if (isUpdate == true) {
+//            sendToDatabase2(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+//        }
+        sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
+
 
         Intent intent = new Intent(this, OverviewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
