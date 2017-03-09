@@ -12,170 +12,185 @@ public class PictureObject {
     /**
      * Holds the ID number of the current user.
      */
-    private int myUserId;
+    private int mUserId;
 
     /**
      * The location field for this PictureObject.
      */
-    private String myLocation;
+    private String mLocation;
 
     /**
      * The payment type field for this PictureObject.
      */
-    private String myPaymentType;
+    private String mPaymentType;
 
     /**
      * The date field for this PictureObject.
      */
-    private String myDate;
+    private String mDate;
 
     /**
      * The price field for this PictureObject.
      */
-    private BigDecimal myPrice;
+    private BigDecimal mPrice;
 
     /**
      * The category field for this PictureObject.
      */
-    private String myCategory;
+    private String mCategory;
 
     /**
      * The photoID field for this PictureObject.
      */
-    private String myPhotoId;
+    private String mPhotoId;
 
     /**
      * Instantiates the variables of Picture Object
-     * @param myUserId the user's id
-     * @param myPhotoId the id associated with the photo
-     * @param myLocation the location of purchase
-     * @param myPrice the total price of purchases on any one receipt
-     * @param myPaymentType the payment type used for purchases
-     * @param myDate the date of purchases
-     * @param myCategory the category of these purchases
+     *
+     * @param theUserId      the user's id
+     * @param thePhotoId     the id associated with the photo
+     * @param theLocation    the location of purchase
+     * @param thePrice       the total price of purchases on any one receipt
+     * @param thePaymentType the payment type used for purchases
+     * @param theDate        the date of purchases
+     * @param theCategory    the category of these purchases
      */
-    public PictureObject(int myUserId, String myPhotoId, String myLocation,
-                         BigDecimal myPrice, String myPaymentType, String myDate,
-                         String myCategory) {
-        this.myUserId = myUserId;
-        this.myLocation = myLocation;
-        this.myPaymentType = myPaymentType;
-        this.myDate = myDate;
-        this.myPrice = myPrice;
-        this.myCategory = myCategory;
-        this.myPhotoId = myPhotoId;
+    public PictureObject(int theUserId, String thePhotoId, String theLocation,
+                         BigDecimal thePrice, String thePaymentType, String theDate,
+                         String theCategory) {
+        this.mUserId = theUserId;
+        this.mLocation = theLocation;
+        this.mPaymentType = thePaymentType;
+        this.mDate = theDate;
+        this.mPrice = thePrice;
+        this.mCategory = theCategory;
+        this.mPhotoId = thePhotoId;
     }
 
     /**
      * Gets the user id
-     * @return myUserId to be retrieved
+     *
+     * @return mUserId to be retrieved
      */
-    public int getMyUserId() {
-        return myUserId;
+    public int getmUserId() {
+        return mUserId;
     }
 
     /**
      * sets the user id
-     * @param myUserId to be set
+     *
+     * @param mUserId to be set
      */
-    public void setMyUserId(int myUserId) {
-        this.myUserId = myUserId;
+    public void setmUserId(int mUserId) {
+        this.mUserId = mUserId;
     }
 
     /**
      * Gets the location of purchase from receipt
-     * @return myLocation to be retrieved
+     *
+     * @return mLocation to be retrieved
      */
-    public String getMyLocation() {
-        return myLocation;
+    public String getmLocation() {
+        return mLocation;
     }
 
     /**
      * Sets my location
-     * @param myLocation to be set
+     *
+     * @param mLocation to be set
      */
-    public void setMyLocation(String myLocation) {
-        this.myLocation = myLocation;
+    public void setmLocation(String mLocation) {
+        this.mLocation = mLocation;
     }
 
     /**
      * Gets the payment type
-     * @return myPaymentType to be retrieved
+     *
+     * @return mPaymentType to be retrieved
      */
-    public String getMyPaymentType() {
-        return myPaymentType;
+    public String getmPaymentType() {
+        return mPaymentType;
     }
 
     /**
      * Sets the payment type
-     * @param myPaymentType to be set
+     *
+     * @param mPaymentType to be set
      */
-    public void setMyPaymentType(String myPaymentType) {
-        this.myPaymentType = myPaymentType;
+    public void setmPaymentType(String mPaymentType) {
+        this.mPaymentType = mPaymentType;
     }
 
     /**
      * Gets the date from purchase on receipt
-     * @return myDate to be retrieved
+     *
+     * @return mDate to be retrieved
      */
-    public String getMyDate() {
-        return myDate;
+    public String getmDate() {
+        return mDate;
     }
 
     /**
      * Sets the date
-     * @param myDate to be set
+     *
+     * @param mDate to be set
      */
-    public void setMyDate(String myDate) {
-        this.myDate = myDate;
+    public void setmDate(String mDate) {
+        this.mDate = mDate;
     }
 
     /**
      * Gets the cost of purchase
-     * @return myPrice to be retrieved
+     *
+     * @return mPrice to be retrieved
      */
-    public BigDecimal getMyPrice() {
-        return myPrice;
+    public BigDecimal getmPrice() {
+        return mPrice;
     }
 
     /**
      * Sets the cost of the purchase
-     * @param myPrice to be set
+     *
+     * @param mPrice to be set
      */
-    public void setMyPrice(BigDecimal myPrice) {
-        this.myPrice = myPrice;
+    public void setmPrice(BigDecimal mPrice) {
+        this.mPrice = mPrice;
     }
 
     /**
      * Gets my category
-     * @return myCategory to be retrieved
+     *
+     * @return mCategory to be retrieved
      */
-    public String getMyCategory() {
-        return myCategory;
+    public String getmCategory() {
+        return mCategory;
     }
 
     /**
      * Sets the category
-     * @param myCategory to be set
+     *
+     * @param mCategory to be set
      */
-    public void setMyCategory(String myCategory) {
-        this.myCategory = myCategory;
+    public void setmCategory(String mCategory) {
+        this.mCategory = mCategory;
     }
 
     /**
      * Gets the photo Id
-     * @return myPhotoId to be retrieved
+     *
+     * @return mPhotoId to be retrieved
      */
-    public String getMyPhotoId() {
-        return myPhotoId;
+    public String getmPhotoId() {
+        return mPhotoId;
     }
 
     /**
      * Sets my photo id
-     * @param myPhotoId to be set
+     *
+     * @param mPhotoId to be set
      */
-    public void setMyPhotoId(String myPhotoId) {
-        this.myPhotoId = myPhotoId;
+    public void setmPhotoId(String mPhotoId) {
+        this.mPhotoId = mPhotoId;
     }
 
     /**
@@ -184,7 +199,7 @@ public class PictureObject {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(myPhotoId);
+        sb.append(mPhotoId);
         return sb.toString();
     }
 }

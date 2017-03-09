@@ -32,10 +32,7 @@
         <activity android:name="entry.OverviewActivity"
             android:screenOrientation="portrait"
             ></activity>
-        <activity android:name="entry.newEntryActivity"
-            android:screenOrientation="portrait"
-            ></activity>
-        <activity android:name="entry.viewEntryActivity"
+        <activity android:name="entry.NewEntryActivity"
             android:screenOrientation="portrait"
             ></activity>
     </application>

@@ -132,12 +132,12 @@ public class PhotoDB {
         // build GET Statement
         final StringBuilder sb = new StringBuilder();
         sb.append("?userid=" + userid);
-        sb.append("&photoid=" + picData.getMyPhotoId());
-        sb.append("&location=" + picData.getMyLocation());
-        sb.append("&total=" + picData.getMyPrice());
-        sb.append("&payment_type=" + picData.getMyPaymentType());
-        sb.append("&date=" + picData.getMyDate());
-        sb.append("&category=" + picData.getMyCategory());
+        sb.append("&photoid=" + picData.getmPhotoId());
+        sb.append("&location=" + picData.getmLocation());
+        sb.append("&total=" + picData.getmPrice());
+        sb.append("&payment_type=" + picData.getmPaymentType());
+        sb.append("&date=" + picData.getmDate());
+        sb.append("&category=" + picData.getmCategory());
 
         Log.d("addphoto", "addPhoto: " + PARTIAL_URL + SERVICE + sb.toString());
 
@@ -200,7 +200,7 @@ public class PhotoDB {
                         e.printStackTrace();
                     }
                 }
-                Log.d("AddPhoto", "onPostExecute: "+ result);
+                Log.d("AddPhoto", "onPostExecute: " + result);
 
             }
         }.execute(pictureObject);
@@ -249,6 +249,7 @@ public class PhotoDB {
         new AsyncTask<PictureObject, Void, String>() {
 
             ProgressDialog progressDialog;
+
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -270,8 +271,6 @@ public class PhotoDB {
             @Override
             protected String doInBackground(PictureObject... params) {
                 Log.d("IN On background", "doInBackground: " + PARTIAL_URL + SERVICE + sb.toString());
-//                JSONParser
-//                JSONObject json
                 String response = "";
                 HttpURLConnection urlConnection = null;
                 try {
@@ -364,6 +363,7 @@ public class PhotoDB {
         new AsyncTask<PictureObject, Void, String>() {
 
             ProgressDialog progressDialog2;
+
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -447,18 +447,24 @@ public class PhotoDB {
         return photoResult;
     }
 
+    /**
+     * Updates the photo information in the database.
+     *
+     * @param pictureObject
+     * @return
+     */
     public List<PictureObject> updatePhoto(PictureObject pictureObject) {
         picData = pictureObject;
         final String SERVICE = "updatePhoto.php";
         // build GET Statement
         final StringBuilder sb = new StringBuilder();
         sb.append("?userid=" + userid);
-        sb.append("&photoid=" + picData.getMyPhotoId());
-        sb.append("&location=" + picData.getMyLocation());
-        sb.append("&total=" + picData.getMyPrice());
-        sb.append("&payment_type=" + picData.getMyPaymentType());
-        sb.append("&date=" + picData.getMyDate());
-        sb.append("&category=" + picData.getMyCategory());
+        sb.append("&photoid=" + picData.getmPhotoId());
+        sb.append("&location=" + picData.getmLocation());
+        sb.append("&total=" + picData.getmPrice());
+        sb.append("&payment_type=" + picData.getmPaymentType());
+        sb.append("&date=" + picData.getmDate());
+        sb.append("&category=" + picData.getmCategory());
 
         Log.d("addphoto", "addPhoto: " + PARTIAL_URL + SERVICE + sb.toString());
 
@@ -507,29 +513,9 @@ public class PhotoDB {
                 } else if (result.startsWith("{\"Success")) {
                     Toast.makeText(context, "Photo Data Updated", Toast.LENGTH_LONG).show();
 
-//                    try {
-//                        JSONObject root = new JSONObject(result);
-//                        JSONObject success = root.getJSONObject("Success");
-//                        photoResult = getJsonPhotos(success.getJSONArray("Status"));
-//
-////                        photoData = success.getJSONArray("photoData");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
                 } else if (result.startsWith("{\"Error")) {
                     Toast.makeText(context, "No Update Occurred", Toast.LENGTH_LONG).show();
-//                    try {
-//                        JSONObject root = new JSONObject(result);
-//                        JSONObject error = root.getJSONObject("Error");
-//                        photoResult = getJsonPhotos(error.getJSONArray("photoData"));
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
                 }
-
-//                if (myActivity instanceof OverviewActivity) {
-//                    ((OverviewActivity) myActivity).updateTable(photoResult);
-//                }
             }
         }.execute(pictureObject);
         return photoResult;
