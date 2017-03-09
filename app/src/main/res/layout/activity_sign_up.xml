@@ -109,7 +109,7 @@
             android:layout_height="wrap_content">
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:text="Cancel"
                 style="@style/newButton"
                 android:onClick="cancelRegistration"/>
@@ -117,7 +117,8 @@
             android:text="@string/submit"
                 style="@style/newButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                android:layout_marginLeft="155dp"
+            android:layout_height="35dp"
             android:onClick="createUser"
             android:id="@+id/button3" />
             </LinearLayout>
