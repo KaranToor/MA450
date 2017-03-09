@@ -34,17 +34,20 @@ import entry.OverviewActivity;
  * @version Winter 2017
  */
 public class MainActivity extends AppCompatActivity {
+    /**
+     * Used to log into cssgate.
+     */
     private static final String PARTIAL_URL = "http://cssgate.insttech.washington.edu/~ekoval/";
 
     /**
      * The EditText which holds the inputted Email.
      */
-    private EditText myEmail;
+    private EditText mEmail;
 
     /**
      * The EditText which holds the inputted password.
      */
-    private EditText myPassword;
+    private EditText mPassword;
 
     /**
      * The application's SharedPreferences
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * A field to hold the unique ID number of the user.
      */
-    private int myUserId;
+    private int mUserId;
 
     /**
      * Initializes activity
@@ -100,17 +103,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Directs the myEmail to the overview activity after logging in.
+     * Directs the mEmail to the overview activity after logging in.
      *
      * @param theView The View passed in when this method is called.
      */
     public void logInUser(View theView) {
-        myEmail = (EditText) findViewById(R.id.editText2);
-        myPassword = (EditText) findViewById(R.id.editText3);
+        mEmail = (EditText) findViewById(R.id.editText2);
+        mPassword = (EditText) findViewById(R.id.editText3);
 
-        if (SignUpActivity.isValidEmail(myEmail.getText()) && myPassword.getText().length() > 7) {
+        if (SignUpActivity.isValidEmail(mEmail.getText()) && mPassword.getText().length() > 7) {
 
-            if (myPassword.getText().toString().length() >= 1) {
+            if (mPassword.getText().toString().length() >= 1) {
                 AsyncTask<String, Void, String> task = null;
                 String message = ((EditText) findViewById(R.id.editText2)).getText().toString();
                 String message2 = ((EditText) findViewById(R.id.editText3)).getText().toString();
@@ -122,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, getString(R.string.incompleteFormMsg), Toast.LENGTH_LONG).show();
 
             }
-        } else if (!SignUpActivity.isValidEmail(myEmail.getText())) {
-            myEmail.requestFocus();
-            myEmail.setError(getString(R.string.invalidEmailMsg));
+        } else if (!SignUpActivity.isValidEmail(mEmail.getText())) {
+            mEmail.requestFocus();
+            mEmail.setError(getString(R.string.invalidEmailMsg));
         } else {
-            myPassword.requestFocus();
-            myPassword.setError(getString(R.string.passwordErrorMessage));
+            mPassword.requestFocus();
+            mPassword.setError(getString(R.string.passwordErrorMessage));
         }
 
     }
@@ -146,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             submit.setClickable(false);
-//            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = mPrefs.edit();
             editor.putBoolean(getString(R.string.isloggedin), true);
             editor.commit();
@@ -195,9 +197,9 @@ public class MainActivity extends AppCompatActivity {
             submit.setClickable(true);
             if (theResult.contains("Success")) {
                 try {
-                    myUserId = getUserId(theResult);
+                    mUserId = getUserId(theResult);
                     SharedPreferences.Editor editor = mPrefs.edit();
-                    editor.putInt(getString(R.string.UID), myUserId);
+                    editor.putInt(getString(R.string.UID), mUserId);
                     editor.commit();
                     Log.d("AFTER LOGIN :", "onPostExecute: result " + theResult);
                     Log.d("UID:", mPrefs.getInt(getString(R.string.UID), -1) + "");
@@ -208,25 +210,19 @@ public class MainActivity extends AppCompatActivity {
 
             } else if (theResult.contains("Error")) {
                 if (theResult.contains("Username Does not Exist")) {
-                    myEmail.requestFocus();
-                    myEmail.setError("Username Does Not Exist");
+                    mEmail.requestFocus();
+                    mEmail.setError("Username Does Not Exist");
                 } else if (theResult.contains("Incorrect Password")) {
-                    myPassword.requestFocus();
-                    myPassword.setError("Incorrect Password");
+                    mPassword.requestFocus();
+                    mPassword.setError("Incorrect Password");
                 }
             }
-        }
-
-        private String parseLoginErrorResponse(String theString) {
-            String toReturn = "";
-
-
-            return toReturn;
         }
     }
 
     /**
      * Parses the result for the ID of the current user.
+     *
      * @param theResult is the result
      * @return the ID number of the logged-in user
      * @throws JSONException
@@ -246,5 +242,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return uId;
     }
-
 }

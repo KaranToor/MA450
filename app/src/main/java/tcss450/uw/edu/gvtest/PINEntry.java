@@ -11,7 +11,7 @@ import android.widget.EditText;
 import entry.OverviewActivity;
 
 /**
- * Provides a pin entry for users to sign in rather than with a myEmail and myPassword.
+ * Provides a pin entry for users to sign in rather than with a myEmail and mPassword.
  *
  * @author MA450 Team 11
  * @version Winter 2017
@@ -27,7 +27,7 @@ public class PINEntry extends AppCompatActivity {
      * Creates the activity and sets the state if savedInstanceState is passed.
      *
      * @param theSavedInstanceState Saves the previous state of the activiy if previously
-     *                           created.
+     *                              created.
      */
     @Override
     protected void onCreate(Bundle theSavedInstanceState) {
@@ -38,16 +38,16 @@ public class PINEntry extends AppCompatActivity {
 
     /**
      * Verifies the pin entered is the one associated with the user
+     *
      * @param view The view that was pressed
      */
     public void verifyPIN(View view) {
-        EditText editText = (EditText)findViewById(R.id.PINInput);
-//        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        EditText editText = (EditText) findViewById(R.id.PINInput);
         String PIN = mPrefs.getString(getString(R.string.PINNum), "null");
-        if (PIN.equals("null")){
+        if (PIN.equals("null")) {
             editText.requestFocus();
             editText.setError("No PIN found");
-        } else if (PIN.equals(editText.getText().toString())){
+        } else if (PIN.equals(editText.getText().toString())) {
             startActivity(new Intent(getApplicationContext(), OverviewActivity.class));
         } else {
             editText.requestFocus();

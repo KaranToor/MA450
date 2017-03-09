@@ -3,7 +3,6 @@ package entry;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -49,8 +48,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,31 +75,86 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
      * Used in the NewEntryActivity to get the price via getIntent.
      */
     public static final String TOTAL_AMOUNT = "picture-total-text";
+
+    /**
+     * Used to get the location via getIntent.
+     */
     public static final String LOCATION = "location-from-pic";
+
+    /**
+     * Used to get the payment type via getIntent.
+     */
     public static final String PAYMENT_TYPE = "payment-from-pic";
+
+    /**
+     * Used to get the date via getIntent.
+     */
     public static final String DATE = "date-from-pic";
-    public static final String CAMERA_OR_GALLERY = "camera-or-gallery";
+
+    /**
+     * Used to get the image file path via getIntent.
+     */
+    public static final String GET_FILE_NAME = "file-name";
+
+    /**
+     * The int representing gallery permissions request.
+     */
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
+
+    /**
+     * The int representing gallery image request.
+     */
     public static final int GALLERY_IMAGE_REQUEST = 1;
+
+    /**
+     * The int representing camera permissions request.
+     */
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
+
+    /**
+     * The int representing camera image request.
+     */
     public static final int CAMERA_IMAGE_REQUEST = 3;
-    PhotoDB pdb;
 
-
+    /**
+     * Karan's Google Cloud Vision API key.
+     */
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAEmx8tOtRIn3KTxAgPcdqtcGD9CLcXGQQ";
-    public static String mCurrentPhotoPath;
-    private static File mPhoto;
 
+    /**
+     * A certificate header used to allow the use of Google Cloud Vision.
+     */
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
+
+    /**
+     * A header used with a package signature sent to Google Cloud Vision.
+     */
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
 
+    /**
+     * Used for debugging.
+     */
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private TextView myImageDetails;
-    private Uri myImageUri;
+    /**
+     * The photo path of the current photo.
+     */
+    public static String mCurrentPhotoPath;
 
-    private newEntryActivity nea;
-    private Boolean retakePicture;
+    /**
+     * The file path of this photo.
+     */
+    private static File mPhoto;
+
+    /**
+     * The photo database.
+     */
+    private PhotoDB mPhotoDB;
+
+    /**
+     * True if the picture is being retaken.
+     */
+    private Boolean mRetakePicture;
 
     /**
      * Called at the creation of the Activity.
@@ -113,36 +165,27 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     protected void onCreate(Bundle theSavedInstanceState) {
         super.onCreate(theSavedInstanceState);
 
-        //Bundle extras = getIntent().getExtras();
         Intent intent = getIntent();
-        retakePicture = intent.getBooleanExtra("Retake Picture",false);
-        if (retakePicture) {
+        mRetakePicture = intent.getBooleanExtra("Retake Picture", false);
+        if (mRetakePicture) {
             mCurrentPhotoPath = intent.getStringExtra("OldPath");
             Log.d("ifRetakePic", "onCreate: oldPath =" + mCurrentPhotoPath);
-            myImageUri = Uri.parse(mCurrentPhotoPath);
             cameraButtonClicked();
         }
 
         setContentView(R.layout.activity_overview);
         setProgressLabel();
-        //init();
 
         Spinner spinner = (Spinner) findViewById(R.id.category_selector);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.categories, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
+
+        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
+
+        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-
-//        TableLayout table = (TableLayout) findViewById(R.id.table);
-//        TableRow t = new TableRow(this);
-        myImageDetails = new TextView(this);
-//        t.addView(myImageDetails);
-//        table.addView(t);
-
-
     }
 
     /**
@@ -151,72 +194,46 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     @Override
     public void onResume() {
         super.onResume();
-        //PhotoDB pdb = new PhotoDB(this);
-        pdb = new PhotoDB(this);
-
-        // pdb.getAllPhotos(); // used in onItemSelected()
-        // Dont make any calls after getAllPhotos()
+        mPhotoDB = new PhotoDB(this);
     }
 
-
+    /**
+     * Updates the overview page with picture information.
+     *
+     * @param allPhotos the photos for this user as PictureObjects.
+     */
     public void updateTable(final List<PictureObject> allPhotos) {
-//        TableLayout table = (TableLayout) findViewById(R.id.table);
-//        table.removeViewsInLayout(1, table.getChildCount() - 1);
-//        TextView dateHeader = (TextView)findViewById(R.id.Date);
-//
-//        TextView locHeader = (TextView)findViewById(R.id.Location);
-//        TextView priceHeader = (TextView)findViewById(R.id.Cost);
-//        TextView catHeader = (TextView)findViewById(R.id.Category);
         GridLayout gridLayout = (GridLayout) findViewById(R.id.entries);
         gridLayout.removeViewsInLayout(0, gridLayout.getChildCount());
-//
-//
-//        gridLayout.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
-//        gridLayout.setColumnCount(4);
-//        gridLayout.addView(dateHeader, 0);
-//                    titleText.setCompoundDrawablesWithIntrinsicBounds(rightIc, 0, 0, 0);
-
-
-        if(allPhotos != null) {
+        if (allPhotos != null) {
             gridLayout.setRowCount(allPhotos.size() + 1);
-//            GridLayout.LayoutParams dhparam = new GridLayout.LayoutParams();
-//            dhparam.height = GridLayout.LayoutParams.WRAP_CONTENT;
-//            dhparam.width = 350;
-//            dhparam.rightMargin = 5;
-//            dhparam.topMargin = 5;
-//            dhparam.setGravity(Gravity.CENTER);
-//            dhparam.columnSpec = GridLayout.spec(0);
-//            dhparam.rowSpec = GridLayout.spec(0);
-//            dateHeader.setLayoutParams(dhparam);
 
             for (int i = 0; i < allPhotos.size(); i++) {
                 TableRow t = new TableRow(this);
-                String myCategory = allPhotos.get(i).getMyCategory();
-                if (myCategory.equals(getString(R.string.nullStr))){
+                String myCategory = allPhotos.get(i).getmCategory();
+                if (myCategory.equals(getString(R.string.nullStr))) {
                     myCategory = "none";
                 }
                 final int finalI = i;
                 View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        viewEntry(v,allPhotos.get(finalI));
+                        viewEntry(v, allPhotos.get(finalI));
                     }
                 };
 
                 TextView date = new TextView(this);
-//                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                date.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                date.setText(allPhotos.get(i).getMyDate());
+                date.setText(allPhotos.get(i).getmDate());
                 date.setClickable(true);
                 date.setOnClickListener(onClickListener);
 
                 TextView location = new TextView(this);
-                location.setText(allPhotos.get(i).getMyLocation());
+                location.setText(allPhotos.get(i).getmLocation());
                 location.setClickable(true);
                 location.setOnClickListener(onClickListener);
 
                 TextView price = new TextView(this);
-                price.setText("$"+allPhotos.get(i).getMyPrice());
+                price.setText("$" + allPhotos.get(i).getmPrice());
                 price.setClickable(true);
                 price.setOnClickListener(onClickListener);
 
@@ -224,26 +241,19 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 category.setText(myCategory);
                 category.setClickable(true);
                 category.setOnClickListener(onClickListener);
-//                text.setText(allPhotos.get(i).getMyDate() + "      " + allPhotos.get(i).getMyLocation()
-//                        + "                          " + allPhotos.get(i).getMyPrice() + "             "
-//                        + myCategory);
 
 
-
-                    gridLayout.addView(date, i);
-//                    titleText.setCompoundDrawablesWithIntrinsicBounds(rightIc, 0, 0, 0);
-                    GridLayout.LayoutParams dateparam = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, .3f),      GridLayout.spec(GridLayout.UNDEFINED, .3f));
-                    dateparam.height = GridLayout.LayoutParams.WRAP_CONTENT;
-                    dateparam.width = GridLayout.LayoutParams.WRAP_CONTENT;
-                    dateparam.rightMargin = 5;
-                    dateparam.topMargin = 5;
-                    dateparam.setGravity(Gravity.CENTER);
-                    dateparam.columnSpec = GridLayout.spec(0, 0.3f);
-//                GridLayout.LayoutParams parem = new LayoutParams();
-//                v.setLayoutParams(parem);
-                    dateparam.rowSpec = GridLayout.spec(i);
-                    date.setLayoutParams(dateparam);
-                    gridLayout.addView(location, i);
+                gridLayout.addView(date, i);
+                GridLayout.LayoutParams dateparam = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, .3f), GridLayout.spec(GridLayout.UNDEFINED, .3f));
+                dateparam.height = GridLayout.LayoutParams.WRAP_CONTENT;
+                dateparam.width = GridLayout.LayoutParams.WRAP_CONTENT;
+                dateparam.rightMargin = 5;
+                dateparam.topMargin = 5;
+                dateparam.setGravity(Gravity.CENTER);
+                dateparam.columnSpec = GridLayout.spec(0, 0.3f);
+                dateparam.rowSpec = GridLayout.spec(i);
+                date.setLayoutParams(dateparam);
+                gridLayout.addView(location, i);
 
                 GridLayout.LayoutParams locationParam = new GridLayout.LayoutParams();
                 locationParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
@@ -252,13 +262,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 locationParam.rightMargin = 0;
                 locationParam.topMargin = 5;
                 locationParam.setGravity(Gravity.START);
-//                date.setLayoutParams(param);
-//                gridLayout.addView(location);
                 locationParam.columnSpec = GridLayout.spec(1, .3f);
                 locationParam.rowSpec = GridLayout.spec(i);
-                    location.setLayoutParams(locationParam);
+                location.setLayoutParams(locationParam);
 
-                GridLayout.LayoutParams priceParam= new GridLayout.LayoutParams();
+                GridLayout.LayoutParams priceParam = new GridLayout.LayoutParams();
                 priceParam.height = GridLayout.LayoutParams.WRAP_CONTENT;
                 priceParam.width = GridLayout.LayoutParams.WRAP_CONTENT;
                 priceParam.rightMargin = 0;
@@ -267,7 +275,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 priceParam.columnSpec = GridLayout.spec(2, .3f);
                 priceParam.rowSpec = GridLayout.spec(i);
                 price.setLayoutParams(priceParam);
-//                price.setGravity(Gravity.RIGHT);
                 price.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
                 gridLayout.addView(price);
 
@@ -282,16 +289,9 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 category.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 category.setLayoutParams(categoryParam);
                 gridLayout.addView(category);
-
-//
             }
         } else {
             System.out.println("NO PHOTOS FOUND");
-//            TableRow t = new TableRow(this);
-//            TextView date = new TextView(this);
-//            date.setText("NO ENTRIES FOUND");
-//            t.addView(date);
-//            //table.addView(t);
             TextView date = new TextView(this);
             date.setText("NO ENTRIES");
             gridLayout.addView(date, 0);
@@ -299,26 +299,16 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         }
     }
 
+    /**
+     * Starts the camera when the camera button is clicked.
+     */
     public void cameraButtonClicked() {
         AlertDialog.Builder builder = new AlertDialog.Builder(OverviewActivity.this);
-       // builder
-               // .setMessage(R.string.dialog_select_prompt)
-//                .setPositiveButton(R.string.dialog_select_gallery, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        startGalleryChooser();
-//                    }
-//                })
-               // .setNegativeButton(R.string.dialog_select_camera, new DialogInterface.OnClickListener() {
-               //     @Override
-                //    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            startCamera();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                //    }
-               // });
+        try {
+            startCamera();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         builder.create().show();
     }
 
@@ -347,6 +337,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     /**
      * Presents the user with a confirmation prompt if the logout button is selected.
+     *
      * @param theView the button that was pressed.
      */
     public void onLogoutPressed(View theView) {
@@ -378,6 +369,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     /**
      * Launches the camera.
+     *
      * @throws IOException
      */
     public void startCamera() throws IOException {
@@ -387,13 +379,12 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA)) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (retakePicture) {
-                Log.d(TAG, "startCamera: "+ mCurrentPhotoPath);
+            if (mRetakePicture) {
+                Log.d(TAG, "startCamera: " + mCurrentPhotoPath);
 
                 File overridePhoto = new File(Uri.parse(mCurrentPhotoPath).getPath());
-                if(overridePhoto.exists() && overridePhoto.delete()) {
+                if (overridePhoto.exists() && overridePhoto.delete()) {
                     Log.d(TAG, "startCamera: oldphoto deleted");
-                    //overridePhoto = new File(Uri.parse(mCurrentPhotoPath).getPath());
                     mPhoto = overridePhoto;
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(overridePhoto));
 
@@ -406,7 +397,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             } else {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getCameraFile()));
             }
-
 
 
             if (Build.VERSION.SDK_INT >= 24) {
@@ -439,7 +429,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         File image = new File(
                 storageDir,
                 imageFileName +  /* prefix */
-                ".jpg"        /* suffix */
+                        ".jpg"        /* suffix */
                       /* directory */
         );
 
@@ -450,11 +440,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         mPhoto = image;
         return image;
     }
-
-//    public File getCameraFile() {
-//        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-//        return new File(dir, FILE_NAME);
-//    }
 
     /**
      * Checks if the permissions were authorized.
@@ -475,11 +460,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
         } else if (theRequestCode == CAMERA_IMAGE_REQUEST && theResultCode == RESULT_OK) {
             galleryAddPic();
-            if (retakePicture) {
-                Log.d(TAG, "onActivityResult OldImage: " +Uri.fromFile(mPhoto));
+            if (mRetakePicture) {
+                Log.d(TAG, "onActivityResult OldImage: " + Uri.fromFile(mPhoto));
                 uploadImage(Uri.fromFile(mPhoto));
             } else {
-                Log.d(TAG, "onActivityResult newImage: "+Uri.fromFile(mPhoto));
+                Log.d(TAG, "onActivityResult newImage: " + Uri.fromFile(mPhoto));
                 uploadImage(Uri.fromFile(mPhoto));
 
             }
@@ -503,7 +488,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         if (theUri != null) {
             try {
                 // scale the image to save on bandwidth
-                myImageUri = theUri;
+//                myImageUri = theUri;
 
                 // Needed for some reason even though it is not used.
                 Bitmap galleryBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), theUri);
@@ -596,6 +581,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
                         // Add the image
                         Image base64EncodedImage = new Image();
+
                         // Convert the bitmap to a JPEG
                         // Just in case it's a format that Android understands but Cloud Vision
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -651,30 +637,30 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     }
 
     /**
-     * Calls the methods which parse the REGEX response and sends their returns to a new newEntryActivity.
+     * Calls the methods which parse the REGEX response and sends their returns to a new NewEntryActivity.
+     *
      * @param theMessage the message to be parsed
      */
     public void startNewEntry(String theMessage) {
         Pattern pattern = Pattern.compile("(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+)+\\.[0-9]{1,2}");
-        // TODO parsing location, payment type, date
         Matcher matcher = pattern.matcher(theMessage);
         StringBuilder sb = new StringBuilder();
         while (matcher.find()) {
             sb.append(" " + matcher.group() + "\n");
         }
 
-        Intent intent = new Intent(this, newEntryActivity.class);
+        Intent intent = new Intent(this, NewEntryActivity.class);
         System.out.println("*****Printing result" + sb.toString());
         intent.putExtra(TOTAL_AMOUNT, parseREGEX(sb.toString()));
         intent.putExtra(LOCATION, parseLocation(theMessage));
         intent.putExtra(PAYMENT_TYPE, parsePaymentType(theMessage));
         intent.putExtra(DATE, parseDate(theMessage));
         Log.d("OverView", "startNewEntry: filepath = " + mPhoto.getAbsolutePath());
-        intent.putExtra(CAMERA_OR_GALLERY,mPhoto.getAbsolutePath()); //myImageUri.toString());
-        if (retakePicture) {
-            intent.putExtra("fromTable",true);
+        intent.putExtra(GET_FILE_NAME, mPhoto.getAbsolutePath()); //myImageUri.toString());
+        if (mRetakePicture) {
+            intent.putExtra("fromTable", true);
             intent.putExtra(getString(R.string.category), "null");
-            retakePicture = false;
+            mRetakePicture = false;
         }
 
         startActivity(intent);
@@ -682,6 +668,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     /**
      * Parses the response from Google Vision which has been passed through REGEX for a payment type.
+     *
      * @param theInput the response from Google Vision which has been passed through REGEX
      * @return the discovered payment type
      */
@@ -708,6 +695,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     /**
      * Parses the response from Google Vision which has been passed through REGEX for a date.
+     *
      * @param theInput the response from Google Vision which has been passed through REGEX
      * @return the date that was found
      */
@@ -732,6 +720,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     /**
      * Parses the response from Google Vision which has been passed through REGEX for an abbreviated State location.
+     *
      * @param theInput the response from Google Vision which has been passed through REGEX
      * @return the abbreviated State location
      */
@@ -774,6 +763,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     /**
      * Parses the response from Google Vision which has been run through REGEX, looking for a dollar amount.
+     *
      * @param theInput the response from Google Vision which has been run through REGEX
      * @return the dollar amount
      */
@@ -866,14 +856,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     }
 
     /**
-     * Initializes the rows of temporary receipts in the overview screen.
-     */
-    private void init() {
-
-
-    }
-
-    /**
      * Sets the progress bar.
      */
     private void setProgressLabel() {
@@ -903,17 +885,17 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         Log.d(getString(R.string.print), getString(R.string.clicked));
 
 
-        Intent intent = new Intent(this, newEntryActivity.class);
-        intent.putExtra(TOTAL_AMOUNT, photo.getMyPrice().toPlainString());
-        intent.putExtra(LOCATION, photo.getMyLocation());
-        intent.putExtra(PAYMENT_TYPE, photo.getMyPaymentType());
-        intent.putExtra(DATE, photo.getMyDate());
+        Intent intent = new Intent(this, NewEntryActivity.class);
+        intent.putExtra(TOTAL_AMOUNT, photo.getmPrice().toPlainString());
+        intent.putExtra(LOCATION, photo.getmLocation());
+        intent.putExtra(PAYMENT_TYPE, photo.getmPaymentType());
+        intent.putExtra(DATE, photo.getmDate());
 
-        Log.d(TAG, "viewEntry: photoID "+ photo.getMyPhotoId());
+        Log.d(TAG, "viewEntry: photoID " + photo.getmPhotoId());
 
-        intent.putExtra(CAMERA_OR_GALLERY, photo.getMyPhotoId());
-        intent.putExtra("fromTable",true);
-        intent.putExtra(getString(R.string.category), photo.getMyCategory());
+        intent.putExtra(GET_FILE_NAME, photo.getmPhotoId());
+        intent.putExtra("fromTable", true);
+        intent.putExtra(getString(R.string.category), photo.getmCategory());
         startActivity(intent);
     }
 
@@ -930,10 +912,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
 
     /**
      * A method which is automatically called every time a spinner item is selected.
-     * @param parent the AdapterView that triggered the event
-     * @param view The view within the AdapterView that triggered the event
+     *
+     * @param parent   the AdapterView that triggered the event
+     * @param view     The view within the AdapterView that triggered the event
      * @param position The position of the view that was selected
-     * @param id The row id of the item that was selected
+     * @param id       The row id of the item that was selected
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -941,17 +924,18 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         String selectedCategory = spinner.getSelectedItem().toString();
         Log.d("selectedCat", selectedCategory);
 
-        if(selectedCategory.equals("Show All")){
-            pdb.getAllPhotos();
+        if (selectedCategory.equals("Show All")) {
+            mPhotoDB.getAllPhotos();
         } else {
-            //PhotoDB pdb = new PhotoDB(this);
-            pdb.getCategoryAll(selectedCategory);
+            //PhotoDB mPhotoDB = new PhotoDB(this);
+            mPhotoDB.getCategoryAll(selectedCategory);
         }
     }
 
     /**
      * An obligatory empty method to implement OnItemSelectedListener.
-     * @param parent
+     *
+     * @param parent the parent adapter.
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {

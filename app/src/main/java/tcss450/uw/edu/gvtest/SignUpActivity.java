@@ -28,7 +28,7 @@ import entry.OverviewActivity;
 /**
  * @author MA450 Team 11
  * @version Winter 2017
- * Adds a new user to the app's database and allows for future logins from this new user.
+ *          Adds a new user to the app's database and allows for future logins from this new user.
  */
 public class SignUpActivity extends AppCompatActivity {
     /**
@@ -39,12 +39,12 @@ public class SignUpActivity extends AppCompatActivity {
     /**
      * The field which contains the desired username.
      */
-    EditText myUser;
+    EditText mUser;
 
     /**
      * The field which contains the desired password.
      */
-    EditText myPassword;
+    EditText mPassword;
 
     /**
      * The shared preferences for the application.
@@ -54,7 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
     /**
      * The ID number of the current user.
      */
-    private int myUserId;
+    private int mUserId;
 
     /**
      * Initializes activity.
@@ -74,8 +74,8 @@ public class SignUpActivity extends AppCompatActivity {
      * @param theView The view passed in when this method is called
      */
     public void createUser(View theView) {
-        myUser = (EditText) findViewById(R.id.editText4);
-        myPassword = (EditText) findViewById(R.id.editText6);
+        mUser = (EditText) findViewById(R.id.editText4);
+        mPassword = (EditText) findViewById(R.id.editText6);
         EditText myPass2 = (EditText) findViewById(R.id.editText7);
         CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
         EditText pinBox = (EditText) findViewById(R.id.newPIN);
@@ -84,30 +84,27 @@ public class SignUpActivity extends AppCompatActivity {
         if (nameTextField.getText().toString().length() < 1) {
             nameTextField.requestFocus();
             nameTextField.setError("Please enter a Name");
-        }
-        else if (myUser.getText().toString().length() < 1) {
-            myUser.requestFocus();
-            myUser.setError("Please enter an email address");
-        }
-
-         else if (myPassword.getText().length() < 8) {
-            myPassword.requestFocus();
-            myPassword.setError(getString(R.string.passwordErrorMessage));
+        } else if (mUser.getText().toString().length() < 1) {
+            mUser.requestFocus();
+            mUser.setError("Please enter an email address");
+        } else if (mPassword.getText().length() < 8) {
+            mPassword.requestFocus();
+            mPassword.setError(getString(R.string.passwordErrorMessage));
         } else if (myPass2.getText().length() < 8) {
             myPass2.requestFocus();
             myPass2.setError(getString(R.string.passwordErrorMessage));
         } else if (checkBox.isChecked() && pinBox.getText().toString().length() < 4) {
             pinBox.requestFocus();
             pinBox.setError("PIN must contain at least 4 digits");
-        } else if(!isValidEmail(myUser.getText())){
-            myUser.requestFocus();
-            myUser.setError("Please enter an email with address@example.com format");
-        } else if (isValidEmail(myUser.getText()) && myPassword.getText().length() >= 8
+        } else if (!isValidEmail(mUser.getText())) {
+            mUser.requestFocus();
+            mUser.setError("Please enter an email with address@example.com format");
+        } else if (isValidEmail(mUser.getText()) && mPassword.getText().length() >= 8
                 && myPass2.getText().length() >= 8) {
 
-            if (myPass2.getText().toString().equals(myPassword.getText().toString())) {
+            if (myPass2.getText().toString().equals(mPassword.getText().toString())) {
 
-                if (myUser.getText().toString().length() >= 1 && myPassword.getText().toString().length() >= 1) {
+                if (mUser.getText().toString().length() >= 1 && mPassword.getText().toString().length() >= 1) {
                     AsyncTask<String, Void, String> task = null;
                     String message = ((EditText) findViewById(R.id.editText)).getText().toString();
                     String message2 = ((EditText) findViewById(R.id.editText4)).getText().toString();
@@ -137,6 +134,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     /**
      * Allows creating a pin or not, depending on the user's choice
+     *
      * @param view The view that was pressed
      */
     public void setPINFieldVisibility(View view) {
@@ -154,6 +152,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     /**
      * Returns to the previous activity when the cancel button is pressed.
+     *
      * @param view the view that was pressed
      */
     public void cancelRegistration(View view) {
@@ -167,7 +166,9 @@ public class SignUpActivity extends AppCompatActivity {
         private final String SERVICE = "register.php";
         Button submit = (Button) findViewById(R.id.button3);
 
-
+        /**
+         * Checks if the user has a pin.
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -228,9 +229,9 @@ public class SignUpActivity extends AppCompatActivity {
             submit.setClickable(true);
             if (theResult.contains("Success")) {
                 try {
-                    myUserId = getUserId(theResult);
+                    mUserId = getUserId(theResult);
                     SharedPreferences.Editor editor = mPrefs.edit();
-                    editor.putInt(getString(R.string.UID), myUserId);
+                    editor.putInt(getString(R.string.UID), mUserId);
                     editor.commit();
                     Intent intent = new Intent(getApplicationContext(), OverviewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -251,9 +252,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     /**
      * Returns the user Id
+     *
      * @param theResult the String of user data
      * @return uId the user's id to be retrieved
-     * @throws JSONException
+     * @throws JSONException if the JSON is incorrect.
      */
     public int getUserId(String theResult) throws JSONException {
         int uId = -1;
