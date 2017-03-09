@@ -35,15 +35,15 @@
                 />
 
                 <EditText
-                    android:text="@string/location"
+                    android:id="@+id/locationId"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:id="@+id/locationId"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/underlinededittext"
                     android:inputType="text"
                     android:paddingRight="10dp"
-                    android:background="@drawable/underlinededittext"
-                    android:textSize="24sp"
-                    android:layout_marginBottom="5dp"/></LinearLayout>
+                    android:text="@string/location"
+                    android:textSize="24sp" /></LinearLayout>
 
         </TableRow>
 
