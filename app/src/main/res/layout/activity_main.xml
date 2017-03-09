@@ -1,54 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorIcons"
     >
 
     <ImageView
-        android:text="@string/app_name"
-        android:contentDescription="@string/logoContentDesc"
-        android:layout_width="250dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="49dp"
-        android:layout_marginBottom="9dp"
-        android:id="@+id/textView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:fontFamily="serif"
-        android:textSize="45sp"
-        android:src="@drawable/receiptsuitelogo1"
-        android:textColor="@color/colorIcons" />
-    <EditText
+        android:id="@+id/imageView3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/editText2"
-        android:hint="@string/email"
-        android:background="@drawable/roundedtextbox" />
+        android:layout_height="283dp"
+        app:srcCompat="@drawable/bills" />
 
-    <EditText
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/editText3"
-        android:layout_marginTop="5dp"
-        android:hint="@string/password"
-        android:background="@drawable/roundedtextbox"
-        />
+        android:background="@color/colorIcons"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorIcons"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/editText2"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/editText3"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorIcons"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/textView"
+                android:layout_width="120dp"
+                android:layout_height="115dp"
+                android:layout_marginBottom="9dp"
+                android:layout_marginTop="29dp"
+                android:layout_marginLeft="19dp"
+                android:contentDescription="@string/logoContentDesc"
+                android:fontFamily="serif"
+                android:src="@drawable/receiptsuitelogo1"
+                android:text="@string/app_name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textColor="@color/colorIcons"
+                android:textSize="45sp" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:text="@string/log_in"
         android:id="@+id/button2"
         android:onClick="logInUser"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="5dp"
         android:textColor="@color/colorTextPrimary"
         />
@@ -60,8 +102,10 @@
         android:background="@color/colorIcons">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
             android:text="@string/register"
             android:onClick="registerUser"
             android:id="@+id/button"

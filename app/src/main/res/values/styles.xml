@@ -21,5 +21,8 @@
         <item name="android:fontFamily">"sans-serif"</item>
         <item name="android:paddingLeft">10dp</item>
     </style>
+    <style name="changedEditText">
+        <item name="android:background">@drawable/changededittxt</item>
+    </style>
 
 </resources>

@@ -4,4 +4,6 @@
     <solid android:color="@color/colorIcons"/>
     <corners
         android:radius="10dp"/>
+    <item android:state_pressed="true"
+        android:drawable="@drawable/underlinededittext" /> <!-- pressed -->
 </shape>
