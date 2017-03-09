@@ -48,6 +48,11 @@ public class NewEntryActivity extends AppCompatActivity implements AdapterView.O
     private String mPaymentType;
 
     /**
+     * The position of the spinner category found via REGEX.
+     */
+    private String mPosition;
+
+    /**
      * The date which was found via REGEX.
      */
     private String mDate;
@@ -86,6 +91,9 @@ public class NewEntryActivity extends AppCompatActivity implements AdapterView.O
         mLocation = intent.getStringExtra(OverviewActivity.LOCATION);
         mPaymentType = intent.getStringExtra(OverviewActivity.PAYMENT_TYPE);
         mDate = intent.getStringExtra(OverviewActivity.DATE);
+        mPosition = intent.getStringExtra(OverviewActivity.POSITION);
+
+
 
         EditText locationEditText = (EditText) findViewById(R.id.locationId);
         locationEditText.setText(mLocation);

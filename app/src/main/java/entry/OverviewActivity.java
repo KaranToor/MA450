@@ -98,6 +98,11 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
     public static final String GET_FILE_NAME = "file-name";
 
     /**
+     * Used to set the category position.
+     */
+    public static final String POSITION = "null";
+
+    /**
      * The int representing gallery permissions request.
      */
     public static final int GALLERY_PERMISSIONS_REQUEST = 0;
@@ -663,7 +668,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             intent.putExtra(getString(R.string.category), "null");
             mRetakePicture = false;
         }
-
+        intent.putExtra(POSITION, parseCategory(theMessage));
         startActivity(intent);
     }
 
@@ -760,6 +765,20 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             }
         }
         return toReturn.trim();
+    }
+
+    /**
+     * Parses the response from Google Vision which has been passed through REGEX for a category.
+     *
+     * @param theInput the response from Google Vision which has been passed through REGEX
+     * @return the int to set the spinner on correlated with category
+     */
+    public int parseCategory(String theInput) {
+        int pos = 0;
+        if (theInput.contains("Chipotle") || theInput.contains("Burger King")) {
+            pos = 8;
+        }
+        return pos;
     }
 
     /**
