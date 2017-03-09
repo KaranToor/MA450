@@ -13,7 +13,8 @@
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="283dp"
-        app:srcCompat="@drawable/bills" />
+        app:srcCompat="@drawable/bills"
+        android:layout_marginTop="-20dp"/>
 
 
     <LinearLayout
@@ -84,7 +85,8 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/newButton"
+        android:layout_height="35dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:text="@string/log_in"
@@ -103,8 +105,9 @@
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_marginLeft="40dp"
+            style="@style/newButton"
             android:layout_marginRight="40dp"
             android:text="@string/register"
             android:onClick="registerUser"

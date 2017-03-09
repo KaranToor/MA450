@@ -139,6 +139,7 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         }
         isEditEntry = intent.getBooleanExtra("fromTable", false);
         if (isEditEntry) {
+
             Button b = (Button) findViewById(R.id.ok_button);
             b.setText(getString(R.string.updateStr));
             b = (Button) findViewById(R.id.new_entry_back_button);
@@ -155,6 +156,9 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
                 int spinnerPosition = adapter.getPosition(category);
                 spinner.setSelection(spinnerPosition);
             }
+        } else if (!isEditEntry) {
+            Button retakeB = (Button) findViewById(R.id.button7);
+            retakeB.setVisibility(View.INVISIBLE);
         }
     }
 

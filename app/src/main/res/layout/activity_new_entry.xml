@@ -9,6 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
     tools:context="entry.newEntryActivity"
     >
 
@@ -36,7 +37,7 @@
                 <EditText
                     android:text="@string/location"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:id="@+id/locationId"
                     android:inputType="text"
                     android:paddingRight="10dp"
@@ -63,7 +64,7 @@
             <EditText
                 android:text="@string/amount"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:id="@+id/amountId"
                 android:inputType="text"
                 android:textSize="24sp"
@@ -90,7 +91,7 @@
             <EditText
                 android:text="@string/payment_method"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:inputType="text"
                 android:background="@drawable/underlinededittext"
                 android:id="@+id/paymentId"
@@ -117,7 +118,7 @@
             <EditText
                 android:text="@string/date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:inputType="date"
                 android:id="@+id/dateId"
                 android:layout_marginBottom="5dp"
@@ -139,6 +140,7 @@
 
     <Button
         android:text="@string/retake_image"
+        style="@style/newButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
@@ -169,6 +171,7 @@
 
         <Button
             android:id="@+id/new_entry_back_button"
+            style="@style/newButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/backStr"
@@ -176,6 +179,7 @@
 
         <Button
             android:text="@string/ok"
+            style="@style/newButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ok_button"

@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -116,6 +117,7 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         //Bundle extras = getIntent().getExtras();
         Intent intent = getIntent();
         retakePicture = intent.getBooleanExtra("Retake Picture",false);
+
         if (retakePicture) {
             mCurrentPhotoPath = intent.getStringExtra("OldPath");
             Log.d("ifRetakePic", "onCreate: oldPath =" + mCurrentPhotoPath);

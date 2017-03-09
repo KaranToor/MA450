@@ -24,5 +24,8 @@
     <style name="changedEditText">
         <item name="android:background">@drawable/changededittxt</item>
     </style>
+    <style name="newButton">
+        <item name="android:background">@drawable/newbtn</item>
+    </style>
 
 </resources>
