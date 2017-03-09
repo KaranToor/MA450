@@ -123,14 +123,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             cameraButtonClicked();
         }
 
-//        if (extras != null) {
-//            String value = extras.getString("retake");
-////            nea = getIntent().getExtras().getSerializable("myclass");
-//            if(value.equals("retake")){
-//                //      cameraButtonClicked(); // ????????????
-//                retakePicture = true;
-//            }
-//        }
         setContentView(R.layout.activity_overview);
         setProgressLabel();
         //init();
@@ -444,13 +436,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = userid + "_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-
         File image = new File(
                 storageDir,
                 imageFileName +  /* prefix */
@@ -692,15 +677,6 @@ public class OverviewActivity extends AppCompatActivity implements View.OnLongCl
             retakePicture = false;
         }
 
-//        if (!myAccessedGallery) {
-//            intent.putExtra(CAMERA_OR_GALLERY, "" + CAMERA_IMAGE_REQUEST);
-//        } else {
-//            intent.putExtra(CAMERA_OR_GALLERY, "" + GALLERY_IMAGE_REQUEST);
-//            if (myAccessedGallery) {
-////                intent.putExtra(BITMAP_IMG, myGalleryBitmap);
-//                myAccessedGallery = false;
-//             }
-//        }
         startActivity(intent);
     }
 

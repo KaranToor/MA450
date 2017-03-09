@@ -24,7 +24,6 @@ import android.widget.Spinner;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.SQLOutput;
@@ -38,11 +37,6 @@ import tcss450.uw.edu.gvtest.R;
 import utils.PermissionUtils;
 
 public class newEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    public static final int GALLERY_PERMISSIONS_REQUEST = 0;
-    public static final int GALLERY_IMAGE_REQUEST = 1;
-    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
-    public static final int CAMERA_IMAGE_REQUEST = 3;
-    boolean isARetake = false;
 
     /**
      * The file location of the photo to be used.
@@ -124,8 +118,6 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
             public void onClick(View v) {
 
                 Intent intent = new Intent(newEntryActivity.this, OverviewActivity.class);
-                //String message = "retake";
-//                intent.putExtra("retake", "retake");
                 intent.putExtra("Retake Picture", true);
                 intent.putExtra("OldPath", imagePath);
                 intent.putExtra(getString(R.string.category), "null");
@@ -145,7 +137,6 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
             setImage(Uri.fromFile(image));
             // File was not found
         }
-//        setImage(myPhotoId);
         isEditEntry = intent.getBooleanExtra("fromTable", false);
         if (isEditEntry) {
             Button b = (Button) findViewById(R.id.ok_button);
@@ -158,10 +149,8 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
                 }
             });
             b.setVisibility(View.VISIBLE);
-            //Spinner mSpinner = (Spinner) findViewById(R.id.category_assigner);
 
             String category = intent.getStringExtra(getString(R.string.category));
-            //spinner.setAdapter(adapter);
             if (!category.equals("null")) {
                 int spinnerPosition = adapter.getPosition(category);
                 spinner.setSelection(spinnerPosition);
@@ -170,56 +159,12 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
     }
 
 
-
-//    //ADDED THIS METHOD FROM OVERVIEW
-//    private File getCameraFile() throws IOException {
-//        // Create an image file name
-//        SharedPreferences prefs = getApplicationContext().getSharedPreferences(getString(R.string.prefKey), Context.MODE_PRIVATE);
-//        int userid = prefs.getInt(getString(R.string.UID), -1);
-//        if (userid == -1) {
-//            throw new IllegalArgumentException("userid is not set in Prefs");
-//        }
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = userid + "_" + timeStamp + "_";
-//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-//        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-////        File image = File.createTempFile(
-////                imageFileName,  /* prefix */
-////                ".jpg",         /* suffix */
-////                storageDir      /* directory */
-////        );
-//
-//        File image = new File(
-//                storageDir,
-//                imageFileName +  /* prefix */
-//                        ".jpg"        /* suffix */
-//                      /* directory */
-//        );
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        return image;
-//    }
-
-
-
     public void okButtonPress(View theView) {
-//        boolean isUpdate = false;
-
-//        Button isthisUpdate = (Button) findViewById(R.id.ok_button);
-//        if(isthisUpdate.getText().toString().equals("Update")) {
-//            isUpdate = true;
-//        }
-
         myLocation = ((EditText) findViewById(R.id.locationId)).getText().toString();
         myDate = ((EditText) findViewById(R.id.dateId)).getText().toString();
         myPrice = ((EditText) findViewById(R.id.amountId)).getText().toString();
         myPaymentType = ((EditText) findViewById(R.id.paymentId)).getText().toString();
 
-//        if(isUpdate == false) {
-//            sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
-//        } else if (isUpdate == true) {
-//            sendToDatabase2(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
-//        }
         sendToDatabase(myPhotoId, myLocation, myPrice, myPaymentType, myDate, myCategory);
 
 
@@ -228,32 +173,6 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         intent.putExtra("Retake Picture", false);
         startActivity(intent);
         this.finish();
-    }
-
-    private void sendToDatabase2(Uri thePhotoId, String theLocation, String thePrice,
-                                String thePaymentType, String theDate,
-                                String theCategory) {
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
-                getString(R.string.prefKey), Context.MODE_PRIVATE);
-        int userId = prefs.getInt(getString(R.string.UID), -1);
-        if (userId == -1) {
-            throw new IllegalArgumentException("UserId was not set in SharedPreferences");
-        }
-
-        BigDecimal price;
-        if (!myPrice.equals("Not Found")) {
-            price = new BigDecimal(thePrice);
-        } else {
-            price = new BigDecimal(0.00001); //BigDecimal.ZERO;
-        }
-
-        // TODO Toork PhotoId.toString()
-        PictureObject pictureObject = new PictureObject(userId, myPhotoId.getPath(),
-                theLocation, price, thePaymentType, theDate, theCategory);
-        PhotoDB photoDB = new PhotoDB(this);
-        System.out.println("this is is a retake right now" + isARetake);
-        photoDB.updatePhoto(pictureObject);
-
     }
 
     private void sendToDatabase(Uri thePhotoId, String theLocation, String thePrice,
@@ -314,7 +233,6 @@ public class newEntryActivity extends AppCompatActivity implements AdapterView.O
         if (position > 0) {
             myCategory = selectedCategory;
         }
-//        Log.d("selectedCat", myCategory);
     }
 
     @Override
