@@ -97,7 +97,7 @@ class ConfigurationHelper(object):
       self,
       cluster_name,
       image,
-      master_machine_type,
+      main_machine_type,
       worker_machine_type,
       network,
       subnetwork):
@@ -107,9 +107,9 @@ class ConfigurationHelper(object):
     region = compute_utils.ZoneNameToRegionName(zone)
     uris = {
         'image': self._GetResourceUri(image, 'compute.images'),
-        'master_machine_type':
+        'main_machine_type':
             self._GetResourceUri(
-                master_machine_type, 'compute.machineTypes', zone=zone),
+                main_machine_type, 'compute.machineTypes', zone=zone),
         'worker_machine_type':
             self._GetResourceUri(
                 worker_machine_type, 'compute.machineTypes', zone=zone),

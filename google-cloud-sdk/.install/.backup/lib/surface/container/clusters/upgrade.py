@@ -47,20 +47,20 @@ To upgrade nodes to the latest available version, run
 
 
 class VersionVerifier(object):
-  """Compares the cluster and master versions for upgrade availablity."""
+  """Compares the cluster and main versions for upgrade availablity."""
   UP_TO_DATE = 0
   UPGRADE_AVAILABLE = 1
   SUPPORT_ENDING = 2
   UNSUPPORTED = 3
 
-  def Compare(self, current_master_version, current_cluster_version):
-    """Compares the cluster and master versions and returns an enum."""
-    # TODO(user):update the if condition when we roll the master version
-    if current_master_version == current_cluster_version:
+  def Compare(self, current_main_version, current_cluster_version):
+    """Compares the cluster and main versions and returns an enum."""
+    # TODO(user):update the if condition when we roll the main version
+    if current_main_version == current_cluster_version:
       return self.UP_TO_DATE
-    master_version = SemVer(current_master_version)
+    main_version = SemVer(current_main_version)
     cluster_version = SemVer(current_cluster_version)
-    major, minor, _ = master_version.Distance(cluster_version)
+    major, minor, _ = main_version.Distance(cluster_version)
     if major != 0 or minor > 2:
       return self.UNSUPPORTED
     elif minor > 1:
@@ -80,12 +80,12 @@ def _Args(parser):
       'name',
       metavar='NAME',
       help='The name of the cluster to upgrade.')
-  cv = flags.AddClusterVersionFlag(parser, 'master or nodes')
+  cv = flags.AddClusterVersionFlag(parser, 'main or nodes')
   cv.detailed_help = """\
     The Kubernetes release version to which to upgrade the cluster's nodes.
 
     If provided, the --cluster-version must be no greater than the cluster
-    master's minor version (x.*X*.x), and must be a latest patch version
+    main's minor version (x.*X*.x), and must be a latest patch version
     (x.x.*X*).
 
     You can find the list of allowed versions for upgrades by running:
@@ -96,10 +96,10 @@ def _Args(parser):
       '--node-pool',
       help='The node pool to upgrade.')
   parser.add_argument(
-      '--master',
-      help='Upgrade the cluster\'s master to the latest version of Kubernetes'
+      '--main',
+      help='Upgrade the cluster\'s main to the latest version of Kubernetes'
       ' supported on Container Engine. Nodes cannot be upgraded at the same'
-      ' time as the master.',
+      ' time as the main.',
       action='store_true')
   flags.AddClustersWaitAndAsyncFlags(parser)
   flags.AddImageTypeFlag(parser, 'cluster/node pool')
@@ -132,8 +132,8 @@ class Upgrade(base.Command):
 
     options = api_adapter.UpdateClusterOptions(
         version=args.cluster_version,
-        update_master=args.master,
-        update_nodes=(not args.master),
+        update_main=args.main,
+        update_nodes=(not args.main),
         node_pool=args.node_pool,
         image_type=args.image_type)
 
@@ -142,9 +142,9 @@ class Upgrade(base.Command):
     else:
       new_version = 'latest'
 
-    if args.master:
-      node_message = 'Master'
-      current_version = cluster.currentMasterVersion
+    if args.main:
+      node_message = 'Main'
+      current_version = cluster.currentMainVersion
     else:
       node_message = 'All {node_count} {node}'.format(
           node_count=cluster.currentNodeCount,
@@ -180,7 +180,7 @@ Upgrade.detailed_help = {
       Upgrades the Kubernetes version of an existing container cluster.
 
       This command upgrades the Kubernetes version of the *nodes* of a cluster.
-      The Kubernetes version of the cluster's *master* is periodically upgraded
+      The Kubernetes version of the cluster's *main* is periodically upgraded
       automatically as new releases are available.
 
       *By running this command, all of the cluster's nodes will be deleted and*
@@ -196,7 +196,7 @@ Upgrade.detailed_help = {
     """,
     'EXAMPLES': """\
       Upgrade the nodes of <cluster> to the Kubernetes version of the cluster's
-      master.
+      main.
 
         $ {command} <cluster>
 

@@ -54,8 +54,8 @@ def _CommonArgs(parser):
       type=int,
       help='The number of preemptible worker nodes in the cluster.')
   parser.add_argument(
-      '--master-machine-type',
-      help='The type of machine to use for the master. Defaults to '
+      '--main-machine-type',
+      help='The type of machine to use for the main. Defaults to '
       'server-specified.')
   parser.add_argument(
       '--worker-machine-type',
@@ -98,9 +98,9 @@ def _CommonArgs(parser):
       type=int,
       help='The number of local SSDs to attach to each worker in a cluster.')
   parser.add_argument(
-      '--num-master-local-ssds',
+      '--num-main-local-ssds',
       type=int,
-      help='The number of local SSDs to attach to the master in a cluster.')
+      help='The number of local SSDs to attach to the main in a cluster.')
   parser.add_argument(
       '--initialization-actions',
       type=arg_parsers.ArgList(min_length=1),
@@ -188,12 +188,12 @@ Alias,URI
     additional_scopes='\n'.join(constants.ADDITIONAL_DEFAULT_SCOPE_URIS),
     aliases=compute_helpers.SCOPE_ALIASES_FOR_HELP)
 
-  master_boot_disk = parser.add_mutually_exclusive_group()
+  main_boot_disk = parser.add_mutually_exclusive_group()
   worker_boot_disk = parser.add_mutually_exclusive_group()
 
   # Deprecated, to be removed at a future date.
-  master_boot_disk.add_argument(
-      '--master-boot-disk-size-gb',
+  main_boot_disk.add_argument(
+      '--main-boot-disk-size-gb',
       type=int,
       help=argparse.SUPPRESS)
   worker_boot_disk.add_argument(
@@ -208,11 +208,11 @@ Alias,URI
       ``10GB'' will produce a 10 gigabyte disk. The minimum size a boot disk
       can have is 10 GB. Disk size must be a multiple of 1 GB.
       """
-  master_boot_disk_size = master_boot_disk.add_argument(
-      '--master-boot-disk-size',
+  main_boot_disk_size = main_boot_disk.add_argument(
+      '--main-boot-disk-size',
       type=arg_parsers.BinarySize(lower_bound='10GB'),
-      help='The size of the boot disk of the master in a cluster.')
-  master_boot_disk_size.detailed_help = boot_disk_size_detailed_help
+      help='The size of the boot disk of the main in a cluster.')
+  main_boot_disk_size.detailed_help = boot_disk_size_detailed_help
   worker_boot_disk_size = worker_boot_disk.add_argument(
       '--worker-boot-disk-size',
       type=arg_parsers.BinarySize(lower_bound='10GB'),
@@ -249,14 +249,14 @@ class Create(base.CreateCommand):
   @staticmethod
   def Args(parser):
     _CommonArgs(parser)
-    parser.add_argument('--num-masters', type=int, help=argparse.SUPPRESS)
+    parser.add_argument('--num-mains', type=int, help=argparse.SUPPRESS)
 
   @staticmethod
   def ValidateArgs(args):
-    if args.master_boot_disk_size_gb:
-      log.warn('The --master-boot-disk-size-gb flag is deprecated. '
-               'Use equivalent --master-boot-disk-size=%sGB flag.',
-               args.master_boot_disk_size_gb)
+    if args.main_boot_disk_size_gb:
+      log.warn('The --main-boot-disk-size-gb flag is deprecated. '
+               'Use equivalent --main-boot-disk-size=%sGB flag.',
+               args.main_boot_disk_size_gb)
 
     if args.worker_boot_disk_size_gb:
       log.warn('The --worker-boot-disk-size-gb flag is deprecated. '
@@ -275,7 +275,7 @@ class Create(base.CreateCommand):
     compute_uris = config_helper.ResolveGceUris(
         args.name,
         args.image,
-        args.master_machine_type,
+        args.main_machine_type,
         args.worker_machine_type,
         args.network,
         args.subnet)
@@ -291,10 +291,10 @@ class Create(base.CreateCommand):
     software_config = messages.SoftwareConfig(
         imageVersion=args.image_version)
 
-    master_boot_disk_size_gb = args.master_boot_disk_size_gb
-    if args.master_boot_disk_size:
-      master_boot_disk_size_gb = (
-          api_utils.BytesToGb(args.master_boot_disk_size))
+    main_boot_disk_size_gb = args.main_boot_disk_size_gb
+    if args.main_boot_disk_size:
+      main_boot_disk_size_gb = (
+          api_utils.BytesToGb(args.main_boot_disk_size))
 
     worker_boot_disk_size_gb = args.worker_boot_disk_size_gb
     if args.worker_boot_disk_size:
@@ -326,13 +326,13 @@ class Create(base.CreateCommand):
     cluster_config = messages.ClusterConfig(
         configBucket=args.bucket,
         gceClusterConfig=gce_cluster_config,
-        masterConfig=messages.InstanceGroupConfig(
-            numInstances=args.num_masters,
+        mainConfig=messages.InstanceGroupConfig(
+            numInstances=args.num_mains,
             imageUri=compute_uris['image'],
-            machineTypeUri=compute_uris['master_machine_type'],
+            machineTypeUri=compute_uris['main_machine_type'],
             diskConfig=messages.DiskConfig(
-                bootDiskSizeGb=master_boot_disk_size_gb,
-                numLocalSsds=args.num_master_local_ssds,
+                bootDiskSizeGb=main_boot_disk_size_gb,
+                numLocalSsds=args.num_main_local_ssds,
             ),
         ),
         workerConfig=messages.InstanceGroupConfig(
@@ -409,16 +409,16 @@ class CreateBeta(Create):
   def Args(parser):
     _CommonArgs(parser)
     labels_util.AddCreateLabelsFlags(parser)
-    num_masters = parser.add_argument(
-        '--num-masters',
+    num_mains = parser.add_argument(
+        '--num-mains',
         type=int,
-        help='The number of master nodes in the cluster.')
-    num_masters.detailed_help = """\
-      The number of master nodes in the cluster.
+        help='The number of main nodes in the cluster.')
+    num_mains.detailed_help = """\
+      The number of main nodes in the cluster.
 
       [format="csv",options="header"]
       |========
-      Number of Masters,Cluster Mode
+      Number of Mains,Cluster Mode
       1,Standard
       3,High Availability
       |========

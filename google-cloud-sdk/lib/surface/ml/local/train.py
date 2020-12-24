@@ -92,4 +92,4 @@ class RunLocal(base.Command):
       local_train.MakeProcess(args.module_name,
                               package_root,
                               args=args.user_args,
-                              task_type='master')
+                              task_type='main')
